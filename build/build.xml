@@ -24,4 +24,5 @@
 	<target name="build.tasks" depends="compile.tasks">
 		<jar jarfile="${target.lib.dir}/org.restlet.js.build.jar" basedir="${target.classes.dir}"/>
 	</target>
+
 </project>

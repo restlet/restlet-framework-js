@@ -13,6 +13,7 @@ function copyElements(obj1, obj2) {
 			obj2["_"+elt] = obj1[elt];
 		}
 	}
+
 }
 
 var Class = function() {

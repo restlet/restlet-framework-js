@@ -7,6 +7,7 @@ var Connector = new Class(Restlet, {
 			this.protocols = [];
 		}
 	},
+
 	getProtocols: function() {
 		return this.protocols;
 	}

@@ -18,7 +18,6 @@ public class ReplaceIncludeTask extends Task {
 		}
 		
 		String content = IOUtils.getFileContent(srcFile);
-		
 		StringBuilder newContent = new StringBuilder();
 		StringTokenizer st = new StringTokenizer(content, "\n", true);
 		while (st.hasMoreTokens()) {

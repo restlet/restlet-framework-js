@@ -1,7 +1,6 @@
 //var jsclass = require("./jsclass/core");
 var util = require("util");
 var http = require("http");
-var libxmljs = require("libxmljs");
 
 // OOP and generic stuff
 
