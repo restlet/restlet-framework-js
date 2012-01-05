@@ -9,6 +9,6 @@
     "implemented generic Restlet entities",
     "implemented generic Restlet client processing",
     "dom representation based on libxmljs module",
-    "json representation",
+    "json representation"
   ]
 }

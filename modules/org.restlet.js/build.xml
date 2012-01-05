@@ -1,5 +1,4 @@
 <project name="org.restlet.js" basedir=".">
-
 	<property name="target.dir" value="${basedir}/target" />
 	<property name="target.browser.dir" value="${target.dir}/browser" />
 	<property name="target.nodejs.dir" value="${target.dir}/nodejs" />
