@@ -1,4 +1,3 @@
-// [ifndef nodejs]
 var XhrHttpClientCall = new Class(ClientCall, {
 	initialize: function() {
 		this.xhr = this.createXhrObject();
@@ -104,4 +103,3 @@ var XhrHttpClientCall = new Class(ClientCall, {
 		}
 	}
 });
-// [enddef]

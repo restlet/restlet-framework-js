@@ -66,4 +66,3 @@ var Reference = new Class({
 		return this.path;
 	}
 });
-

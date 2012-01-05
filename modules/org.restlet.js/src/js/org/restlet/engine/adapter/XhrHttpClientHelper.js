@@ -1,4 +1,3 @@
-// [ifndef nodejs]
 var XhrHttpClientHelper = new Class(HttpClientHelper, {
 	initialize: function(client) {
 		this.client = client;
@@ -7,4 +6,3 @@ var XhrHttpClientHelper = new Class(HttpClientHelper, {
 		return new XhrHttpClientCall();
 	}
 });
-// [enddef]
