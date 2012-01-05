@@ -25,7 +25,7 @@ var Message = new Class({
 	}, 
 	setAttributes: function(attributes) {
 		this.attributes = attributes;
-	} 
+	},
 	//this.cacheDirectives = null;
 	getDate: function() {
 		return this.date;
