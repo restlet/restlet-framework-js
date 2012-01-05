@@ -1,0 +1,16 @@
+<project name="build-test" basedir="." default="tests">
+	<path id="restletjs-path">
+		<fileset dir="${basedir}/../target/lib" includes="**/*.jar" />
+	</path>
+	
+	<taskdef name="replaceInclude"
+	        classname="org.restlet.build.js.ReplaceIncludeTask"
+			classpathref="restletjs-path"/>
+
+	<target name="tests">
+		<replaceInclude srcFile="${basedir}/test.js"
+				destFile="${basedir}/target-test.js"
+				baseDir="${basedir}"/>
+	</target>
+	
+</project>
