@@ -5,8 +5,11 @@
 	<property name="src.dist.dir" value="${basedir}/src/dist" />
 	<property name="src.js.dir" value="${basedir}/src/js" />
 	<property name="lib.js.dir" value="${basedir}/lib/js" />
+	
+	<property name="utils.src.dir" value="${basedir}/../org.restlet.js.utils/src"/>
+	<property name="utils.src.js.dir" value="${utils.src.dir}/js"/>
 
-	<property name="tests.browser.dir" value="${basedir}/../org.restlet.js.tests/src/browser/static/restlet/" />
+	<property name="tests.browser.dir" value="${basedir}/../../tests/org.restlet.js.tests/src/browser/static/restlet/" />
 	
 	<path id="forge-path">
 		<fileset dir="${basedir}/lib/java/forge" includes="**/*.jar" />
@@ -45,6 +48,7 @@
 			classpathref="closure-compiler-path"/>
 
 	<target name="init">
+		<delete dir="${target.dir}"/>
 		<mkdir dir="${target.dir}"/>
 		<mkdir dir="${target.browser.dir}"/>
 		<mkdir dir="${target.browser.dir}/build"/>
@@ -55,8 +59,10 @@
 	<target name="build.browser" depends="init">
 		<!-- Including files in the file -->
 		<replaceInclude srcFile="${src.dist.dir}/restlet-browser.js"
-				destFile="${target.browser.dir}/build/restlet-browser.js"
-				baseDir="${src.js.dir}"/>
+				destFile="${target.browser.dir}/build/restlet-browser.js">
+			<fileset dir="${src.js.dir}"/>
+			<fileset dir="${utils.src.js.dir}"/>
+		</replaceInclude>
 		<!-- Cleaning and moving the file -->
 		<copy todir="${target.browser.dir}" overwrite="true" includeEmptyDirs="false">
 			<fileset dir="${target.browser.dir}/build" excludes="forge/**,target/**">

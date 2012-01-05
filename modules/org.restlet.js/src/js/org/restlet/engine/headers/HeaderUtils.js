@@ -207,7 +207,7 @@ HeaderUtils.extend({
 	},
 	addHeader: function(headerName, headerValue, headers) {
         if ((headerName != null) && (headerValue != null)
-                && (headerValue.length() > 0)) {
+                && (headerValue.length > 0)) {
             try {
                 headers.push(new Parameter(headerName, headerValue));
             } catch (err) {

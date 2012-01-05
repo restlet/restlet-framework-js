@@ -1,8 +1,9 @@
 var Reference = new Class({
 	initialize: function(urlString) {
-		/*console.log("#### Reference.initialize");
-		this.url = url;
-		console.log("url = "+url);
+        // [ifndef nodejs]
+		console.log("#### Reference.initialize");
+		this.url = urlString;
+		console.log("url = "+urlString);
 		var tmp = this.url;
 		console.log("tmp = "+tmp);
 		var index = tmp.indexOf("://");
@@ -27,28 +28,32 @@ var Reference = new Class({
 		if (index!=-1) {
 			this.port = parseInt(tmp.substring(0, index));
 			tmp = tmp.substring(index);
-		console.log("tmp = "+tmp);
-		this.path = tmp;*/
-		var urlDetails = url.parse(urlString);
-		this.protocol = urlDetails.protocol;
-		var index = -1;
-		if ((index = this.protocol.indexOf(":"))!=-1) {
-			this.protocol = this.protocol.substring(0, index);
+			console.log("tmp = "+tmp);
+			this.path = tmp;
 		}
-		this.host = urlDetails.hostname;
-		this.port = urlDetails.port;
-		if (typeof port=="undefined") {
-			if (this.protocol=="http") {
-				this.port = 80;
-			} else if (this.protocol=="http") {
-				this.port = 443;
-			}
-		}
-		this.path = urlDetails.pathname;
-		console.log("this.protocol = "+this.protocol);
-		console.log("this.host = "+this.host);
-		console.log("this.port = "+this.port);
-		console.log("this.path = "+this.path);
+		// [enddef]
+		// [ifdef nodejs] uncomment
+		//var urlDetails = url.parse(urlString);
+		//this.protocol = urlDetails.protocol;
+		//var index = -1;
+		//if ((index = this.protocol.indexOf(":"))!=-1) {
+		//	this.protocol = this.protocol.substring(0, index);
+		//}
+		//this.host = urlDetails.hostname;
+		//this.port = urlDetails.port;
+		//if (typeof port=="undefined") {
+		//	if (this.protocol=="http") {
+		//		this.port = 80;
+		//	} else if (this.protocol=="http") {
+		//		this.port = 443;
+		//	}
+		//}
+		//this.path = urlDetails.pathname;
+		//console.log("this.protocol = "+this.protocol);
+		//console.log("this.host = "+this.host);
+		//console.log("this.port = "+this.port);
+		//console.log("this.path = "+this.path);
+		// [enddef]
 	},
 	getUrl: function() {
 		return this.url;

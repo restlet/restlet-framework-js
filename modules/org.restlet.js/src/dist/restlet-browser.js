@@ -1,66 +1,18 @@
-// OOP and generic stuff
+// Utils
 
-function copyElements(obj1, obj2) {
-	var elt = null;
-	for (elt in obj1) {
-		if (elt != "initialize" || typeof obj1[elt] != "function") {
-			obj2[elt] = obj1[elt];
-		} else {
-			obj2["_"+elt] = obj1[elt];
-		}
-	}
-}
+#include org/restlet/js/utils/Class.js#
 
-var Class = function () {
-	var parent = null;
-	var content = null;
-	if (arguments.length == 1) {
-		content = arguments[0];
-	} else if (arguments.length == 2) {
-		parent = arguments[0];
-		content = arguments[1];
-	}
-	
-	var clazz = function () {
-		if (clazz.initializeExtend != null && clazz.initializeExtend == true) {
-			return;
-		}
-		if (content != null && content["initialize"] != null) {
-			content["initialize"].apply(this, arguments);
-		}
-	}
-	if (parent != null) {
-		copyElements(parent, clazz);
-		parent.initializeExtend = true;
-		clazz.prototype = new parent();
-		clazz.parent = parent.prototype;
-		parent.initializeExtend = null;
-		copyElements(content, clazz.prototype);
-		clazz.prototype["callSuper"] = function() {
-			if (clazz.parent["_initialize"] != null) {
-				var superInitialize = clazz.parent["_initialize"];
-				superInitialize.apply(this);
-			}
-		};
-	} else {
-		clazz.prototype = {};
-		copyElements(content, clazz.prototype);
-	}
-	clazz.extend = function (content) {
-		copyElements(content, this);
-	};
-	return clazz;
-};
+#include org/restlet/js/utils/String.js#
 
-String.prototype.equalsIgnoreCase = function (arg) {               
-    return (new String(this.toLowerCase())
-             == (new String(arg)).toLowerCase());
-};
-String.prototype.equals = function (arg) {
-	return (this.toString() == arg.toString());
-};
+#include org/restlet/js/utils/StringBuilder.js#
 
-//End OOP and generic stuff
+#include org/restlet/js/utils/Array.js#
+
+#include org/restlet/js/utils/Number.js#
+
+#include org/restlet/js/utils/DateFormat.js#
+
+//End Utils
 
 // Restlet
 
@@ -93,6 +45,10 @@ String.prototype.equals = function (arg) {
 #include org/restlet/engine/headers/HeaderWriterUtils.js#
 
 #include org/restlet/engine/headers/HeaderUtils.js#
+
+#include org/restlet/engine/headers/DateWriter.js#
+
+#include org/restlet/engine/util/DateUtils.js#
 
 #include org/restlet/data/Status.js#
 
