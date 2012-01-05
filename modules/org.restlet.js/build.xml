@@ -1,0 +1,101 @@
+<project name="org.restlet.js" basedir=".">
+
+	<property name="target.dir" value="${basedir}/target" />
+	<property name="target.browser.dir" value="${target.dir}/browser" />
+	<property name="target.nodejs.dir" value="${target.dir}/nodejs" />
+	<property name="src.dist.dir" value="${basedir}/src/dist" />
+	<property name="src.js.dir" value="${basedir}/src/js" />
+	<property name="lib.js.dir" value="${basedir}/lib/js" />
+
+	<property name="tests.browser.dir" value="${basedir}/../org.restlet.js.tests/src/browser/static/restlet/" />
+	
+	<path id="forge-path">
+		<fileset dir="${basedir}/lib/java/forge" includes="**/*.jar" />
+	</path>
+
+	<path id="jsmin-path">
+		<fileset dir="${basedir}/lib/java/jsmin" includes="**/*.jar" />
+	</path>
+
+	<path id="restletjs-path">
+		<fileset dir="${basedir}/lib/java/restletjs" includes="**/*.jar" />
+	</path>
+	
+	<path id="jslint-path">
+		<fileset dir="${basedir}/lib/java/jslint" includes="**/*.jar" />
+	</path>
+	
+	<path id="closure-compiler-path">
+		<fileset dir="${basedir}/lib/java/closurecompiler" includes="**/*.jar" />
+	</path>
+	
+	<taskdef name="jsmin"
+	        classname="net.matthaynes.jsmin.JSMin_Task"
+			classpathref="jsmin-path"/>
+
+	<taskdef name="replaceInclude"
+	        classname="org.restlet.build.js.ReplaceIncludeTask"
+			classpathref="restletjs-path"/>
+
+	<taskdef name="jslint"
+			classname="com.googlecode.jslint4java.ant.JSLintTask"
+			classpathref="jslint-path" />
+	
+	<taskdef name="jscomp"
+			classname="com.google.javascript.jscomp.ant.CompileTask"
+			classpathref="closure-compiler-path"/>
+
+	<target name="init">
+		<mkdir dir="${target.dir}"/>
+		<mkdir dir="${target.browser.dir}"/>
+		<mkdir dir="${target.browser.dir}/build"/>
+		<mkdir dir="${target.nodejs.dir}"/>
+		<mkdir dir="${target.nodejs.dir}/build"/>
+	</target>
+	
+	<target name="build.browser" depends="init">
+		<!-- Including files in the file -->
+		<replaceInclude srcFile="${src.dist.dir}/restlet-browser.js"
+				destFile="${target.browser.dir}/build/restlet-browser.js"
+				baseDir="${src.js.dir}"/>
+		<!-- Cleaning and moving the file -->
+		<copy todir="${target.browser.dir}" overwrite="true" includeEmptyDirs="false">
+			<fileset dir="${target.browser.dir}/build" excludes="forge/**,target/**">
+				<custom classname="selector.EditionFileSelector" classpathref="forge-path">
+					<param name="edition" value="browser"/>
+				</custom>
+	        	<include name="**/*.js" />
+			</fileset>
+			<filterchain>
+				<filterreader classname="filter.EditionFilterReader" classpathref="forge-path">
+					<param name="edition" value="browser" />
+				</filterreader>
+			</filterchain>
+	    </copy>
+		<!-- Code quality -->
+		<!--jslint options="undef,white">
+			<formatter type="plain" />
+			<formatter type="xml" destfile="${target.browser.dir}/jslint.xml" />
+			<fileset dir="${target.browser.dir}" includes="restlet-browser.js"/>
+		</jslint-->
+		<!-- Minimizing the file -->
+		<!--jsmin suffix="true" destdir="${target.browser.dir}">
+			<fileset dir="${target.browser.dir}" includes="restlet-browser.js"/>
+		</jsmin-->
+		<!-- Compile -->
+		<!-- jscomp compilationLevel="simple" warning="verbose" 
+				debug="false" output="${target.browser.dir}/restlet-browser-min.js">
+			<sources dir="${target.browser.dir}">
+				<file name="restlet-browser.js"/>
+			</sources>
+			<sources dir="${lib.js.dir}/jsonparser">
+				<file name="json-minified.js"/>
+			</sources>
+		</jscomp -->
+	</target>
+	
+	<target name="install.browser.for.tests" depends="build.browser">
+		<copy file="${target.browser.dir}/restlet-browser.js" todir="${tests.browser.dir}"/>
+	</target>
+
+</project>

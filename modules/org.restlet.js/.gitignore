@@ -1,0 +1,16 @@
+.DS_Store
+lib-cov
+*.seed
+*.log
+*.csv
+*.dat
+*.out
+*.pid
+*.swp
+*.swo
+benchmarks/graphs
+testing
+node_modules/
+testing
+.coverage_data
+cover_html
