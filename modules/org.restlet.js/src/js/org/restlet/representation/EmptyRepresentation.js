@@ -7,4 +7,3 @@ var EmptyRepresentation = new Class(Representation, {
 		return null;
 	}
 });
-
