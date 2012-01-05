@@ -1,7 +1,6 @@
 //var jsclass = require("./jsclass/core");
 var util = require("util");
 var http = require("http");
-var libxmljs = require("libxmljs");
 
 // OOP and generic stuff
 
@@ -13,7 +12,6 @@ function copyElements(obj1, obj2) {
 			obj2["_"+elt] = obj1[elt];
 		}
 	}
-
 }
 
 var Class = function() {
@@ -78,6 +76,22 @@ var Connector = new Class(Restlet, {
 			this.protocols = [];
 		}
 	},
+
+	getProtocols: function() {
+		return this.protocols;
+	}
+});
+
+var Connector = new Class(Restlet, {
+	initialize: function(context, protocols) {
+		this.context = context;
+		if (typeof protocols != "undefined" && protocols!=null) {
+			this.protocols = protocols;
+		} else {
+			this.protocols = [];
+		}
+	},
+
 	getProtocols: function() {
 		return this.protocols;
 	}
