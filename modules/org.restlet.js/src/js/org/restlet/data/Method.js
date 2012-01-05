@@ -9,9 +9,9 @@ var Method = new Class({
 	getName: function() {
 		return this.name;
 	},
-	equals: function(method) {
-		return (method!=null && this.name==method.getName());
-	}
+    equals: function(status) {
+    	return (this.getName()==status.getName());
+    }
 });
 
 Method.extend({

@@ -1,17 +1,12 @@
 var ClientAdapter = new Class({
 	initialize: function(context) {
-		
 	},
     readResponseHeaders: function(httpCall, response) {
-    	console.log("readResponseHeaders");
+    	console.log("> readResponseHeaders");
         try {
             var responseHeaders = httpCall.getResponseHeaders();
-        	console.log("responseHeaders = "+responseHeaders.length);
 
             // Put the response headers in the call's attributes map
-        	console.log("response = "+response);
-        	console.log("response = "+response.getAttributes);
-        	console.log("response = "+response.getAttributes());
             response.getAttributes()[HeaderConstants.ATTRIBUTE_HEADERS] = responseHeaders;
 
             HeaderUtils.copyResponseTransportHeaders(responseHeaders, response);
@@ -19,8 +14,10 @@ var ClientAdapter = new Class({
         	console.log(err);
             response.setStatus(Status.CONNECTOR_ERROR_INTERNAL, err);
         }
+    	console.log("< readResponseHeaders");
     },
     toSpecific: function(client, request) {
+    	console.log("> toSpecific");
         // Create the low-level HTTP client call
         var result = client.create(request);
 
@@ -38,17 +35,17 @@ var ClientAdapter = new Class({
             HeaderUtils.addRequestHeaders(request, result.getRequestHeaders());
         }
 
+    	console.log("< toSpecific");
         return result;
     },
     updateResponse: function(response, status, httpCall) {
-    	console.log("updateResponse");
+    	console.log("> updateResponse");
         // Send the request to the client
         response.setStatus(status);
 
         // Get the server address
-        //TODO:
-        //response.getServerInfo().setAddress(httpCall.getServerAddress());
-        //response.getServerInfo().setPort(httpCall.getServerPort());
+        response.getServerInfo().setAddress(httpCall.getServerAddress());
+        response.getServerInfo().setPort(httpCall.getServerPort());
 
         // Read the response headers
         this.readResponseHeaders(httpCall, response);
@@ -60,29 +57,32 @@ var ClientAdapter = new Class({
         if (response.getEntity() != null) {
             if (response.getEntity().getSize() == 0) {
                 response.getEntity().release();
-            } else if (response.getRequest().getMethod().equals(Method.HEAD)) {
+            } else if (response.getRequest().getMethod()==Method.HEAD) {
                 response.getEntity().release();
-            } else if (response.getStatus().equals(Status.SUCCESS_NO_CONTENT)) {
+            } else if (response.getStatus()==Status.SUCCESS_NO_CONTENT) {
                 response.getEntity().release();
             } else if (response.getStatus()
-                    .equals(Status.SUCCESS_RESET_CONTENT)) {
+                    ==Status.SUCCESS_RESET_CONTENT) {
                 response.getEntity().release();
                 response.setEntity(null);
-            } else if (response.getStatus().equals(
-                    Status.REDIRECTION_NOT_MODIFIED)) {
+            } else if (response.getStatus()==
+                    Status.REDIRECTION_NOT_MODIFIED) {
                 response.getEntity().release();
             } else if (response.getStatus().isInformational()) {
                 response.getEntity().release();
                 response.setEntity(null);
             }
         }
+    	console.log("< updateResponse");
     },
     commit: function(httpCall, request, callback) {
+    	console.log("> commit");
         if (httpCall != null) {
             // Send the request to the client
         	var currentThis = this;
             httpCall.sendRequest(request, function(response) {
                 try {
+                	console.log("internal callback");
                 	currentThis.updateResponse(response,
                             new Status(httpCall.getStatusCode(), null,
                                     httpCall.getReasonPhrase(), null),
@@ -100,5 +100,6 @@ var ClientAdapter = new Class({
                 }
             });
         }
+    	console.log("< commit");
     }
 });

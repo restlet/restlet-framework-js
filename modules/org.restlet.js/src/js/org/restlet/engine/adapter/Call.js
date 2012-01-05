@@ -1,20 +1,51 @@
 var Call = new Class({
-    /*private volatile String clientAddress;
-    private volatile int clientPort;
-    private volatile boolean confidential;
-    private volatile String hostDomain;
-    private volatile int hostPort;
-    private volatile String method;
-    private volatile Protocol protocol;
-    $$ private volatile String reasonPhrase;
-    $$ private final Series<Parameter> requestHeaders;
-    private volatile String requestUri;
-    $$ private final Series<Parameter> responseHeaders;
-    private volatile String serverAddress;
-    private volatile int serverPort;
-    $$ private volatile int statusCode;
-    private volatile String version;*/
-	getReasonPhrase: function() {
+	initialize: function() {
+		this.requestHeaders = [];
+		this.responseHeaders = [];
+	},
+	getClientAddress: function() {
+		return this.clientAddress;
+	},
+	setClientAddress: function(clientAddress) {
+		this.clientAddress = clientAddress;
+	},
+	getClientPort: function() {
+		return this.clientPort;
+	},
+	setClientPort: function(clientPort) {
+		this.clientPort = clientPort;
+	},
+	getConfidential: function() {
+		return this.confidential;
+	},
+	setConfidential: function(confidential) {
+		this.confidential = confidential;
+	},
+	getHostDomain: function() {
+		return this.hostDomain;
+	},
+	setHostDomain: function(hostDomain) {
+		this.hostDomain = hostDomain;
+	},
+	getHostPort: function() {
+		return this.hostPort;
+	},
+	setHostPort: function(hostPort) {
+		this.hostPort = hostPort;
+	},
+	getMethod: function() {
+		return this.method;
+	},
+	setMethod: function(method) {
+		this.method = method;
+	},
+	getProtocol: function() {
+		return this.protocol;
+	},
+	setProtocol: function(protocol) {
+		this.protocol = protocol;
+	},
+    getReasonPhrase: function() {
 		return this.reasonPhrase;
 	},
 	setReasonPhrase: function(reasonPhrase) {
@@ -26,6 +57,12 @@ var Call = new Class({
 	setRequestHeaders: function(requestHeaders) {
 		this.requestHeaders = requestHeaders;
 	},
+	getRequestUri: function() {
+		return this.requestUri;
+	},
+	setRequestUri: function(requestUri) {
+		this.requestUri = requestUri;
+	},
 	getResponseHeaders: function() {
 		console.log("call - getResponseHeaders - "+this.responseHeaders.length);
 		return this.responseHeaders;
@@ -34,10 +71,34 @@ var Call = new Class({
 		console.log("call - setResponseHeaders - "+this.responseHeaders+" | "+responseHeaders.length);
 		this.responseHeaders = responseHeaders;
 	},
+	getServerAddress: function() {
+		return this.serverAddress;
+	},
+	setServerAddress: function(serverAddress) {
+		this.serverAddress = serverAddress;
+	},
+	getServerPort: function() {
+		return this.serverPort;
+	},
+	setServerPort: function(serverPort) {
+		this.serverPort = serverPort;
+	},
 	getStatusCode: function() {
 		return this.statusCode;
 	},
 	setStatusCode: function(statusCode) {
 		this.statusCode = statusCode;
+	},
+	getStatusCode: function() {
+		return this.statusCode;
+	},
+	setStatusCode: function(statusCode) {
+		this.statusCode = statusCode;
+	},
+	getVersion: function() {
+		return this.version;
+	},
+	setVersion: function(version) {
+		this.version = version;
 	}
 });

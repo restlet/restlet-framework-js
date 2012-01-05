@@ -12,10 +12,10 @@ var HttpClientHelper = new Class({
             var clientCall = this.getAdapter().toSpecific(this, request);
             this.getAdapter().commit(clientCall, request, callback);
         } catch (err) {
+        	console.log(err);
             /*getLogger().log(Level.INFO,
                     "Error while handling an HTTP client call", e);*/
         	var response = new Response(request);
-        	console.log(err);
             response.setStatus(Status.CONNECTOR_ERROR_INTERNAL, err);
             response.setEntity(new Representation());
             callback(response);

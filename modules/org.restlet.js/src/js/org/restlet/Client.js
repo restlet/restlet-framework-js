@@ -1,7 +1,7 @@
 var Client = new Class(Connector, {
 	initialize: function(context, protocols, helper) {
-		this.callSuper(context, protocols);
 		//TODO:
+		//this.callSuper(context, protocols, helper);
 		this.setContext(context);
 		this.setProtocols(protocols);
 		
@@ -12,7 +12,6 @@ var Client = new Class(Connector, {
 			this.helper = helper;
 			return;
 		}
-		console.log("this.protocols = "+this.protocols);
 		if (this.protocols!=null && this.protocols.length>0) {
 			if (Engine.getInstance()!=null) {
 				this.helper = Engine.getInstance().createHelper(this);
@@ -28,8 +27,6 @@ var Client = new Class(Connector, {
 	},
 	handle: function(request, callback) {
         //this.callSuper(request, callback);
-		console.log("client.handle");
-		console.log("client.handle - this.getHelper() = "+this.getHelper());
 
         if (this.getHelper()!=null) {
             this.getHelper().handle(request, callback);
@@ -39,6 +36,7 @@ var Client = new Class(Connector, {
             sb.append("'").append(request.getProtocol().getName()).append("'.");
             sb.append(" Please add the JAR of a matching connector to your classpath.");
             response.setStatus(Status.CONNECTOR_ERROR_INTERNAL, sb.toString());*/
+        	console.log("No available client connector supports the required protocol: ");
         }
     }
 });

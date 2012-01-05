@@ -11,4 +11,3 @@ var Connector = new Class(Restlet, {
 		return this.protocols;
 	}
 });
-

@@ -1,43 +1,37 @@
 var ClientCall = new Class(Call, {
+	initialize: function() {
+		//TODO: fix recursive callSuper bug
+		//this.callSuper();
+		this.requestHeaders = [];
+		this.responseHeaders = [];
+	},
+	getContentLength: function() {
+		return HeaderUtils.getContentLength(this.getResponseHeaders());
+	},
 	getResponseEntity: function(response) {
 		console.log("> getResponseEntity");
         var result = response.getEntity();
-        //TODO:
-        // boolean available = false;
         var size = Representation.UNKNOWN_SIZE;
 
         // Compute the content length
         var responseHeaders = this.getResponseHeaders();
         console.log("responseHeaders = "+responseHeaders);
-        /*var transferEncoding = responseHeaders.getFirstValue(
-                HeaderConstants.HEADER_TRANSFER_ENCODING, true);
+        var transferEncoding = responseHeaders.getFirstValue(
+        			HeaderConstants.HEADER_TRANSFER_ENCODING, true);
         if ((transferEncoding != null)
-                && !"identity".equalsIgnoreCase(transferEncoding)) {
-            size = Representation.UNKNOWN_SIZE;
+        		&& !"identity".equalsIgnoreCase(transferEncoding)) {
+        	size = Representation.UNKNOWN_SIZE;
         } else {
-            size = getContentLength();
-        }*/
+        	size = this.getContentLength();
+        }
 
-        /*if (!getMethod().equals(Method.HEAD.getName())
+        if (!this.getMethod().equals(Method.HEAD)
                 && !response.getStatus().isInformational()
-                && !response.getStatus()
-                        .equals(Status.REDIRECTION_NOT_MODIFIED)
+                && !response.getStatus().equals(Status.REDIRECTION_NOT_MODIFIED)
                 && !response.getStatus().equals(Status.SUCCESS_NO_CONTENT)
                 && !response.getStatus().equals(Status.SUCCESS_RESET_CONTENT)) {
-            // Make sure that an InputRepresentation will not be instantiated
-            // while the stream is closed.
-            InputStream stream = getUnClosedResponseEntityStream(getResponseEntityStream(size));
-            // [ifndef gwt] line
-            java.nio.channels.ReadableByteChannel channel = getResponseEntityChannel(size);
-            // [ifdef gwt] line uncomment
-            // InputStream channel = null;
-
-            if (stream != null) {
-                result = getRepresentation(stream);
-            } else if (channel != null) {
-                result = getRepresentation(channel);
-            }
-        }*/
+        	result = response.getEntity();
+        }
 
         if (result != null) {
             result.setSize(size);

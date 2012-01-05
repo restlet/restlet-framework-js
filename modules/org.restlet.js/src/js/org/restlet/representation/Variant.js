@@ -10,10 +10,23 @@ var Variant = new Class({
 	},
 	setCharacterSet: function(characterSet) {
 		this.characterSet = characterSet;
+	},
+	getEncodings: function() {
+		return this.encodings;
+	},
+	setEncodings: function(encodings) {
+		this.encodings = encodings;
+	},
+	getLocationRef: function() {
+		return this.locationRef;
+	},
+	setLocationRef: function(locationRef) {
+		this.locationRef = locationRef;
+	},
+    getLanguages: function() {
+		return this.languages;
+	},
+	setLanguages: function(languages) {
+		this.languages = languages;
 	}
-    /*private volatile CharacterSet characterSet;
-    private volatile List<Encoding> encodings;
-    private volatile Reference locationRef;
-    private volatile List<Language> languages;
-    private volatile MediaType mediaType;*/
 });

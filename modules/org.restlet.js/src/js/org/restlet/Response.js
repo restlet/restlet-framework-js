@@ -12,7 +12,7 @@ var Response = new Class(Message, {
         this.proxyChallengeRequests = null;
         this.request = request;
         this.retryAfter = null;
-        this.serverInfo = null;
+        this.serverInfo = new ServerInfo();
         this.status = Status.SUCCESS_OK;
 	},
     /*this.age = 0;
@@ -47,5 +47,11 @@ var Response = new Class(Message, {
 	},
 	setStatus: function(status) {
 		this.status = status;
+	},
+	getLocationRef: function() {
+		return this.locationRef;
+	},
+	setLocationRef: function(locationRef) {
+		this.locationRef = locationRef;
 	}
 });

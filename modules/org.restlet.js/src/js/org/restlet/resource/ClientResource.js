@@ -98,7 +98,7 @@ var ClientResource = new Class({
 
         if (next != null) {
             // Effectively handle the call
-        	this.handleNext(request, callback/*, null, 0*/, next);
+        	this.handleNext(request, callback, next);
         } else {
         	//console
             /*getLogger()

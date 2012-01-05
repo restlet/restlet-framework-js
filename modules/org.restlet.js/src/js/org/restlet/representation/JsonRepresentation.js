@@ -16,7 +16,12 @@ var JsonRepresentation = new Class(Representation, {
 	},
 	getText: function() {
 		if (this.obj!=null) {
+	        // [ifndef nodejs]
 			return window.JSON.stringify(this.obj);
+			// [enddef]
+			// [ifdef nodejs] uncomment
+			//return JSON.stringify(this.obj);
+			// [enddef]
 		} else {
 			return "";
 		}

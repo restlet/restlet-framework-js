@@ -1,4 +1,4 @@
-var Restlet = new Class(Restlet, {
+var Restlet = new Class({
 	setContext: function(context) {
 		this.context = context;
 	},
