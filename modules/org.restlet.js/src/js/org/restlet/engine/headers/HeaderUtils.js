@@ -234,14 +234,14 @@ HeaderUtils.extend({
 	addRequestHeaders: function(request, headers) {
         var clientInfo = request.getClientInfo();
 
-        if (!clientInfo.getAcceptedMediaTypes().isEmpty()) {
+        /*if (!clientInfo.getAcceptedMediaTypes().isEmpty()) {
         	HeaderUtils.addHeader(HeaderConstants.HEADER_ACCEPT,
                     PreferenceWriter.write(clientInfo.getAcceptedMediaTypes()),
                     headers);
         } else {
         	HeaderUtils.addHeader(HeaderConstants.HEADER_ACCEPT, MediaType.ALL.getName(),
                     headers);
-        }
+        }*/
 
         /*if (!clientInfo.getAcceptedCharacterSets().isEmpty()) {
         	HeaderUtils.addHeader(HeaderConstants.HEADER_ACCEPT_CHARSET,
@@ -578,16 +578,16 @@ HeaderUtils.extend({
                                 Level.WARNING,
                                 "Error during Age header parsing. Header: "
                                         + header.getValue(), nfe);
-                    }
+                    }*/
                 } else if (header.getName().equalsIgnoreCase(
                         HeaderConstants.HEADER_DATE)) {
-                    Date date = DateUtils.parse(header.getValue());
+                    var date = DateUtils.parse(header.getValue());
 
                     if (date == null) {
                         date = new Date();
                     }
 
-                    response.setDate(date);*/
+                    response.setDate(date);
                 /*} else if (header.getName().equalsIgnoreCase(
                         HeaderConstants.HEADER_RETRY_AFTER)) {
                     // [ifndef gwt]

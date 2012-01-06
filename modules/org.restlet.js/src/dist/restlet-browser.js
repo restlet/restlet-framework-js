@@ -22,6 +22,8 @@
 
 #include org/restlet/data/ClientInfo.js#
 
+#include org/restlet/data/ServerInfo.js#
+
 #include org/restlet/Message.js#
 
 #include org/restlet/data/Reference.js#

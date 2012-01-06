@@ -1,9 +1,21 @@
 var Call = new Class({
 	initialize: function() {
-		this.requestHeaders = [];
+		this.hostDomain = null;
+        this.hostPort = -1;
+        this.clientAddress = null;
+        this.clientPort = -1;
+        this.confidential = false;
+        this.method = null;
+        this.protocol = null;
+        this.reasonPhrase = "";
+	    this.requestHeaders = [];
+        this.requestUri = null;
 		this.responseHeaders = [];
-	},
-	getClientAddress: function() {
+        this.serverAddress = null;
+        this.serverPort = -1;
+        this.statusCode = 200;
+        this.version = null;
+
 		return this.clientAddress;
 	},
 	setClientAddress: function(clientAddress) {

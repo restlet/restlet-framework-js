@@ -20,6 +20,9 @@ var ClientAdapter = new Class({
     	console.log("> toSpecific");
         // Create the low-level HTTP client call
         var result = client.create(request);
+        console.log("result = "+result);
+        console.log("result request headers = "+result.getRequestHeaders());
+        console.log("result response headers = "+result.getResponseHeaders());
 
         // Add the headers
         if (result != null) {

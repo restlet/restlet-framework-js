@@ -1,5 +1,6 @@
 var XhrHttpClientCall = new Class(ClientCall, {
 	initialize: function() {
+		this.callSuper();
 		this.xhr = this.createXhrObject();
 	},
 	createXhrObject: function() {
@@ -27,6 +28,7 @@ var XhrHttpClientCall = new Class(ClientCall, {
 		var response = new Response(request);
 		var url = request.getReference().getUrl();
 		var method = request.getMethod().getName();
+		this.method = request.getMethod();
 		var clientInfo = request.getClientInfo();
 		console.log("clientInfo = "+clientInfo);
 		var acceptedMediaTypes = clientInfo.getAcceptedMediaTypes();
