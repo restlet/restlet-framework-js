@@ -57,5 +57,8 @@ var Representation = new Class(RepresentationInfo, {
 			this.text = content.responseText;
 			this.xml = content.responseXML;
 		}
-	}
+	},
+	release: function() {
+        this.setAvailable(false);
+    }
 });

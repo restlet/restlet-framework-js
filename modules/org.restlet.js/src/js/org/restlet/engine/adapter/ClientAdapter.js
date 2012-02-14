@@ -23,12 +23,15 @@ var ClientAdapter = new Class({
         console.log("result = "+result);
         console.log("result request headers = "+result.getRequestHeaders());
         console.log("result response headers = "+result.getResponseHeaders());
+        console.log("request.getEntity() = "+request.getEntity());
 
         // Add the headers
         if (result != null) {
+            console.log("1");
             HeaderUtils.addGeneralHeaders(request, result.getRequestHeaders());
 
             if (request.getEntity() != null) {
+                console.log("2");
                 HeaderUtils.addEntityHeaders(request.getEntity(),
                         result.getRequestHeaders());
             }

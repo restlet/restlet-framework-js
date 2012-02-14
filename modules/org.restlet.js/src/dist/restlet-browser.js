@@ -42,13 +42,29 @@
 
 #include org/restlet/data/Parameter.js#
 
+#include org/restlet/data/Metadata.js#
+
+#include org/restlet/data/Encoding.js#
+
 #include org/restlet/engine/headers/HeaderReaderUtils.js#
 
 #include org/restlet/engine/headers/HeaderWriterUtils.js#
 
 #include org/restlet/engine/headers/HeaderUtils.js#
 
+#include org/restlet/engine/headers/HeaderReader.js#
+
 #include org/restlet/engine/headers/DateWriter.js#
+
+#include org/restlet/engine/headers/HeaderWriter.js#
+
+#include org/restlet/engine/headers/MetadataWriter.js#
+
+#include org/restlet/engine/headers/EncodingWriter.js#
+
+#include org/restlet/engine/headers/LanguageWriter.js#
+
+#include org/restlet/engine/headers/TagWriter.js#
 
 #include org/restlet/engine/util/DateUtils.js#
 

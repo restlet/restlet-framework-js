@@ -15,7 +15,7 @@ HeaderUtils.extend({
         	HeaderUtils.addHeader(HeaderConstants.HEADER_CONTENT_LANGUAGE,
                     LanguageWriter.write(entity.getLanguages()), headers);
 
-            if (entity.getLocationRef() != null) {
+            /*if (entity.getLocationRef() != null) {
             	HeaderUtils.addHeader(HeaderConstants.HEADER_CONTENT_LOCATION, entity
                         .getLocationRef().getTargetRef().toString(), headers);
             }
@@ -39,7 +39,7 @@ HeaderUtils.extend({
 
                 HeaderUtils.addHeader(HeaderConstants.HEADER_CONTENT_TYPE, contentType,
                         headers);
-            }
+            }*/
 
             if (entity.getExpirationDate() != null) {
             	HeaderUtils.addHeader(HeaderConstants.HEADER_EXPIRES,
@@ -56,13 +56,13 @@ HeaderUtils.extend({
                         TagWriter.write(entity.getTag()), headers);
             }
 
-            if (entity.getDisposition() != null
+            /*if (entity.getDisposition() != null
                     && !Disposition.TYPE_NONE.equals(entity.getDisposition()
                             .getType())) {
             	HeaderUtils.addHeader(HeaderConstants.HEADER_CONTENT_DISPOSITION,
                         DispositionWriter.write(entity.getDisposition()),
                         headers);
-            }
+            }*/
         }
 	},
 	addExtensionHeaders: function(existingHeaders, additionalHeaders) {
