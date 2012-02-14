@@ -12,7 +12,7 @@
 <script type="text/javascript"> 
 module("Simple Restlet JS client tests");
 
-asyncTest("Get with resource client", function() {
+/*asyncTest("Get with resource client", function() {
 	var request = new Request(Method.GET, "/contact/1");
 	var client = new Client(new Context(), [Protocol.HTTP]);
 	client.handle(request, function(response) {
@@ -22,7 +22,7 @@ asyncTest("Get with resource client", function() {
 	  ok(content, "{\"id\":\"1\",\"lastName\":\"lastName1\",\"firstName\":\"firstName1\",\"email\":null}");
 	  start();
 	});
-});
+});*/
 
 /*asyncTest("Get with resource client (json)", function() {
   var clientResource = new ClientResource("../resource/contact/1");
@@ -36,8 +36,8 @@ asyncTest("Get with resource client", function() {
   }, MediaType.APPLICATION_JSON);
 });*/
 
-/*asyncTest("Put with resource client (json)", function() {
-  var clientResource = new ClientResource("../resource/contact/1");
+asyncTest("Put with resource client (json)", function() {
+  var clientResource = new ClientResource("/contact/1");
   var contact = {
 	id: "1",
 	lastName: "lastName",
@@ -53,7 +53,7 @@ asyncTest("Get with resource client", function() {
 	  ok(obj.firstName, "firstName");
 	  start();
   }, MediaType.APPLICATION_JSON);
-});*/
+});
 </script> 
  </head>
  

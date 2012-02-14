@@ -28,10 +28,11 @@ public class SimpleContactServerResource
 	}
 
 	@Put
-	public void storeContact(
-			Representation representation, Variant variant) {
+	public Representation storeContact(Representation representation) {
+		System.out.println("1");
 		Contact contact = (new JacksonRepresentation<Contact>(
 				representation, Contact.class)).getObject();
 		contactService.storeContact(contact);
+		return new JacksonRepresentation<Contact>(contact);
 	}
 }

@@ -812,6 +812,82 @@ var Parameter = new Class({
 	}
 });
 
+var Metadata = new Class({
+	initialize: function(name, description) {
+		if (description==null) {
+			description = "Encoding applied to a representation";
+		}
+        this.name = name;
+        this.description = description;
+    },
+    getName: function() {
+    	return this.name;
+    },
+    getDescription: function() {
+    	return this.description;
+    }
+});
+
+var Encoding = new Class(Metadata, {
+	initialize: function(name, description) {
+		this.callSuper(name, description);
+		/*if (description==null) {
+			description = "Encoding applied to a representation";
+		}
+        this.name = name;
+        this.description = description;*/
+	}
+});
+Encoding.extend({
+    /** All encodings acceptable. */
+    ALL: new Encoding("*", "All encodings"),
+    /** The common Unix file compression. */
+    COMPRESS: new Encoding("compress",
+            	"Common Unix compression"),
+    /** The zlib format defined by RFC 1950 and 1951. */
+    DEFLATE: new Encoding("deflate",
+            "Deflate compression using the zlib format"),
+    FREEMARKER: new Encoding("freemarker",
+            "FreeMarker templated representation"),
+    /** The GNU Zip encoding. */
+    GZIP: new Encoding("gzip", "GZip compression"),
+    /** The default (identity) encoding. */
+    IDENTITY: new Encoding("identity",
+            "The default encoding with no transformation"),
+    /** The Velocity encoding. */
+    VELOCITY: new Encoding("velocity",
+            "Velocity templated representation"),
+    /** The Info-Zip encoding. */
+    ZIP: new Encoding("zip", "Zip compression"),
+    valueOf: function(name) {
+        var result = null;
+
+        if ((name != null) && !name.equals("")) {
+            if (name.equalsIgnoreCase(Encoding.ALL.getName())) {
+                result = Encoding.ALL;
+            } else if (name.equalsIgnoreCase(Encoding.GZIP.getName())) {
+                result = Encoding.GZIP;
+            } else if (name.equalsIgnoreCase(Encoding.ZIP.getName())) {
+                result = Encoding.ZIP;
+            } else if (name.equalsIgnoreCase(Encoding.COMPRESS.getName())) {
+                result = Encoding.COMPRESS;
+            } else if (name.equalsIgnoreCase(Encoding.DEFLATE.getName())) {
+                result = Encoding.DEFLATE;
+            } else if (name.equalsIgnoreCase(Encoding.IDENTITY.getName())) {
+                result = Encoding.IDENTITY;
+            } else if (name.equalsIgnoreCase(Encoding.FREEMARKER.getName())) {
+                result = Encoding.FREEMARKER;
+            } else if (name.equalsIgnoreCase(Encoding.VELOCITY.getName())) {
+                result = Encoding.VELOCITY;
+            } else {
+                result = new Encoding(name);
+            }
+        }
+
+        return result;
+    }
+});
+
 var HeaderReaderUtils = new Class({});
 
 HeaderReaderUtils.extend({
@@ -841,7 +917,7 @@ HeaderUtils.extend({
         	HeaderUtils.addHeader(HeaderConstants.HEADER_CONTENT_LANGUAGE,
                     LanguageWriter.write(entity.getLanguages()), headers);
 
-            if (entity.getLocationRef() != null) {
+            /*if (entity.getLocationRef() != null) {
             	HeaderUtils.addHeader(HeaderConstants.HEADER_CONTENT_LOCATION, entity
                         .getLocationRef().getTargetRef().toString(), headers);
             }
@@ -865,7 +941,7 @@ HeaderUtils.extend({
 
                 HeaderUtils.addHeader(HeaderConstants.HEADER_CONTENT_TYPE, contentType,
                         headers);
-            }
+            }*/
 
             if (entity.getExpirationDate() != null) {
             	HeaderUtils.addHeader(HeaderConstants.HEADER_EXPIRES,
@@ -882,13 +958,13 @@ HeaderUtils.extend({
                         TagWriter.write(entity.getTag()), headers);
             }
 
-            if (entity.getDisposition() != null
+            /*if (entity.getDisposition() != null
                     && !Disposition.TYPE_NONE.equals(entity.getDisposition()
                             .getType())) {
             	HeaderUtils.addHeader(HeaderConstants.HEADER_CONTENT_DISPOSITION,
                         DispositionWriter.write(entity.getDisposition()),
                         headers);
-            }
+            }*/
         }
 	},
 	addExtensionHeaders: function(existingHeaders, additionalHeaders) {
@@ -1718,18 +1794,578 @@ HeaderUtils.extend({
     }
 });
 
+var HeaderReader = new Class({
+	initialize: function(header) {
+        this.header = header;
+        this.index = ((header == null) || (header.length == 0)) ? -1 : 0;
+        this.mark = this.index;
+	},
+    readDate: function(date, cookie) {
+        if (cookie) {
+            return DateUtils.parse(date, DateUtils.FORMAT_RFC_1036);
+        }
+
+        return DateUtils.parse(date, DateUtils.FORMAT_RFC_1123);
+    },
+    readHeader: function(header) {
+        var result = null;
+
+        if (header.length > 0) {
+            // Detect the end of headers
+            var start = 0;
+            var index = 0;
+            var next = header.charAt(index++);
+
+            if (HeaderUtils.isCarriageReturn(next)) {
+                next = header.charAt(index++);
+
+                if (!HeaderUtils.isLineFeed(next)) {
+                    throw new Error(
+                            "Invalid end of headers. Line feed missing after the carriage return.");
+                }
+            } else {
+                result = new Parameter();
+
+                // Parse the header name
+                while ((index < header.length) && (next != ':')) {
+                    next = header.charAt(index++);
+                }
+
+                if (index == header.length) {
+                    throw new Error(
+                            "Unable to parse the header name. End of line reached too early.");
+                }
+
+                result.setName(header.substring(start, index - 1).toString());
+                next = header.charAt(index++);
+
+                while (HeaderUtils.isSpace(next)) {
+                    // Skip any separator space between colon and header value
+                    next = header.charAt(index++);
+                }
+
+                start = index - 1;
+
+                // Parse the header value
+                result.setValue(header.substring(start, header.length)
+                        .toString());
+            }
+        }
+
+        return result;
+    },
+    addValues: function(values) {
+        try {
+            // Skip leading spaces
+        	this.skipSpaces();
+
+            do {
+                // Read the first value
+                var nextValue = this.readValue();
+                if (this.canAdd(nextValue, values)) {
+                    // Add the value to the list
+                    values.push(nextValue);
+                }
+
+                // Attempt to skip the value separator
+                this.skipValueSeparator();
+            } while (this.peek() != -1);
+        } catch (err) {
+            //Context.getCurrentLogger().log(Level.INFO,
+            //        "Unable to read a header", ioe);
+        	console.log(err);
+        }
+    },
+    canAdd: function(value, values) {
+        if (value!=null) {
+        	for (var cpt=0;cpt<values.length;cpt++) {
+        		if (values[cpt]==value) {
+        			return false;
+        		}
+        	}
+        }
+        return true;
+    },
+    createParameter: function(name, value) {
+        return new Parameter(name, value);
+    },
+    mark: function() {
+        this.mark = this.index;
+    },
+    peek: function() {
+        var result = -1;
+
+        if (this.index != -1) {
+            result = this.header.charAt(this.index);
+        }
+
+        return result;
+    },
+    read: function() {
+        var result = -1;
+
+        if (this.index >= 0) {
+            result = this.header.charAt(this.index++);
+
+            if (this.index >= this.header.length) {
+                this.index = -1;
+            }
+        }
+        return result;
+    },
+    readComment: function() {
+        var result = null;
+        var next = this.read();
+
+        // First character must be a parenthesis
+        if (next == '(') {
+            var buffer = new StringBuilder();
+
+            while (result == null) {
+                next = this.read();
+
+                if (HeaderUtils.isCommentText(next)) {
+                    buffer.append(next);
+                } else if (HeaderUtils.isQuoteCharacter(next)) {
+                    // Start of a quoted pair (escape sequence)
+                    buffer.append(read());
+                } else if (next == '(') {
+                    // Nested comment
+                    buffer.append('(').append(this.readComment()).append(')');
+                } else if (next == ')') {
+                    // End of comment
+                    result = buffer.toString();
+                } else if (next == -1) {
+                    throw new Error(
+                            "Unexpected end of comment. Please check your value");
+                } else {
+                    throw new Error("Invalid character \"" + next
+                            + "\" detected in comment. Please check your value");
+                }
+            }
+        } else {
+            throw new Error("A comment must start with a parenthesis");
+        }
+
+        return result;
+    },
+    readDigits: function() {
+        var sb = new StringBuilder();
+        var next = this.read();
+
+        while (HeaderUtils.isTokenChar(next)) {
+            sb.append(next);
+            next = this.read();
+        }
+
+        // Unread the last character (separator or end marker)
+        this.unread();
+
+        return sb.toString();
+    },
+    readParameter: function() {
+        var result = null;
+        var name = this.readToken();
+        var nextChar = this.read();
+
+        if (name.length > 0) {
+            if (nextChar == '=') {
+                // The parameter has a value
+                result = this.createParameter(name, this.readParameterValue());
+            } else {
+                // The parameter has not value
+            	this.unread();
+                result = this.createParameter(name);
+            }
+        } else {
+            throw new Error(
+                    "Parameter or extension has no name. Please check your value");
+        }
+
+        return result;
+    },
+    readParameterValue: function() {
+         var result = null;
+
+        // Discard any leading space
+        this.skipSpaces();
+
+        // Detect if quoted string or token available
+        var nextChar = this.peek();
+
+        if (HeaderUtils.isDoubleQuote(nextChar)) {
+            result = this.readQuotedString();
+        } else if (HeaderUtils.isTokenChar(nextChar)) {
+            result = this.readToken();
+        }
+
+        return result;
+    },
+    readQuotedString: function() {
+        var result = null;
+        var next = this.read();
+
+        // First character must be a double quote
+        if (HeaderUtils.isDoubleQuote(next)) {
+            var buffer = new StringBuilder();
+
+            while (result == null) {
+                next = this.read();
+
+                if (HeaderUtils.isQuotedText(next)) {
+                    buffer.append(next);
+                } else if (HeaderUtils.isQuoteCharacter(next)) {
+                    // Start of a quoted pair (escape sequence)
+                    buffer.append(read());
+                } else if (HeaderUtils.isDoubleQuote(next)) {
+                    // End of quoted string
+                    result = buffer.toString();
+                } else if (next == -1) {
+                    throw new Error(
+                            "Unexpected end of quoted string. Please check your value");
+                } else {
+                    throw new Error(
+                            "Invalid character \""
+                                    + next
+                                    + "\" detected in quoted string. Please check your value");
+                }
+            }
+        } else {
+            throw new Error(
+                    "A quoted string must start with a double quote");
+        }
+
+        return result;
+    },
+    readRawText: function() {
+        // Read value until end or space
+        var sb = null;
+        var next = this.read();
+
+        while ((next != -1) && !HeaderUtils.isSpace(next) && !HeaderUtils.isComma(next)) {
+            if (sb == null) {
+                sb = new StringBuilder();
+            }
+
+            sb.append(next);
+            next = this.read();
+        }
+
+        // Unread the separator
+        if (HeaderUtils.isSpace(next) || HeaderUtils.isComma(next)) {
+            unread();
+        }
+
+        return (sb == null) ? null : sb.toString();
+    },
+    readRawValue: function() {
+        // Skip leading spaces
+    	this.skipSpaces();
+
+        // Read value until end or comma
+        var sb = null;
+        var next = this.read();
+
+        while ((next != -1) && !HeaderUtils.isComma(next)) {
+            if (sb == null) {
+                sb = new StringBuilder();
+            }
+
+            sb.append(next);
+            next = this.read();
+        }
+
+        // Remove trailing spaces
+        if (sb != null) {
+            for (var i = sb.length() - 1; (i >= 0)
+                    && HeaderUtils.isLinearWhiteSpace(sb.charAt(i)); i--) {
+                sb.deleteCharAt(i);
+            }
+        }
+
+        // Unread the separator
+        if (HeaderUtils.isComma(next)) {
+        	this.unread();
+        }
+
+        return (sb == null) ? null : sb.toString();
+    },
+    readToken: function() {
+        var sb = new StringBuilder();
+        var next = this.read();
+
+        while (HeaderUtils.isTokenChar(next)) {
+            sb.append(next);
+            next = this.read();
+        }
+        
+        // Unread the last character (separator or end marker)
+        this.unread();
+
+        return sb.toString();
+    },
+    /*public V readValue() throws IOException {
+        return null;
+    },*/
+    readValues: function() {
+        var result = [];
+        addValues(result);
+        return result;
+    },
+    reset: function() {
+        this.index = this.mark;
+    },
+    skipParameterSeparator: function() {
+        var result = false;
+        // Skip leading spaces
+        this.skipSpaces();
+        // Check if next character is a parameter separator
+        if (HeaderUtils.isSemiColon(read())) {
+            result = true;
+            // Skip trailing spaces
+            this.skipSpaces();
+        } else {
+            // Probably reached the end of the header
+        	this.unread();
+        }
+        return result;
+    },
+    skipSpaces: function() {
+        var result = false;
+        var next = this.peek();
+
+        while (HeaderUtils.isLinearWhiteSpace(next) && (next != -1)) {
+            result = result || HeaderUtils.isLinearWhiteSpace(next);
+            this.read();
+            next = this.peek();
+        }
+
+        return result;
+    },
+    skipValueSeparator: function() {
+        var result = false;
+        this.skipSpaces();
+        if (HeaderUtils.isComma(this.read())) {
+            result = true;
+            this.skipSpaces();
+        } else {
+        	this.unread();
+        }
+        return result;
+    },
+	unread: function() {
+        if (this.index > 0) {
+            this.index--;
+        }
+    }
+});
+
 var DateWriter = new Class({});
 
 DateWriter.extend({
-    write: function(date) {
+    /*write: function(date) {
         return DateWriter.write(date, false);
-    },
+    },*/
     write: function(date, cookie) {
         if (cookie) {
             return DateUtils.format(date, DateUtils.FORMAT_RFC_1036[0]);
         }
         return DateUtils.format(date);
     }
+});
+
+var HeaderWriter = new Class({
+    initialize: function() {
+    	this.content = [];
+    },
+
+    append: function(text) {
+		this.content.push(text);
+	},
+	
+	toString: function() {
+		return this.content.join("");
+	},
+
+    appendCollection: function(values) {
+        if ((values != null) && !values.isEmpty()) {
+            var first = true;
+
+            for (var i=0; i<values.length; i++) {
+            	var value = values[i];
+                if (this.canWrite(value)) {
+                    if (first) {
+                        first = false;
+                    } else {
+                        this.appendValueSeparator();
+                    }
+
+                    if (typeof value == "string") {
+                    	this.append(value);
+                    } else {
+                    	this.appendObject(value);
+                    }
+                }
+            }
+        }
+
+        return this;
+    },
+
+	appendComment: function(content) {
+        this.append("(");
+        var c;
+
+        for (var i = 0; i < content.length(); i++) {
+            c = content.charAt(i);
+
+            if (HeaderUtils.isCommentText(c)) {
+                this.append(c);
+            } else {
+            	this.appendQuotedPair(c);
+            }
+        }
+
+        return this.append(")");
+    },
+
+    appendExtension: function(extension) {
+        if (extension != null) {
+            return this.appendExtension(extension.getName(), extension.getValue());
+        } else {
+            return this;
+        }
+    },
+
+    appendExtension: function(name, value) {
+        if ((name != null) && (name.length() > 0)) {
+            this.append(name);
+
+            if ((value != null) && (value.length() > 0)) {
+            	this.append("=");
+
+                if (HeaderUtils.isToken(value)) {
+                	this.append(value);
+                } else {
+                	this.appendQuotedString(value);
+                }
+            }
+        }
+
+        return this;
+    },
+
+    appendParameterSeparator: function() {
+        return this.append(";");
+    },
+
+    appendProduct: function(name, version) {
+        this.appendToken(name);
+
+        if (version != null) {
+            this.append("/").appendToken(version);
+        }
+
+        return this;
+    },
+
+    appendQuotedPair: function(character) {
+        return this.append("\\").append(character);
+    },
+
+    appendQuotedString: function(content) {
+        if ((content != null) && (content.length() > 0)) {
+            this.append("\"");
+            var c;
+
+            for (var i = 0; i < content.length(); i++) {
+                c = content.charAt(i);
+
+                if (HeaderUtils.isQuotedText(c)) {
+                    this.append(c);
+                } else {
+                    this.appendQuotedPair(c);
+                }
+            }
+
+            this.append("\"");
+        }
+
+        return this;
+    },
+
+    appendSpace: function() {
+        return this.append(" ");
+    },
+
+    appendToken: function(token) {
+        if (HeaderUtils.isToken(token)) {
+            return this.append(token);
+        } else {
+            throw new Error(
+                    "Unexpected character found in token: " + token);
+        }
+    },
+
+    appendUriEncoded: function(source, characterSet) {
+        return this.append(Reference.encode(source.toString(), characterSet));
+    },
+
+    appendValueSeparator: function() {
+        return this.append(", ");
+    },
+
+    canWrite: function(value) {
+        return (value != null);
+    }
+});
+
+var MetadataWriter = new Class(HeaderWriter, {
+    appendObject: function(metadata) {
+        return this.append(metadata.getName());
+    }
+});
+
+var EncodingWriter = new Class(MetadataWriter, {
+    initialize: function(header) {
+        this.callSuper(header);
+    },
+    canAdd: function(value, values) {
+        return value != null && !Encoding.IDENTITY.getName().equals(value.getName());
+    },
+    readValue: function() {
+        return Encoding.valueOf(this.readToken());
+    }
+});
+
+EncodingWriter.extend({
+	write: function(encodings) {
+        return new EncodingWriter().appendCollection(encodings).toString();
+    }
+});
+
+var LanguageWriter = new Class(MetadataWriter, {
+    initialize: function(header) {
+        this.callSuper(header);
+    },
+});
+
+LanguageWriter.extend({
+	write: function(languages) {
+        return new LanguageWriter().appendCollection(languages).toString();
+    }
+});
+
+var TagWriter = new Class(HeaderWriter, {
+    appendObject: function(tag) {
+        return this.append(tag.format());
+    }
+});
+
+TagWriter.extend({
+	write: function(tags) {
+	    return new TagWriter().appendCollection(tags).toString();
+	}
 });
 
 var DateUtils = new Class({});
@@ -3074,12 +3710,15 @@ var ClientAdapter = new Class({
         console.log("result = "+result);
         console.log("result request headers = "+result.getRequestHeaders());
         console.log("result response headers = "+result.getResponseHeaders());
+        console.log("request.getEntity() = "+request.getEntity());
 
         // Add the headers
         if (result != null) {
+            console.log("1");
             HeaderUtils.addGeneralHeaders(request, result.getRequestHeaders());
 
             if (request.getEntity() != null) {
+                console.log("2");
                 HeaderUtils.addEntityHeaders(request.getEntity(),
                         result.getRequestHeaders());
             }
@@ -3353,7 +3992,10 @@ var Representation = new Class(RepresentationInfo, {
 			this.text = content.responseText;
 			this.xml = content.responseXML;
 		}
-	}
+	},
+	release: function() {
+        this.setAvailable(false);
+    }
 });
 
 var EmptyRepresentation = new Class(Representation, { 
