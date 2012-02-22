@@ -46,6 +46,12 @@
 
 #include org/restlet/data/Encoding.js#
 
+#include org/restlet/util/Series.js#
+
+#include org/restlet/data/Form.js#
+
+#include org/restlet/data/Preference.js#
+
 #include org/restlet/engine/headers/HeaderReaderUtils.js#
 
 #include org/restlet/engine/headers/HeaderWriterUtils.js#
@@ -64,7 +70,9 @@
 
 #include org/restlet/engine/headers/LanguageWriter.js#
 
-#include org/restlet/engine/headers/TagWriter.js#
+#include org/restlet/engine/headers/LanguageWriter.js#
+
+#include org/restlet/engine/headers/PreferenceWriter.js#
 
 #include org/restlet/engine/util/DateUtils.js#
 

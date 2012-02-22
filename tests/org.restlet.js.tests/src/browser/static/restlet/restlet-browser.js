@@ -409,7 +409,7 @@ var ClientInfo = new Class({
 	 */
 		this.acceptedMediaTypes = [];
 		if (arguments.length==1 && arguments[0] instanceof MediaType) {
-			this.acceptedMediaTypes.push(arguments[0]);
+			this.acceptedMediaTypes.push(new Preference(arguments[0]));
 		}
 	},
 	getAcceptedMediaTypes: function() {
@@ -825,6 +825,9 @@ var Metadata = new Class({
     },
     getDescription: function() {
     	return this.description;
+    },
+    toString: function() {
+    	return this.getName();
     }
 });
 
@@ -888,6 +891,357 @@ Encoding.extend({
     }
 });
 
+var Series = new Class({
+	initialize: function() {
+		this.array = [];
+	},
+
+	size: function() {
+		return this.array.length;
+	},
+	
+	add: function(name, value) {
+		return this.array.push(this.createEntry(name, value));
+	},
+
+	equals: function(value1, value2, ignoreCase) {
+		var result = (value1 == value2);
+
+		if (!result) {
+			if ((value1 != null) && (value2 != null)) {
+				if (ignoreCase) {
+					result = value1.equalsIgnoreCase(value2);
+				} else {
+					result = value1.equals(value2);
+				}
+			}
+		}
+
+		return result;
+	},
+
+	getFirst: function(name, ignoreCase) {
+		if (ignoreCase==null) {
+			ignoreCase = false;
+		}
+
+		for (var i=0; i<this.array.length; i++) {
+			var param = this.array[i];
+			if (this.equals(param.getName(), name, ignoreCase)) {
+				return param;
+			}
+		}
+
+		return null;
+	},
+
+	getFirstValue: function() {
+		var name = arguments[0];
+		var ignoreCase= false;
+		var defaultValue = null;
+		if (arguments.length==2 && typeof arguments[1] == "string") {
+			defaultValue = arguments[1];
+		} else if (arguments.length==2) {
+			ignoreCase = arguments[1]
+		}
+
+		var result = defaultValue;
+		var param = this.getFirst(name, ignoreCase);
+
+		if ((param != null) && (param.getValue() != null)) {
+			result = param.getValue();
+		}
+
+		return result;
+	},
+
+	//public String getFirstValue(String name, String defaultValue) {
+
+	getNames: function() {
+		var result = [];
+
+		for (var i=0; i<this.array.length; i++) {
+			var param = this.array[i];
+			result.push(param.getName());
+		}
+
+		return result;
+	},
+
+	getValues: function(name, separator, ignoreCase) {
+		if (separator==null) {
+			separator = ",";
+		}
+		if (ignoreCase==null) {
+			ignoreCase = true;
+		}
+		var result = null;
+		var sb = null;
+
+		for (var i=0; i<this.array.length; i++) {
+			var param = this.array[i];
+			if ((ignoreCase && param.getName().equalsIgnoreCase(name))
+					|| param.getName().equals(name)) {
+				if (sb == null) {
+					if (result == null) {
+						result = param.getValue();
+					} else {
+						sb = new StringBuilder();
+						sb.append(result).append(separator)
+								.append(param.getValue());
+					}
+				} else {
+					sb.append(separator).append(param.getValue());
+				}
+			}
+		}
+
+		if (sb != null) {
+			result = sb.toString();
+		}
+
+		return result;
+	},
+
+	getValuesArray: function() {
+		var name = arguments[0];
+		var ignoreCase= false;
+		var defaultValue = null;
+		if (arguments.length==2 && typeof arguments[1] == "string") {
+			defaultValue = arguments[1];
+		} else if (arguments.length==2) {
+			ignoreCase = arguments[1]
+		}
+
+		var result = null;
+		var params = this.subList(name, ignoreCase);
+
+		if ((params.size() == 0) && (defaultValue != null)) {
+			result = [];
+			result.push(defaultValue);
+		} else {
+			result = [];
+
+			for (var i = 0; i < params.length; i++) {
+				result.push(params.get[i].getValue());
+			}
+		}
+
+		return result;
+	},
+
+	getValuesMap: function() {
+		var result = {};
+
+		for (var i=0; i<this.array.length; i++) {
+			if (!result[param.getName()]) {
+				result[param.getName()] = param.getValue();
+			}
+		}
+
+		return result;
+	},
+
+	removeAll: function(name, ignoreCase) {
+		if (ignoreCase==null) {
+			ignoreCase = false;
+		}
+
+		var changed = false;
+		var param = null;
+
+		for (var i=0; i<this.array.length; i++) {
+			var param = this.array[i];
+
+			if (this.equals(param.getName(), name, ignoreCase)) {
+				this.array.splice(i, i);
+				i--;
+				changed = true;
+			}
+		}
+
+		return changed;
+	},
+
+	removeFirst: function(name, ignoreCase) {
+		if (ignoreCase==null) {
+			ignoreCase = false;
+		}
+		var changed = false;
+		var param = null;
+
+		for (var i=0; i<this.array.length && !changed; i++) {
+			param = this.array[i];
+			if (this.equals(param.getName(), name, ignoreCase)) {
+				this.array.splice(i, i);
+				i--;
+				changed = true;
+			}
+		}
+
+		return changed;
+	},
+
+	set: function(name, value, ignoreCase) {
+		if (ignoreCase==null) {
+			ignoreCase = false;
+		}
+		var result = null;
+		var param = null;
+		var found = false;
+
+		for (var i=0; i<this.array.length; i++) {
+			param = this.array[i];
+
+			if (this.equals(param.getName(), name, ignoreCase)) {
+				if (found) {
+					// Remove other entries with the same name
+					iter.remove();
+					this.array.splice(i, i);
+					i--;
+				} else {
+					// Change the value of the first matching entry
+					found = true;
+					param.setValue(value);
+					result = param;
+				}
+			}
+		}
+
+		if (!found) {
+			this.add(name, value);
+		}
+
+		return result;
+		
+	},
+
+	subList: function(name, ignoreCase) {
+		if (ignoreCase==null) {
+			ignoreCase = false;
+		}
+
+		var result = [];
+
+		for (var i=0; i<this.array.length; i++) {
+			if (this.equals(param.getName(), name, ignoreCase)) {
+				result.add(param);
+			}
+		}
+
+		return result;
+	}
+
+});
+
+var Form = new Class(Series, {
+	initialize: function() {
+		this.callSuper();
+	},
+
+	createEntry: function(name, value) {
+		return new Parameter(name, value);
+	},
+
+	encode: function(characterSet, separator) {
+		if (characterSet==null) {
+			characterSet = CharacterSet.UTF_8;
+		}
+		if (separator==null) {
+			separator = "&";
+		}
+		var sb = new StringBuilder();
+
+		for (var i = 0; i < this.size(); i++) {
+			if (i > 0) {
+				sb.append(separator);
+			}
+
+			this.get(i).encode(sb, characterSet);
+		}
+
+		return sb.toString();
+	},
+
+	getMatrixString: function(characterSet) {
+		if (characterSet==null) {
+			characterSet = CharacterSet.UTF_8;
+		}
+
+		try {
+			return encode(characterSet, ';');
+		} catch (err) {
+			return null;
+		}
+	},
+
+	getQueryString: function(characterSet) {
+		if (characterSet==null) {
+			characterSet = CharacterSet.UTF_8;
+		}
+
+		try {
+			return this.encode(characterSet);
+		} catch (err) {
+			return null;
+		}
+	},
+
+	getWebRepresentation: function(characterSet) {
+		if (characterSet==null) {
+			characterSet = CharacterSet.UTF_8;
+		}
+
+		return new StringRepresentation(this.getQueryString(characterSet),
+				MediaType.APPLICATION_WWW_FORM, null, characterSet);
+	}
+});
+
+var Preference = new Class({
+	initialize: function(metadata, quality, parameters) {
+        this.metadata = metadata;
+        if (quality==null) {
+        	this.quality = 1;
+        } else {
+        	this.quality = quality;
+        }
+        
+        this.parameters = parameters;
+	},
+
+    getMetadata: function() {
+        return this.metadata;
+    },
+
+    getParameters: function() {
+        if (this.parameters == null) {
+        	this.parameters = new Series();
+        }
+        return this.parameters;
+    },
+
+    getQuality: function() {
+        return this.quality;
+    },
+
+    setMetadata: function(metadata) {
+        this.metadata = metadata;
+    },
+
+    setParameters: function(parameters) {
+        this.parameters = parameters;
+    },
+
+    setQuality: function(quality) {
+        this.quality = quality;
+    },
+
+    toString: function() {
+        return (this.getMetadata() == null) ? ""
+                : (this.getMetadata().getName() + ":" + this.getQuality());
+    }
+});
+
 var HeaderReaderUtils = new Class({});
 
 HeaderReaderUtils.extend({
@@ -917,19 +1271,21 @@ HeaderUtils.extend({
         	HeaderUtils.addHeader(HeaderConstants.HEADER_CONTENT_LANGUAGE,
                     LanguageWriter.write(entity.getLanguages()), headers);
 
-            /*if (entity.getLocationRef() != null) {
+            if (entity.getLocationRef() != null) {
             	HeaderUtils.addHeader(HeaderConstants.HEADER_CONTENT_LOCATION, entity
                         .getLocationRef().getTargetRef().toString(), headers);
             }
 
-            if (entity.getRange() != null) {
+            /*if (entity.getRange() != null) {
             	HeaderUtils.HeaderUtils.addHeader(HeaderConstants.HEADER_CONTENT_RANGE,
                         RangeWriter.write(entity.getRange(), entity.getSize()),
                         headers);
-            }
+            }*/
 
+        	console.log("entity.getMediaType() = "+entity.getMediaType());
             if (entity.getMediaType() != null) {
                 var contentType = entity.getMediaType().toString();
+            	console.log("contentType = "+contentType.toString());
 
                 // Specify the character set parameter if required
                 if ((entity.getMediaType().getParameters()
@@ -939,9 +1295,10 @@ HeaderUtils.extend({
                             + entity.getCharacterSet().getName();
                 }
 
+            	console.log("contentType = "+contentType.toString());
                 HeaderUtils.addHeader(HeaderConstants.HEADER_CONTENT_TYPE, contentType,
                         headers);
-            }*/
+            }
 
             if (entity.getExpirationDate() != null) {
             	HeaderUtils.addHeader(HeaderConstants.HEADER_EXPIRES,
@@ -1108,9 +1465,11 @@ HeaderUtils.extend({
                 WarningWriter.write(message.getWarnings()), headers);*/
 	},
 	addHeader: function(headerName, headerValue, headers) {
+		console.log("> addHeader");
         if ((headerName != null) && (headerValue != null)
                 && (headerValue.length > 0)) {
             try {
+            	console.log("  ## adding header "+headerName+" : "+headerValue);
                 headers.push(new Parameter(headerName, headerValue));
             } catch (err) {
             	console.log(err);
@@ -1118,6 +1477,7 @@ HeaderUtils.extend({
                         "Unable to format the " + headerName + " header", t);*/
             }
         }
+		console.log("< addHeader");
 	},
 	addNotModifiedEntityHeaders: function(entity, headers) {
         if (entity != null) {
@@ -1136,14 +1496,14 @@ HeaderUtils.extend({
 	addRequestHeaders: function(request, headers) {
         var clientInfo = request.getClientInfo();
 
-        /*if (!clientInfo.getAcceptedMediaTypes().isEmpty()) {
+        if (!clientInfo.getAcceptedMediaTypes().isEmpty()) {
         	HeaderUtils.addHeader(HeaderConstants.HEADER_ACCEPT,
                     PreferenceWriter.write(clientInfo.getAcceptedMediaTypes()),
                     headers);
         } else {
         	HeaderUtils.addHeader(HeaderConstants.HEADER_ACCEPT, MediaType.ALL.getName(),
                     headers);
-        }*/
+        }
 
         /*if (!clientInfo.getAcceptedCharacterSets().isEmpty()) {
         	HeaderUtils.addHeader(HeaderConstants.HEADER_ACCEPT_CHARSET,
@@ -2356,16 +2716,76 @@ LanguageWriter.extend({
     }
 });
 
-var TagWriter = new Class(HeaderWriter, {
-    appendObject: function(tag) {
-        return this.append(tag.format());
+var LanguageWriter = new Class(MetadataWriter, {
+    initialize: function(header) {
+        this.callSuper(header);
+    },
+});
+
+LanguageWriter.extend({
+	write: function(languages) {
+        return new LanguageWriter().appendCollection(languages).toString();
     }
 });
 
-TagWriter.extend({
-	write: function(tags) {
-	    return new TagWriter().appendCollection(tags).toString();
-	}
+var PreferenceWriter = new Class(HeaderWriter, {
+	initialize: function() {
+		this.callSuper();
+	},
+
+	appendObject: function(pref) {
+        this.append(pref.getMetadata().getName());
+
+        if (pref.getQuality() < 1) {
+            this.append(";q=");
+            this.appendQuality(pref.getQuality());
+        }
+
+        if (pref.getParameters() != null) {
+            var param;
+
+            var params = pref.getParameters();
+            for (var i=0; i<params.length; i++) {
+                param = params[i];
+
+                if (param.getName() != null) {
+                    this.append(';').append(param.getName());
+
+                    if ((param.getValue() != null)
+                            && (param.getValue().length() > 0)) {
+                        this.append('=').append(param.getValue());
+                    }
+                }
+            }
+        }
+
+        return this;
+    },
+
+    appendQuality: function(quality) {
+        if (!HeaderUtils.isValidQuality(quality)) {
+            throw new Error(
+                    "Invalid quality value detected. Value must be between 0 and 1.");
+        }
+
+        //TODO: implement number format for JS
+        /*java.text.NumberFormat formatter = java.text.NumberFormat
+                .getNumberInstance(java.util.Locale.US);
+        formatter.setMaximumFractionDigits(2);
+        append(formatter.format(quality));*/
+
+        return this;
+    }
+});
+
+PreferenceWriter.extend({
+    isValidQuality: function(quality) {
+        return (quality >= 0) && (quality <= 1);
+    },
+
+    write: function(prefs) {
+        return new PreferenceWriter().appendCollection(prefs).toString();
+    }
 });
 
 var DateUtils = new Class({});
@@ -3609,18 +4029,10 @@ var XhrHttpClientCall = new Class(ClientCall, {
 		var method = request.getMethod().getName();
 		this.method = request.getMethod();
 		var clientInfo = request.getClientInfo();
-		console.log("clientInfo = "+clientInfo);
-		var acceptedMediaTypes = clientInfo.getAcceptedMediaTypes();
-		var acceptHeader = "";
-		for (var i=0;i<acceptedMediaTypes.length;i++) {
-			if (i>0) {
-				acceptHeader += ",";
-			}
-			acceptHeader += acceptedMediaTypes[i].getType();
-		}
 		var headers = {};
-		if (acceptHeader!="") {
-			headers["accept"] = acceptHeader;
+		for (var i=0; i<this.requestHeaders.length; i++) {
+			var requestHeader = this.requestHeaders[i];
+			headers[requestHeader.getName()] = requestHeader.getValue();
 		}
 		var data = "";
 		if (request.getEntity()!=null) {
@@ -3632,8 +4044,8 @@ var XhrHttpClientCall = new Class(ClientCall, {
 			currentThis.extractResponseHeaders(xhr);
 
 			var representation = new Representation();
-			/*representation = HeaderUtils.extractEntityHeaders(
-								currentThis.getResponseHeaders(xhr), representation);*/
+			representation = HeaderUtils.extractEntityHeaders(
+								currentThis.getResponseHeaders(xhr), representation);
 			representation.write(xhr);
 			var status = new Status(xhr.status);
 			response.setStatus(status);
@@ -3874,20 +4286,244 @@ var Client = new Class(Connector, {
     }
 });
 
-var MediaType = new Class({
-	initialize: function(type) {
-		this.type = type;
+var MediaTypeUtils = new Class({});
+MediaTypeUtils.extend({
+    _TSPECIALS: "()<>@,;:/[]?=\\\"",
+
+    normalizeToken: function(token) {
+        var length;
+        var c;
+
+        // Makes sure we're not dealing with a "*" token.
+        token = token.trim();
+        if ("".equals(token) || "*".equals(token))
+            return "*";
+
+        // Makes sure the token is RFC compliant.
+        length = token.length;
+        for (var i = 0; i < length; i++) {
+            c = token.charAt(i);
+            if (c <= 32 || c >= 127 || MediaTypeUtils._TSPECIALS.indexOf(c) != -1)
+                throw new ERROR("Illegal token: " + token);
+        }
+
+        return token;
     },
-	getType: function() {
-		return this.type;
-	}
+
+	normalizeType: function(name, parameters) {
+        var slashIndex;
+        var colonIndex;
+        var mainType;
+        var subType;
+        var params = null;
+
+        // Ignore null names (backward compatibility).
+        if (name == null)
+            return null;
+
+        // Check presence of parameters
+        if ((colonIndex = name.indexOf(';')) != -1) {
+            params = new StringBuilder(name.substring(colonIndex));
+            name = name.substring(0, colonIndex);
+        }
+
+        // No main / sub separator, assumes name/*.
+        if ((slashIndex = name.indexOf('/')) == -1) {
+            mainType = MediaTypeUtils.normalizeToken(name);
+            subType = "*";
+        } else {
+            // Normalizes the main and sub types.
+            mainType = MediaTypeUtils.normalizeToken(name.substring(0, slashIndex));
+            subType = MediaTypeUtils.normalizeToken(name.substring(slashIndex + 1));
+        }
+
+        // Merge parameters taken from the name and the method argument.
+        if (parameters != null && !parameters.isEmpty()) {
+            if (params == null) {
+                params = new StringBuilder();
+            }
+            var hw = new HeaderWriter();
+            hw.appendObject = function(value) {
+            	return this.appendExtension(value);
+            };
+            for (var i = 0; i < parameters.size(); i++) {
+                var p = parameters.get(i);
+                hw.appendParameterSeparator();
+                hw.appendSpace();
+                hw.appendObject(p);
+            }
+            params.append(hw.toString());
+        }
+
+        return (params == null) ? mainType + '/' + subType : mainType + '/'
+                + subType + params.toString();
+    }
 });
+
+var MediaType = new Class(Metadata, {
+	initialize: function(name, parameters, description) {
+		if (description==null) {
+			description = "Media type or range of media types";
+		}
+		//alert("MediaType = "+MediaType);
+        this.callSuper(MediaTypeUtils.normalizeType(name, parameters), description);
+    },
+
+    getMainType: function() {
+        var result = null;
+
+        if (this.getName() != null) {
+            var index = this.getName().indexOf('/');
+
+            // Some clients appear to use name types without subtypes
+            if (index == -1) {
+                index = this.getName().indexOf(';');
+            }
+
+            if (index == -1) {
+                result = this.getName();
+            } else {
+                result = this.getName().substring(0, index);
+            }
+        }
+
+        return result;
+    },
+
+	getParameters: function() {
+        if (this.parameters == null) {
+            if (this.getName() != null) {
+                var index = this.getName().indexOf(';');
+
+                if (index != -1) {
+                	this.parameters = new Form(this.getName().substring(index + 1)
+                            .trim(), ';');
+                }
+            }
+            
+            if (this.parameters==null) {
+            	this.parameters = new Form();
+            }
+        }
+        return this.parameters;
+    },
+
+    getParent: function() {
+        var result = null;
+
+        if (this.getParameters().size() > 0) {
+            result = MediaType.valueOf(this.getMainType() + "/" + this.getSubType());
+        } else {
+            if (this.getSubType().equals("*")) {
+                result = this.equals(MediaType.ALL) ? null : MediaType.ALL;
+            } else {
+                result = MediaType.valueOf(this.getMainType() + "/*");
+            }
+        }
+
+        return result;
+    },
+
+    getSubType: function() {
+        var result = null;
+
+        if (this.getName() != null) {
+            var slash = this.getName().indexOf('/');
+
+            if (slash == -1) {
+                // No subtype found, assume that all subtypes are accepted
+                result = "*";
+            } else {
+                var separator = this.getName().indexOf(';');
+                if (separator == -1) {
+                    result = this.getName().substring(slash + 1);
+                } else {
+                    result = this.getName().substring(slash + 1, separator);
+                }
+            }
+        }
+
+        return result;
+    }
+});
+
+//alert("after new Class MediaType");
 
 MediaType.extend({
 	APPLICATION_JSON: new MediaType("application/json"),
 	TEXT_JSON: new MediaType("text/json"),
 	APPLICATION_XML: new MediaType("application/xml"),
-	TEXT_XML: new MediaType("text/xml")
+	TEXT_XML: new MediaType("text/xml"),
+    _TSPECIALS: "()<>@,;:/[]?=\\\"",
+
+    normalizeToken: function(token) {
+        var length;
+        var c;
+
+        // Makes sure we're not dealing with a "*" token.
+        token = token.trim();
+        if ("".equals(token) || "*".equals(token))
+            return "*";
+
+        // Makes sure the token is RFC compliant.
+        length = token.length;
+        for (var i = 0; i < length; i++) {
+            c = token.charAt(i);
+            if (c <= 32 || c >= 127 || MediaType._TSPECIALS.indexOf(c) != -1)
+                throw new ERROR("Illegal token: " + token);
+        }
+
+        return token;
+    },
+
+	normalizeType: function(name, parameters) {
+        var slashIndex;
+        var colonIndex;
+        var mainType;
+        var subType;
+        var params = null;
+
+        // Ignore null names (backward compatibility).
+        if (name == null)
+            return null;
+
+        // Check presence of parameters
+        if ((colonIndex = name.indexOf(';')) != -1) {
+            params = new StringBuilder(name.substring(colonIndex));
+            name = name.substring(0, colonIndex);
+        }
+
+        // No main / sub separator, assumes name/*.
+        if ((slashIndex = name.indexOf('/')) == -1) {
+            mainType = MediaType.normalizeToken(name);
+            subType = "*";
+        } else {
+            // Normalizes the main and sub types.
+            mainType = MediaType.normalizeToken(name.substring(0, slashIndex));
+            subType = MediaType.normalizeToken(name.substring(slashIndex + 1));
+        }
+
+        // Merge parameters taken from the name and the method argument.
+        if (parameters != null && !parameters.isEmpty()) {
+            if (params == null) {
+                params = new StringBuilder();
+            }
+            var hw = new HeaderWriter();
+            hw.appendObject = function(value) {
+            	return this.appendExtension(value);
+            };
+            for (var i = 0; i < parameters.size(); i++) {
+                var p = parameters.get(i);
+                hw.appendParameterSeparator();
+                hw.appendSpace();
+                hw.appendObject(p);
+            }
+            params.append(hw.toString());
+        }
+
+        return (params == null) ? mainType + '/' + subType : mainType + '/'
+                + subType + params.toString();
+    }
 });
 
 var Variant = new Class({

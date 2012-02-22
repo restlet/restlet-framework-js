@@ -25,8 +25,9 @@ module("Simple Restlet JS client tests");
 });*/
 
 /*asyncTest("Get with resource client (json)", function() {
-  var clientResource = new ClientResource("../resource/contact/1");
+  var clientResource = new ClientResource("/contact/1");
   clientResource.get(function(representation) {
+	  console.log("representation media type = "+representation.getMediaType().toString());
 	  var jsonRepresentation = new JsonRepresentation(representation);
 	  var obj = jsonRepresentation.getObject();
 	  ok(obj.id, "1");

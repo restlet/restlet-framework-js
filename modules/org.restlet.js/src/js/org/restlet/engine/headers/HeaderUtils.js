@@ -15,19 +15,21 @@ HeaderUtils.extend({
         	HeaderUtils.addHeader(HeaderConstants.HEADER_CONTENT_LANGUAGE,
                     LanguageWriter.write(entity.getLanguages()), headers);
 
-            /*if (entity.getLocationRef() != null) {
+            if (entity.getLocationRef() != null) {
             	HeaderUtils.addHeader(HeaderConstants.HEADER_CONTENT_LOCATION, entity
                         .getLocationRef().getTargetRef().toString(), headers);
             }
 
-            if (entity.getRange() != null) {
+            /*if (entity.getRange() != null) {
             	HeaderUtils.HeaderUtils.addHeader(HeaderConstants.HEADER_CONTENT_RANGE,
                         RangeWriter.write(entity.getRange(), entity.getSize()),
                         headers);
-            }
+            }*/
 
+        	console.log("entity.getMediaType() = "+entity.getMediaType());
             if (entity.getMediaType() != null) {
                 var contentType = entity.getMediaType().toString();
+            	console.log("contentType = "+contentType.toString());
 
                 // Specify the character set parameter if required
                 if ((entity.getMediaType().getParameters()
@@ -37,9 +39,10 @@ HeaderUtils.extend({
                             + entity.getCharacterSet().getName();
                 }
 
+            	console.log("contentType = "+contentType.toString());
                 HeaderUtils.addHeader(HeaderConstants.HEADER_CONTENT_TYPE, contentType,
                         headers);
-            }*/
+            }
 
             if (entity.getExpirationDate() != null) {
             	HeaderUtils.addHeader(HeaderConstants.HEADER_EXPIRES,
@@ -206,9 +209,11 @@ HeaderUtils.extend({
                 WarningWriter.write(message.getWarnings()), headers);*/
 	},
 	addHeader: function(headerName, headerValue, headers) {
+		console.log("> addHeader");
         if ((headerName != null) && (headerValue != null)
                 && (headerValue.length > 0)) {
             try {
+            	console.log("  ## adding header "+headerName+" : "+headerValue);
                 headers.push(new Parameter(headerName, headerValue));
             } catch (err) {
             	console.log(err);
@@ -216,6 +221,7 @@ HeaderUtils.extend({
                         "Unable to format the " + headerName + " header", t);*/
             }
         }
+		console.log("< addHeader");
 	},
 	addNotModifiedEntityHeaders: function(entity, headers) {
         if (entity != null) {
@@ -234,14 +240,14 @@ HeaderUtils.extend({
 	addRequestHeaders: function(request, headers) {
         var clientInfo = request.getClientInfo();
 
-        /*if (!clientInfo.getAcceptedMediaTypes().isEmpty()) {
+        if (!clientInfo.getAcceptedMediaTypes().isEmpty()) {
         	HeaderUtils.addHeader(HeaderConstants.HEADER_ACCEPT,
                     PreferenceWriter.write(clientInfo.getAcceptedMediaTypes()),
                     headers);
         } else {
         	HeaderUtils.addHeader(HeaderConstants.HEADER_ACCEPT, MediaType.ALL.getName(),
                     headers);
-        }*/
+        }
 
         /*if (!clientInfo.getAcceptedCharacterSets().isEmpty()) {
         	HeaderUtils.addHeader(HeaderConstants.HEADER_ACCEPT_CHARSET,

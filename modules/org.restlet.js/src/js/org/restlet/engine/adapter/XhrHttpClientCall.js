@@ -30,18 +30,10 @@ var XhrHttpClientCall = new Class(ClientCall, {
 		var method = request.getMethod().getName();
 		this.method = request.getMethod();
 		var clientInfo = request.getClientInfo();
-		console.log("clientInfo = "+clientInfo);
-		var acceptedMediaTypes = clientInfo.getAcceptedMediaTypes();
-		var acceptHeader = "";
-		for (var i=0;i<acceptedMediaTypes.length;i++) {
-			if (i>0) {
-				acceptHeader += ",";
-			}
-			acceptHeader += acceptedMediaTypes[i].getType();
-		}
 		var headers = {};
-		if (acceptHeader!="") {
-			headers["accept"] = acceptHeader;
+		for (var i=0; i<this.requestHeaders.length; i++) {
+			var requestHeader = this.requestHeaders[i];
+			headers[requestHeader.getName()] = requestHeader.getValue();
 		}
 		var data = "";
 		if (request.getEntity()!=null) {
@@ -53,8 +45,8 @@ var XhrHttpClientCall = new Class(ClientCall, {
 			currentThis.extractResponseHeaders(xhr);
 
 			var representation = new Representation();
-			/*representation = HeaderUtils.extractEntityHeaders(
-								currentThis.getResponseHeaders(xhr), representation);*/
+			representation = HeaderUtils.extractEntityHeaders(
+								currentThis.getResponseHeaders(xhr), representation);
 			representation.write(xhr);
 			var status = new Status(xhr.status);
 			response.setStatus(status);

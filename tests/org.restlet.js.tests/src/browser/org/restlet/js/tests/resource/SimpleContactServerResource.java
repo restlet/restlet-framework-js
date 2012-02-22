@@ -19,7 +19,17 @@ public class SimpleContactServerResource
 
 	@Get
 	public Representation getContact(Variant variant) {
-		System.out.println("1");
+		System.out.println("1 - default");
+		Map<String, Object> attributes
+							= getRequest().getAttributes();
+		String contactId = (String) attributes.get("id");
+		Contact contact = contactService.getContact(contactId);
+		return new JacksonRepresentation<Contact>(contact);
+	}
+
+	@Get("json")
+	public Representation getContactJson(Variant variant) {
+		System.out.println("1 - json");
 		Map<String, Object> attributes
 							= getRequest().getAttributes();
 		String contactId = (String) attributes.get("id");
@@ -29,7 +39,16 @@ public class SimpleContactServerResource
 
 	@Put
 	public Representation storeContact(Representation representation) {
-		System.out.println("1");
+		System.out.println("2 - default");
+		Contact contact = (new JacksonRepresentation<Contact>(
+				representation, Contact.class)).getObject();
+		contactService.storeContact(contact);
+		return new JacksonRepresentation<Contact>(contact);
+	}
+
+	@Put("json")
+	public Representation storeContactJson(Representation representation) {
+		System.out.println("2 - json");
 		Contact contact = (new JacksonRepresentation<Contact>(
 				representation, Contact.class)).getObject();
 		contactService.storeContact(contact);

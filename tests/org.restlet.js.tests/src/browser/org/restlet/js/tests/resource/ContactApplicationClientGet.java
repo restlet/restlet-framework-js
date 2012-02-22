@@ -1,6 +1,7 @@
 package org.restlet.js.tests.resource;
 
 import org.restlet.Application;
+import org.restlet.data.MediaType;
 import org.restlet.ext.jackson.JacksonRepresentation;
 import org.restlet.js.tests.model.Contact;
 import org.restlet.representation.Representation;
@@ -11,7 +12,7 @@ public class ContactApplicationClientGet extends Application {
 		try {
 			ClientResource clientResource = new ClientResource(
 								"http://localhost:8182/contact/1");
-			Representation representation = clientResource.get();
+			Representation representation = clientResource.get(MediaType.APPLICATION_JSON);
 			Contact contact = (new JacksonRepresentation<Contact>(
 							representation, Contact.class)).getObject();
 			System.out.println(contact.getId()

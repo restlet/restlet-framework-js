@@ -13,7 +13,7 @@ var ClientInfo = new Class({
 	 */
 		this.acceptedMediaTypes = [];
 		if (arguments.length==1 && arguments[0] instanceof MediaType) {
-			this.acceptedMediaTypes.push(arguments[0]);
+			this.acceptedMediaTypes.push(new Preference(arguments[0]));
 		}
 	},
 	getAcceptedMediaTypes: function() {

@@ -11,5 +11,8 @@ var Metadata = new Class({
     },
     getDescription: function() {
     	return this.description;
+    },
+    toString: function() {
+    	return this.getName();
     }
 });
