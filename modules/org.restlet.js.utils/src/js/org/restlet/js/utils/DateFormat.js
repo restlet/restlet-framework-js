@@ -193,7 +193,10 @@ var DateFormat = new Class({
 			} else if(token=="MMM") {
 				formattedDate += DateFormat.SHORT_MONTHS[date.getMonth()];
 			} else if(token=="MM") {
-				formattedDate += DateFormat.SHORT_MONTHS[date.getMonth()];
+				if (date.getMonth()+1<10) {
+					formattedDate += "0";
+				}
+				formattedDate += date.getMonth()+1;
 			} else if(token=="dd") {
 				formattedDate += date.getDate();
 			} else if(token=="yyyy") {
