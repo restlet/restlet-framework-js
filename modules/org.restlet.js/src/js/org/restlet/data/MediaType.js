@@ -77,7 +77,6 @@ var MediaType = new Class(Metadata, {
 		if (description==null) {
 			description = "Media type or range of media types";
 		}
-		//alert("MediaType = "+MediaType);
         this.callSuper(MediaTypeUtils.normalizeType(name, parameters), description);
     },
 
@@ -158,8 +157,6 @@ var MediaType = new Class(Metadata, {
         return result;
     }
 });
-
-//alert("after new Class MediaType");
 
 MediaType.extend({
 	APPLICATION_JSON: new MediaType("application/json"),

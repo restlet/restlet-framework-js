@@ -8,11 +8,25 @@ var ClientResource = new Class({
 	setRequest: function(request) {
 		this.request = request;
 	},
+	getRequestAttributes: function() {
+		if (this.request!=null) {
+			return this.request.getAttributes();
+		} else {
+			return null;
+		}
+	},
 	getResponse: function() {
 		return this.response;
 	},
 	setResponse: function(response) {
 		this.response = response;
+	},
+	getResponseAttributes: function() {
+		if (this.response!=null) {
+			return this.response.getAttributes();
+		} else {
+			return null;
+		}
 	},
 	createClientInfo: function(mediaType) {
 		var clientInfo = null;

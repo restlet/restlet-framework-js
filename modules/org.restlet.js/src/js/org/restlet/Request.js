@@ -9,7 +9,7 @@ var Request = new Class(Message, {
 		if (typeof url == "string") {
 			this.reference = new Reference(url);
 		} else if (url instanceof Reference) {
-			this.reference = reference;
+			this.reference = url;
 		}
 
 /*		private volatile ChallengeResponse challengeResponse;
@@ -45,5 +45,24 @@ var Request = new Class(Message, {
 	},
 	setReference: function(reference) {
 		this.reference = reference;
-	}
+	},
+    getHostRef: function() {
+        return this.hostRef;
+    },
+    getMaxForwards: function() {
+        return this.maxForwards;
+    },
+    getOriginalRef: function() {
+        return this.originalRef;
+    },
+    getReferrerRef: function() {
+        return this.referrerRef;
+    },
+    getResourceRef: function() {
+        return this.resourceRef;
+    },
+    getRootRef: function() {
+        return this.rootRef;
+    }
+
 });

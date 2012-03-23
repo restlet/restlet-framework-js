@@ -15,7 +15,7 @@ var Message = new Class({
 	},
     getEntityAsText: function() {
         if (this.entityText == null) {
-            this.entityText = (getEntity() == null) ? null : getEntity()
+            this.entityText = (this.getEntity() == null) ? null : this.getEntity()
                         .getText();
         }
         return this.entityText;
