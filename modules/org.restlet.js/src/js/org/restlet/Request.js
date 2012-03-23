@@ -11,6 +11,9 @@ var Request = new Class(Message, {
 		} else if (url instanceof Reference) {
 			this.reference = url;
 		}
+		this.ranges = [];
+		this.conditions = new Conditions();
+		this.cookies = new Series();
 
 /*		private volatile ChallengeResponse challengeResponse;
     $$ private volatile ClientInfo clientInfo;
@@ -40,6 +43,12 @@ var Request = new Class(Message, {
 	setClientInfo: function(clientInfo) {
 		this.clientInfo = clientInfo;
 	},
+	getConditions: function() {
+		return this.conditions;
+	},
+	setConditions: function() {
+		this.conditions = conditions;
+	},
 	getReference: function() {
 		return this.reference;
 	},
@@ -55,6 +64,12 @@ var Request = new Class(Message, {
     getOriginalRef: function() {
         return this.originalRef;
     },
+    getRanges: function() {
+    	return this.ranges;
+    },
+    setRanges: function(ranges) {
+    	this.ranges = ranges;
+    },
     getReferrerRef: function() {
         return this.referrerRef;
     },
@@ -63,6 +78,12 @@ var Request = new Class(Message, {
     },
     getRootRef: function() {
         return this.rootRef;
-    }
+    },
+    getCookies: function() {
+    	return this.cookies;
+    },
+    setCookies: function(cookies) {
+    	this.cookies = cookies;
+    },
 
 });

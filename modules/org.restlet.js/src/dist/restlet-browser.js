@@ -38,6 +38,12 @@
 
 #include org/restlet/data/CharacterSet.js#
 
+#include org/restlet/data/Cookie.js#
+
+#include org/restlet/data/CookieSetting.js#
+
+#include org/restlet/data/Conditions.js#
+
 #include org/restlet/engine/headers/ContentType.js#
 
 #include org/restlet/data/Parameter.js#
@@ -63,6 +69,8 @@
 #include org/restlet/engine/headers/HeaderUtils.js#
 
 #include org/restlet/engine/headers/HeaderReader.js#
+
+#include org/restlet/engine/headers/CookieWriter.js#
 
 #include org/restlet/engine/headers/DateWriter.js#
 

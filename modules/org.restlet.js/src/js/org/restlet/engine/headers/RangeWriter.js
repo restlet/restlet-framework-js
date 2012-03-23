@@ -15,7 +15,7 @@ var RangeWriter = new Class(HeaderWriter, {
             	this.append(", ");
             }
 
-            this.appendObject(ranges.get(i));
+            this.appendObject(ranges[i]);
         }
 
         return this;
@@ -24,16 +24,16 @@ var RangeWriter = new Class(HeaderWriter, {
     appendObject: function(range) {
         if (range.getIndex() >= Range.INDEX_FIRST) {
             this.append(range.getIndex());
-            append("-");
+            this.append("-");
 
             if (range.getSize() != Range.SIZE_MAX) {
-                append(range.getIndex() + range.getSize() - 1);
+            	this.append(range.getIndex() + range.getSize() - 1);
             }
         } else if (range.getIndex() == Range.INDEX_LAST) {
-            append("-");
+        	this.append("-");
 
             if (range.getSize() != Range.SIZE_MAX) {
-                append(range.getSize());
+            	this.append(range.getSize());
             }
         }
 

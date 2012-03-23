@@ -288,7 +288,7 @@ HeaderUtils.extend({
             HeaderUtils.addHeader(HeaderConstants.HEADER_HOST, host, headers);
         }*/
 
-        /*var conditions = request.getConditions();
+        var conditions = request.getConditions();
         HeaderUtils.addHeader(HeaderConstants.HEADER_IF_MATCH,
                 TagWriter.write(conditions.getMatch()), headers);
         HeaderUtils.addHeader(HeaderConstants.HEADER_IF_NONE_MATCH,
@@ -325,7 +325,7 @@ HeaderUtils.extend({
         if (!request.getRanges().isEmpty()) {
         	HeaderUtils.addHeader(HeaderConstants.HEADER_RANGE,
                     RangeWriter.write(request.getRanges()), headers);
-        }*/
+        }
 
         if (request.getReferrerRef() != null) {
         	HeaderUtils.addHeader(HeaderConstants.HEADER_REFERRER, request.getReferrerRef()
@@ -344,17 +344,16 @@ HeaderUtils.extend({
         // 3) Add supported extension headers
         // ----------------------------------
 
-        /*if (request.getCookies().size() > 0) {
+        if (request.getCookies().size() > 0) {
         	HeaderUtils.addHeader(HeaderConstants.HEADER_COOKIE,
-                    CookieWriter.write(request.getCookies()), headers);
-        }*/
+                    CookieWriter.writeCollection(request.getCookies()), headers);
+        }
 
         // -------------------------------------
         // 4) Add user-defined extension headers
         // -------------------------------------
         var additionalHeaders = request
                 .getAttributes()[HeaderConstants.ATTRIBUTE_HEADERS];
-        console.log("additionalHeaders = "+additionalHeaders);
         HeaderUtils.addExtensionHeaders(headers, additionalHeaders);
 
         // ---------------------------------------

@@ -12,8 +12,20 @@ var Series = new Class({
 		return this.array.length;
 	},
 	
-	add: function(name, value) {
-		return this.array.push(this.createEntry(name, value));
+	isEmpty: function() {
+		return (this.size()==0);
+	},
+	
+	add: function() {
+		if (arguments.length==1) {
+			return this.array.push(arguments[0]);
+		} else if (arguments.length==2) {
+			var name = arguments[0];
+			var value = arguments[1];
+			return this.array.push(this.createEntry(name, value));
+		} else {
+			throw new Error("The number of arguments isn't correct.");
+		}
 	},
 
 	createEntry: function(name, value) {
