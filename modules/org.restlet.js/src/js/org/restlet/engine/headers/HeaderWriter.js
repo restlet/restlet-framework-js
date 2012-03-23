@@ -5,6 +5,7 @@ var HeaderWriter = new Class({
 
     append: function(text) {
 		this.content.push(text);
+		return this;
 	},
 	
 	toString: function() {

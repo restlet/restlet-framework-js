@@ -37,6 +37,12 @@ var Representation = new Class(RepresentationInfo, {
     setSize: function(size) {
     	this.size = size;
     },
+    getTag: function() {
+    	return this.tag;
+    },
+    setTag: function(tag) {
+    	this.tag = tag;
+    },
     getText: function() {
 		return this.text;
 	},

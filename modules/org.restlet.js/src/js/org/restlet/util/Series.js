@@ -3,6 +3,11 @@ var Series = new Class({
 		this.array = [];
 	},
 
+	// Specific method for JS
+	getElements: function() {
+		return this.array;
+	},
+	
 	size: function() {
 		return this.array.length;
 	},
@@ -11,6 +16,10 @@ var Series = new Class({
 		return this.array.push(this.createEntry(name, value));
 	},
 
+	createEntry: function(name, value) {
+		return new Parameter(name, value);
+	},
+	
 	equals: function(value1, value2, ignoreCase) {
 		var result = (value1 == value2);
 
@@ -141,6 +150,7 @@ var Series = new Class({
 		var result = {};
 
 		for (var i=0; i<this.array.length; i++) {
+			var param = this.array[i];
 			if (!result[param.getName()]) {
 				result[param.getName()] = param.getValue();
 			}
@@ -159,7 +169,6 @@ var Series = new Class({
 
 		for (var i=0; i<this.array.length; i++) {
 			var param = this.array[i];
-
 			if (this.equals(param.getName(), name, ignoreCase)) {
 				this.array.splice(i, i);
 				i--;
@@ -199,7 +208,6 @@ var Series = new Class({
 
 		for (var i=0; i<this.array.length; i++) {
 			param = this.array[i];
-
 			if (this.equals(param.getName(), name, ignoreCase)) {
 				if (found) {
 					// Remove other entries with the same name

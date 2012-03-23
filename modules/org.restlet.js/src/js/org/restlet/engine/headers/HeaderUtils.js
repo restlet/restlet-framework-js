@@ -20,17 +20,15 @@ HeaderUtils.extend({
                         .getLocationRef().getTargetRef().toString(), headers);
             }
 
-            /*if (entity.getRange() != null) {
-            	HeaderUtils.HeaderUtils.addHeader(HeaderConstants.HEADER_CONTENT_RANGE,
+            if (entity.getRange() != null) {
+            	HeaderUtils.addHeader(HeaderConstants.HEADER_CONTENT_RANGE,
                         RangeWriter.write(entity.getRange(), entity.getSize()),
                         headers);
-            }*/
+            }
 
-        	console.log("entity.getMediaType() = "+entity.getMediaType());
             if (entity.getMediaType() != null) {
                 var contentType = entity.getMediaType().toString();
-            	console.log("contentType = "+contentType.toString());
-
+ 
                 // Specify the character set parameter if required
                 if ((entity.getMediaType().getParameters()
                         .getFirstValue("charset") == null)
@@ -39,7 +37,6 @@ HeaderUtils.extend({
                             + entity.getCharacterSet().getName();
                 }
 
-            	console.log("contentType = "+contentType.toString());
                 HeaderUtils.addHeader(HeaderConstants.HEADER_CONTENT_TYPE, contentType,
                         headers);
             }
@@ -70,8 +67,9 @@ HeaderUtils.extend({
 	},
 	addExtensionHeaders: function(existingHeaders, additionalHeaders) {
         if (additionalHeaders != null) {
-            for (var cpt=0;cpt<additionalHeaders.length;cpt++) {
-            	var param = additionalHeaders[cpt];
+        	var elements = additionalHeaders.getElements();
+            for (var cpt=0;cpt<elements.length;cpt++) {
+            	var param = elements[cpt];
                 if (param.getName().equalsIgnoreCase(
                         HeaderConstants.HEADER_ACCEPT)
                         || param.getName().equalsIgnoreCase(
@@ -187,9 +185,9 @@ HeaderUtils.extend({
                             .info("Addition of the standard header \""
                                     + param.getName()
                                     + "\" is discouraged as a future version of the Restlet API will directly support it.");*/
-                    existingHeaders.add(param);
+                    existingHeaders.push(param);
                 } else {
-                    existingHeaders.add(param);
+                    existingHeaders.push(param);
                 }
             }
         }
@@ -249,7 +247,7 @@ HeaderUtils.extend({
                     headers);
         }
 
-        /*if (!clientInfo.getAcceptedCharacterSets().isEmpty()) {
+        if (!clientInfo.getAcceptedCharacterSets().isEmpty()) {
         	HeaderUtils.addHeader(HeaderConstants.HEADER_ACCEPT_CHARSET,
                     PreferenceWriter.write(clientInfo
                             .getAcceptedCharacterSets()), headers);
@@ -274,7 +272,7 @@ HeaderUtils.extend({
 
         // Manually add the host name and port when it is potentially
         // different from the one specified in the target resource reference.
-        var hostRef = (request.getResourceRef().getBaseRef() != null) ? request
+        /*var hostRef = (request.getResourceRef().getBaseRef() != null) ? request
                 .getResourceRef().getBaseRef() : request.getResourceRef();
 
         if (hostRef.getHostDomain() != null) {
@@ -288,9 +286,9 @@ HeaderUtils.extend({
             }
 
             HeaderUtils.addHeader(HeaderConstants.HEADER_HOST, host, headers);
-        }
+        }*/
 
-        var conditions = request.getConditions();
+        /*var conditions = request.getConditions();
         HeaderUtils.addHeader(HeaderConstants.HEADER_IF_MATCH,
                 TagWriter.write(conditions.getMatch()), headers);
         HeaderUtils.addHeader(HeaderConstants.HEADER_IF_NONE_MATCH,
@@ -327,7 +325,7 @@ HeaderUtils.extend({
         if (!request.getRanges().isEmpty()) {
         	HeaderUtils.addHeader(HeaderConstants.HEADER_RANGE,
                     RangeWriter.write(request.getRanges()), headers);
-        }
+        }*/
 
         if (request.getReferrerRef() != null) {
         	HeaderUtils.addHeader(HeaderConstants.HEADER_REFERRER, request.getReferrerRef()
@@ -346,16 +344,17 @@ HeaderUtils.extend({
         // 3) Add supported extension headers
         // ----------------------------------
 
-        if (request.getCookies().size() > 0) {
+        /*if (request.getCookies().size() > 0) {
         	HeaderUtils.addHeader(HeaderConstants.HEADER_COOKIE,
                     CookieWriter.write(request.getCookies()), headers);
-        }
+        }*/
 
         // -------------------------------------
         // 4) Add user-defined extension headers
         // -------------------------------------
         var additionalHeaders = request
                 .getAttributes()[HeaderConstants.ATTRIBUTE_HEADERS];
+        console.log("additionalHeaders = "+additionalHeaders);
         HeaderUtils.addExtensionHeaders(headers, additionalHeaders);
 
         // ---------------------------------------

@@ -1,7 +1,7 @@
 var LanguageWriter = new Class(MetadataWriter, {
     initialize: function(header) {
         this.callSuper(header);
-    },
+    }
 });
 
 LanguageWriter.extend({
