@@ -78,6 +78,18 @@ String.prototype.equalsIgnoreCase = function(arg) {
 String.prototype.equals = function(arg) {
 	return (this.toString()==arg.toString());
 };
+String.prototype.startsWith = function(arg) {
+	if (this.length>=arg.length) {
+		for (var i = 0; i<arg.length; i++) {
+			if (this.charAt(i)!=arg.charAt(i)) {
+				return false;
+			}
+		}
+		return true;
+	} else {
+		return false;
+	}
+};
 
 var StringBuilder = new Class({
 	initialize: function(value) {
@@ -88,6 +100,7 @@ var StringBuilder = new Class({
 		if (value) {
 			this.strings.push(value);
 		}
+		return this;
 	},
 	clear: function() {
 		this.strings.length = 1;
@@ -318,18 +331,36 @@ var DateFormat = new Class({
 			} else if(token=="MMM") {
 				formattedDate += DateFormat.SHORT_MONTHS[date.getMonth()];
 			} else if(token=="MM") {
-				formattedDate += DateFormat.SHORT_MONTHS[date.getMonth()];
+				if (date.getMonth()+1<10) {
+					formattedDate += "0";
+				}
+				formattedDate += date.getMonth()+1;
 			} else if(token=="dd") {
+				if (date.getDate()<10) {
+					formattedDate += "0";
+				}
 				formattedDate += date.getDate();
 			} else if(token=="yyyy") {
 				formattedDate += date.getFullYear();
 			} else if(token=="yy") {
+				if (date.getYear()<10) {
+					formattedDate += "0";
+				}
 				formattedDate += date.getYear();
 			} else if(token=="HH") {
+				if (date.getHours()<10) {
+					formattedDate += "0";
+				}
 				formattedDate += date.getHours();
 			} else if(token=="mm") {
+				if (date.getMinutes()<10) {
+					formattedDate += "0";
+				}
 				formattedDate += date.getMinutes();
 			} else if(token=="ss") {
+				if (date.getSeconds()<10) {
+					formattedDate += "0";
+				}
 				formattedDate += date.getSeconds();
 			} else if(token=="zzz") {
 				// Pacific Daylight Time
@@ -355,7 +386,7 @@ DateFormat.extend({
 	DAYS_IN_WEEK: ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"],
 	SHORT_DAYS_IN_WEEK: ["Sun","Mon","Tue","Wed","Thu","Fri","Sat","Sun"],
 	MONTHS: ["January","February","March","April","May","June","July","August","September","October","November","December"],
-	SHORT_MONTHS: ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],
+	SHORT_MONTHS: ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]
 });
 
 //End Utils
@@ -396,24 +427,46 @@ Protocol.extend({
 
 var ClientInfo = new Class({
 	initialize: function() {
-		/*
         this.address = null;
         this.agent = null;
         this.port = -1;
-        this.acceptedCharacterSets = null;
-        this.acceptedEncodings = null;
-        this.acceptedLanguages = null;
-        this.acceptedMediaTypes = null;
-        this.forwardedAddresses = null;
-        this.from = null;
-	 */
+        this.acceptedCharacterSets = [];
+        this.acceptedEncodings = [];
+        this.acceptedLanguages = [];
 		this.acceptedMediaTypes = [];
 		if (arguments.length==1 && arguments[0] instanceof MediaType) {
 			this.acceptedMediaTypes.push(new Preference(arguments[0]));
 		}
+        this.forwardedAddresses = [];
+        this.from = null;
+	},
+	
+	getAddress: function() {
+		return this.address;
+	},
+	getAgent: function() {
+		return this.agent;
+	},
+	getPort: function() {
+		return this.port;
+	},
+	getAcceptedCharacterSets: function() {
+		return this.acceptedCharacterSets;
+	},
+	getAcceptedEncodings: function() {
+		return this.acceptedEncodings;
+	},
+	getAcceptedLanguages: function() {
+		return this.acceptedLanguages;
 	},
 	getAcceptedMediaTypes: function() {
 		return this.acceptedMediaTypes;
+	},
+	getForwardedAddresses: function() {
+		return this.forwardedAddresses;
+	},
+	getFrom: function() {
+	    return this.from;
 	}
 });
 
@@ -467,7 +520,7 @@ var Message = new Class({
 	},
     getEntityAsText: function() {
         if (this.entityText == null) {
-            this.entityText = (getEntity() == null) ? null : getEntity()
+            this.entityText = (this.getEntity() == null) ? null : this.getEntity()
                         .getText();
         }
         return this.entityText;
@@ -535,7 +588,256 @@ var Reference = new Class({
 	},
 	getPath: function() {
 		return this.path;
-	}
+	},
+
+	addQueryParameter: function() {
+		var name = null;
+		var value = null;
+		if (arguments.length==1) {
+			name = arguments[0].getName();
+			value = arguments[0].getValue();
+		} else if (arguments.length==2) {
+			name = arguments[0];
+			value = arguments[1];
+		}
+		
+		var query = this.getQuery();
+
+        if (query == null) {
+            if (value == null) {
+            	this.setQuery(Reference.encode(name));
+            } else {
+            	this.setQuery(Reference.encode(name) + '=' + Reference.encode(value));
+            }
+        } else {
+            if (value == null) {
+            	this.setQuery(query + '&' + Reference.encode(name));
+            } else {
+                this.setQuery(query + '&' + Reference.encode(name) + '=' + Reference.encode(value));
+            }
+        }
+
+        return this;
+    },
+
+    addQueryParameters: function(parameters) {
+        for (var i=0; i<parameters.length; i++) {
+        	var param = parameters[i];
+            this.addQueryParameter(param);
+        }
+
+        return this;
+    },
+
+    addSegment: function(value) {
+        var path = this.getPath();
+
+        if (value != null) {
+            if (path == null) {
+                this.setPath("/" + value);
+            } else {
+                if (path.endsWith("/")) {
+                	this.setPath(path + Reference.encode(value));
+                } else {
+                	this.setPath(path + "/" + Reference.encode(value));
+                }
+            }
+        }
+
+        return this;
+    }
+});
+
+Reference.extend({
+	
+/*    private static final boolean[] charValidityMap = new boolean[127];
+
+    static {
+        // Initialize the map of valid characters.
+        for (int character = 0; character < 127; character++) {
+            charValidityMap[character] = isReserved(character)
+                    || isUnreserved(character) || (character == '%');
+        }
+    }
+
+    public static String decode(String toDecode) {
+        return decode(toDecode, CharacterSet.UTF_8);
+    }
+
+    public static String decode(String toDecode, CharacterSet characterSet) {
+        if (Edition.CURRENT == Edition.GWT) {
+            if (!CharacterSet.UTF_8.equals(characterSet)) {
+                throw new IllegalArgumentException(
+                        "Only UTF-8 URL encoding is supported under GWT");
+            }
+        }
+        String result = null;
+        try {
+            result = (characterSet == null) ? toDecode : java.net.URLDecoder
+                    .decode(toDecode, characterSet.getName());
+        } catch (UnsupportedEncodingException uee) {
+            Context.getCurrentLogger()
+                    .log(Level.WARNING,
+                            "Unable to decode the string with the UTF-8 character set.",
+                            uee);
+        }
+
+
+        return result;
+    }
+
+    public static String encode(String toEncode) {
+        return encode(toEncode, true, CharacterSet.UTF_8);
+    }
+
+    public static String encode(String toEncode, boolean queryString) {
+        return encode(toEncode, queryString, CharacterSet.UTF_8);
+    }
+
+    public static String encode(String toEncode, boolean queryString,
+            CharacterSet characterSet) {
+        if (Edition.CURRENT == Edition.GWT) {
+            if (!CharacterSet.UTF_8.equals(characterSet)) {
+                throw new IllegalArgumentException(
+                        "Only UTF-8 URL encoding is supported under GWT");
+            }
+        }
+
+        String result = null;
+
+        try {
+            result = (characterSet == null) ? toEncode : java.net.URLEncoder
+                    .encode(toEncode, characterSet.getName());
+        } catch (UnsupportedEncodingException uee) {
+            Context.getCurrentLogger()
+                    .log(Level.WARNING,
+                            "Unable to encode the string with the UTF-8 character set.",
+                            uee);
+        }
+
+
+        if (queryString) {
+            result = result.replace("+", "%20").replace("*", "%2A")
+                    .replace("%7E", "~");
+        }
+
+        return result;
+    }
+
+    public static String encode(String toEncode, CharacterSet characterSet) {
+        return encode(toEncode, true, characterSet);
+    }
+
+    private static boolean isAlpha(int character) {
+        return isUpperCase(character) || isLowerCase(character);
+    }
+
+    private static boolean isDigit(int character) {
+        return (character >= '0') && (character <= '9');
+    }
+
+    public static boolean isGenericDelimiter(int character) {
+        return (character == ':') || (character == '/') || (character == '?')
+                || (character == '#') || (character == '[')
+                || (character == ']') || (character == '@');
+    }
+
+    private static boolean isLowerCase(int character) {
+        return (character >= 'a') && (character <= 'z');
+    }
+
+    public static boolean isReserved(int character) {
+        return isGenericDelimiter(character) || isSubDelimiter(character);
+    }
+
+    public static boolean isSubDelimiter(int character) {
+        return (character == '!') || (character == '$') || (character == '&')
+                || (character == '\'') || (character == '(')
+                || (character == ')') || (character == '*')
+                || (character == '+') || (character == ',')
+                || (character == ';') || (character == '=');
+    }
+
+    public static boolean isUnreserved(int character) {
+        return isAlpha(character) || isDigit(character) || (character == '-')
+                || (character == '.') || (character == '_')
+                || (character == '~');
+    }
+
+    private static boolean isUpperCase(int character) {
+        return (character >= 'A') && (character <= 'Z');
+    }
+
+    public static boolean isValid(int character) {
+        return character >= 0 && character < 127 && charValidityMap[character];
+    }
+
+    public static String toString(String scheme, String hostName,
+            Integer hostPort, String path, String query, String fragment) {
+        String host = hostName;
+
+        // Appends the host port number
+        if (hostPort != null) {
+            final int defaultPort = Protocol.valueOf(scheme).getDefaultPort();
+            if (hostPort != defaultPort) {
+                host = hostName + ':' + hostPort;
+            }
+        }
+
+        return toString(scheme, host, path, query, fragment);
+    }
+
+    public static String toString(String relativePart, String query,
+            String fragment) {
+        final StringBuilder sb = new StringBuilder();
+
+        // Append the path
+        if (relativePart != null) {
+            sb.append(relativePart);
+        }
+
+        // Append the query string
+        if (query != null) {
+            sb.append('?').append(query);
+        }
+
+        // Append the fragment identifier
+        if (fragment != null) {
+            sb.append('#').append(fragment);
+        }
+
+        // Actually construct the reference
+        return sb.toString();
+    }
+
+    public static String toString(String scheme, String host, String path,
+            String query, String fragment) {
+        final StringBuilder sb = new StringBuilder();
+
+        if (scheme != null) {
+            // Append the scheme and host name
+            sb.append(scheme.toLowerCase()).append("://").append(host);
+        }
+
+        // Append the path
+        if (path != null) {
+            sb.append(path);
+        }
+
+        // Append the query string
+        if (query != null) {
+            sb.append('?').append(query);
+        }
+
+        // Append the fragment identifier
+        if (fragment != null) {
+            sb.append('#').append(fragment);
+        }
+
+        // Actually construct the reference
+        return sb.toString();
+    }*/
+
 });
 
 var Request = new Class(Message, {
@@ -549,7 +851,7 @@ var Request = new Class(Message, {
 		if (typeof url == "string") {
 			this.reference = new Reference(url);
 		} else if (url instanceof Reference) {
-			this.reference = reference;
+			this.reference = url;
 		}
 
 /*		private volatile ChallengeResponse challengeResponse;
@@ -585,7 +887,26 @@ var Request = new Class(Message, {
 	},
 	setReference: function(reference) {
 		this.reference = reference;
-	}
+	},
+    getHostRef: function() {
+        return this.hostRef;
+    },
+    getMaxForwards: function() {
+        return this.maxForwards;
+    },
+    getOriginalRef: function() {
+        return this.originalRef;
+    },
+    getReferrerRef: function() {
+        return this.referrerRef;
+    },
+    getResourceRef: function() {
+        return this.resourceRef;
+    },
+    getRootRef: function() {
+        return this.rootRef;
+    }
+
 });
 
 var Response = new Class(Message, {
@@ -772,13 +1093,51 @@ HeaderConstants.extend({
 	ATTRIBUTE_HTTPS_SSL_SESSION_ID: "org.restlet.https.sslSessionId"
 });
 
-var CharacterSet = new Class({
-	initialize: function(name) {
+var CharacterSet = new Class(Metadata, {
+	initialize: function(name, description) {
 		this.name = name;
+		this.description = description;
 	},
 	getName: function() {
 		return this.name;
+	},
+	getDescription: function() {
+		return this.description;
 	}
+});
+
+CharacterSet.extend({
+	ALL: new CharacterSet("*", "All character sets"),
+	ISO_8859_1: new CharacterSet(
+        "ISO-8859-1", "ISO/IEC 8859-1 or Latin 1 character set"),
+	ISO_8859_2: new CharacterSet(
+        "ISO-8859-2", "ISO/IEC 8859-2 or Latin 2 character set"),
+	ISO_8859_3: new CharacterSet(
+        "ISO-8859-3", "ISO/IEC 8859-3 or Latin 3 character set"),
+	ISO_8859_4: new CharacterSet(
+        "ISO-8859-4", "ISO/IEC 8859-4 or Latin 4 character set"),
+	ISO_8859_5: new CharacterSet(
+        "ISO-8859-5", "ISO/IEC 8859-5 or Cyrillic character set"),
+	ISO_8859_6: new CharacterSet(
+        "ISO-8859-6", "ISO/IEC 8859-6 or Arabic character set"),
+	ISO_8859_7: new CharacterSet(
+        "ISO-8859-7", "ISO/IEC 8859-7 or Greek character set"),
+	ISO_8859_8: new CharacterSet(
+        "ISO-8859-8", "ISO/IEC 8859-8 or Hebrew character set"),
+	ISO_8859_9: new CharacterSet(
+        "ISO-8859-9", "ISO/IEC 8859-9 or Latin 5 character set"),
+	ISO_8859_10: new CharacterSet(
+        "ISO-8859-10", "ISO/IEC 8859-10 or Latin 6 character set"),
+	MACINTOSH: new CharacterSet("macintosh",
+        "Mac OS Roman character set"),
+	US_ASCII: new CharacterSet("US-ASCII",
+        "US ASCII character set"),
+	UTF_16: new CharacterSet("UTF-16",
+        "UTF 16 character set"),
+	UTF_8: new CharacterSet("UTF-8",
+        "UTF 8 character set"),
+	WINDOWS_1252: new CharacterSet(
+        "windows-1252", "Windows 1232 character set")
 });
 
 var ContentType = new Class({
@@ -896,6 +1255,11 @@ var Series = new Class({
 		this.array = [];
 	},
 
+	// Specific method for JS
+	getElements: function() {
+		return this.array;
+	},
+	
 	size: function() {
 		return this.array.length;
 	},
@@ -904,6 +1268,10 @@ var Series = new Class({
 		return this.array.push(this.createEntry(name, value));
 	},
 
+	createEntry: function(name, value) {
+		return new Parameter(name, value);
+	},
+	
 	equals: function(value1, value2, ignoreCase) {
 		var result = (value1 == value2);
 
@@ -1034,6 +1402,7 @@ var Series = new Class({
 		var result = {};
 
 		for (var i=0; i<this.array.length; i++) {
+			var param = this.array[i];
 			if (!result[param.getName()]) {
 				result[param.getName()] = param.getValue();
 			}
@@ -1052,7 +1421,6 @@ var Series = new Class({
 
 		for (var i=0; i<this.array.length; i++) {
 			var param = this.array[i];
-
 			if (this.equals(param.getName(), name, ignoreCase)) {
 				this.array.splice(i, i);
 				i--;
@@ -1092,7 +1460,6 @@ var Series = new Class({
 
 		for (var i=0; i<this.array.length; i++) {
 			param = this.array[i];
-
 			if (this.equals(param.getName(), name, ignoreCase)) {
 				if (found) {
 					// Remove other entries with the same name
@@ -1242,6 +1609,159 @@ var Preference = new Class({
     }
 });
 
+Range = new Class({
+	initialize: function(index, size) {
+		if (index==null) {
+			this.index = Range.INDEX_FIRST;
+		} else {
+			this.index = index;
+		}
+		
+		if (size==null) {
+			this.size = Range.SIZE_MAX;
+		} else {
+			this.size = size;
+		}
+	},
+
+    equals: function(object) {
+        return (object instanceof Range)
+                && object.getIndex() == this.getIndex()
+                && object.getSize() == this.getSize();
+    },
+
+    getIndex: function() {
+        return this.index;
+    },
+
+    getSize: function() {
+        return this.size;
+    },
+
+    isIncluded: function(position, totalSize) {
+        var result = false;
+
+        if (this.getIndex() == Range.INDEX_LAST) {
+            // The range starts from the end
+            result = (0 <= position) && (position < totalSize);
+
+            if (result) {
+                result = position >= (totalSize - this.getSize());
+            }
+        } else {
+            // The range starts from the beginning
+            result = position >= this.getIndex();
+
+            if (result && (this.getSize() != SIZE_MAX)) {
+                result = position < this.getIndex() + this.getSize();
+            }
+        }
+
+        return result;
+    },
+
+    setIndex: function(index) {
+        this.index = index;
+    },
+
+    setSize: function(size) {
+        this.size = size;
+    }
+});
+
+Range.extend({
+	INDEX_FIRST: 0,
+    INDEX_LAST: -1,
+	SIZE_MAX: -1
+});
+
+var Tag = new Class({
+	initialize: function(opaqueTag, weak) {
+		this.name = opaqueTag;
+		if (weak==null) {
+			this.weak = true;
+		} else {
+			this.weak = weak;
+		}
+	},
+
+    equals: function(object, checkWeakness) {
+    	if (checkWeakness==null) {
+    		checkWeakness = true;
+    	}
+        var result = (object != null) && (object instanceof Tag);
+
+        if (result) {
+            var that = object;
+
+            if (checkWeakness) {
+                result = (that.isWeak() == this.isWeak());
+            }
+
+            if (result) {
+                if (this.getName() == null) {
+                    result = (that.getName() == null);
+                } else {
+                    result = this.getName().equals(that.getName());
+                }
+            }
+        }
+
+        return result;
+    },
+
+    format: function() {
+        if (this.getName().equals("*")) {
+            return "*";
+        }
+
+        var sb = new StringBuilder();
+        if (this.isWeak()) {
+            sb.append("W/");
+        }
+        return sb.append('"').append(this.getName()).append('"').toString();
+    },
+
+    getName: function() {
+        return this.name;
+    },
+
+    isWeak: function() {
+        return this.weak;
+    },
+
+    toString: function() {
+        return getName();
+    }
+});
+
+Tag.extend({
+    parse: function(httpTag) {
+        var result = null;
+        var weak = false;
+        var httpTagCopy = httpTag;
+
+        if (httpTagCopy.startsWith("W/")) {
+            weak = true;
+            httpTagCopy = httpTagCopy.substring(2);
+        }
+
+        if (httpTagCopy.startsWith("\"") && httpTagCopy.endsWith("\"")) {
+            result = new Tag(
+                    httpTagCopy.substring(1, httpTagCopy.length() - 1), weak);
+        } else if (httpTagCopy.equals("*")) {
+            result = new Tag("*", weak);
+        } else {
+            /*Context.getCurrentLogger().log(Level.WARNING,
+                    "Invalid tag format detected: " + httpTagCopy);*/
+        }
+
+        return result;
+    }
+});
+
+Tag.ALL = Tag.parse("*");
+
 var HeaderReaderUtils = new Class({});
 
 HeaderReaderUtils.extend({
@@ -1276,17 +1796,15 @@ HeaderUtils.extend({
                         .getLocationRef().getTargetRef().toString(), headers);
             }
 
-            /*if (entity.getRange() != null) {
-            	HeaderUtils.HeaderUtils.addHeader(HeaderConstants.HEADER_CONTENT_RANGE,
+            if (entity.getRange() != null) {
+            	HeaderUtils.addHeader(HeaderConstants.HEADER_CONTENT_RANGE,
                         RangeWriter.write(entity.getRange(), entity.getSize()),
                         headers);
-            }*/
+            }
 
-        	console.log("entity.getMediaType() = "+entity.getMediaType());
             if (entity.getMediaType() != null) {
                 var contentType = entity.getMediaType().toString();
-            	console.log("contentType = "+contentType.toString());
-
+ 
                 // Specify the character set parameter if required
                 if ((entity.getMediaType().getParameters()
                         .getFirstValue("charset") == null)
@@ -1295,7 +1813,6 @@ HeaderUtils.extend({
                             + entity.getCharacterSet().getName();
                 }
 
-            	console.log("contentType = "+contentType.toString());
                 HeaderUtils.addHeader(HeaderConstants.HEADER_CONTENT_TYPE, contentType,
                         headers);
             }
@@ -1326,8 +1843,9 @@ HeaderUtils.extend({
 	},
 	addExtensionHeaders: function(existingHeaders, additionalHeaders) {
         if (additionalHeaders != null) {
-            for (var cpt=0;cpt<additionalHeaders.length;cpt++) {
-            	var param = additionalHeaders[cpt];
+        	var elements = additionalHeaders.getElements();
+            for (var cpt=0;cpt<elements.length;cpt++) {
+            	var param = elements[cpt];
                 if (param.getName().equalsIgnoreCase(
                         HeaderConstants.HEADER_ACCEPT)
                         || param.getName().equalsIgnoreCase(
@@ -1443,9 +1961,9 @@ HeaderUtils.extend({
                             .info("Addition of the standard header \""
                                     + param.getName()
                                     + "\" is discouraged as a future version of the Restlet API will directly support it.");*/
-                    existingHeaders.add(param);
+                    existingHeaders.push(param);
                 } else {
-                    existingHeaders.add(param);
+                    existingHeaders.push(param);
                 }
             }
         }
@@ -1505,7 +2023,7 @@ HeaderUtils.extend({
                     headers);
         }
 
-        /*if (!clientInfo.getAcceptedCharacterSets().isEmpty()) {
+        if (!clientInfo.getAcceptedCharacterSets().isEmpty()) {
         	HeaderUtils.addHeader(HeaderConstants.HEADER_ACCEPT_CHARSET,
                     PreferenceWriter.write(clientInfo
                             .getAcceptedCharacterSets()), headers);
@@ -1530,7 +2048,7 @@ HeaderUtils.extend({
 
         // Manually add the host name and port when it is potentially
         // different from the one specified in the target resource reference.
-        var hostRef = (request.getResourceRef().getBaseRef() != null) ? request
+        /*var hostRef = (request.getResourceRef().getBaseRef() != null) ? request
                 .getResourceRef().getBaseRef() : request.getResourceRef();
 
         if (hostRef.getHostDomain() != null) {
@@ -1544,9 +2062,9 @@ HeaderUtils.extend({
             }
 
             HeaderUtils.addHeader(HeaderConstants.HEADER_HOST, host, headers);
-        }
+        }*/
 
-        var conditions = request.getConditions();
+        /*var conditions = request.getConditions();
         HeaderUtils.addHeader(HeaderConstants.HEADER_IF_MATCH,
                 TagWriter.write(conditions.getMatch()), headers);
         HeaderUtils.addHeader(HeaderConstants.HEADER_IF_NONE_MATCH,
@@ -1583,7 +2101,7 @@ HeaderUtils.extend({
         if (!request.getRanges().isEmpty()) {
         	HeaderUtils.addHeader(HeaderConstants.HEADER_RANGE,
                     RangeWriter.write(request.getRanges()), headers);
-        }
+        }*/
 
         if (request.getReferrerRef() != null) {
         	HeaderUtils.addHeader(HeaderConstants.HEADER_REFERRER, request.getReferrerRef()
@@ -1602,16 +2120,17 @@ HeaderUtils.extend({
         // 3) Add supported extension headers
         // ----------------------------------
 
-        if (request.getCookies().size() > 0) {
+        /*if (request.getCookies().size() > 0) {
         	HeaderUtils.addHeader(HeaderConstants.HEADER_COOKIE,
                     CookieWriter.write(request.getCookies()), headers);
-        }
+        }*/
 
         // -------------------------------------
         // 4) Add user-defined extension headers
         // -------------------------------------
         var additionalHeaders = request
                 .getAttributes()[HeaderConstants.ATTRIBUTE_HEADERS];
+        console.log("additionalHeaders = "+additionalHeaders);
         HeaderUtils.addExtensionHeaders(headers, additionalHeaders);
 
         // ---------------------------------------
@@ -2541,6 +3060,7 @@ var HeaderWriter = new Class({
 
     append: function(text) {
 		this.content.push(text);
+		return this;
 	},
 	
 	toString: function() {
@@ -2707,7 +3227,7 @@ EncodingWriter.extend({
 var LanguageWriter = new Class(MetadataWriter, {
     initialize: function(header) {
         this.callSuper(header);
-    },
+    }
 });
 
 LanguageWriter.extend({
@@ -2716,17 +3236,7 @@ LanguageWriter.extend({
     }
 });
 
-var LanguageWriter = new Class(MetadataWriter, {
-    initialize: function(header) {
-        this.callSuper(header);
-    },
-});
-
-LanguageWriter.extend({
-	write: function(languages) {
-        return new LanguageWriter().appendCollection(languages).toString();
-    }
-});
+// org/restlet/engine/headers/CacheDirectiveWriter.js#
 
 var PreferenceWriter = new Class(HeaderWriter, {
 	initialize: function() {
@@ -2786,6 +3296,130 @@ PreferenceWriter.extend({
     write: function(prefs) {
         return new PreferenceWriter().appendCollection(prefs).toString();
     }
+});
+
+var RangeWriter = new Class(HeaderWriter, {
+	initialize: function() {
+		this.callSuper();
+	},
+
+    appendCollection: function(ranges) {
+        if (ranges == null || ranges.isEmpty()) {
+            return this;
+        }
+
+        this.append("bytes=");
+
+        for (var i = 0; i < ranges.length; i++) {
+            if (i > 0) {
+            	this.append(", ");
+            }
+
+            this.appendObject(ranges.get(i));
+        }
+
+        return this;
+    },
+
+    appendObject: function(range) {
+        if (range.getIndex() >= Range.INDEX_FIRST) {
+            this.append(range.getIndex());
+            append("-");
+
+            if (range.getSize() != Range.SIZE_MAX) {
+                append(range.getIndex() + range.getSize() - 1);
+            }
+        } else if (range.getIndex() == Range.INDEX_LAST) {
+            append("-");
+
+            if (range.getSize() != Range.SIZE_MAX) {
+                append(range.getSize());
+            }
+        }
+
+        return this;
+    }
+});
+
+RangeWriter.extend({
+    write: function(param, size) {
+    	if (param instanceof Array) {
+    		var ranges = param;
+            return new RangeWriter().appendCollection(ranges).toString();
+    	} else {
+    		var range = param;
+            var b = new StringBuilder("bytes ");
+
+            if (range.getIndex() >= Range.INDEX_FIRST) {
+                b.append(range.getIndex());
+                b.append("-");
+                if (range.getSize() != Range.SIZE_MAX) {
+                    b.append(range.getIndex() + range.getSize() - 1);
+                } else {
+                    if (size != Representation.UNKNOWN_SIZE) {
+                        b.append(size - 1);
+                    } else {
+                        throw new Error(
+                                "The entity has an unknown size, can't determine the last byte position.");
+                    }
+                }
+            } else if (range.getIndex() == Range.INDEX_LAST) {
+                if (range.getSize() != Range.SIZE_MAX) {
+                    if (size != Representation.UNKNOWN_SIZE) {
+                        if (range.getSize() <= size) {
+                            b.append(size - range.getSize());
+                            b.append("-");
+                            b.append(size - 1);
+                        } else {
+                            throw new Error(
+                                    "The size of the range ("
+                                            + range.getSize()
+                                            + ") is higher than the size of the entity ("
+                                            + size + ").");
+                        }
+                    } else {
+                        throw new Error(
+                                "The entity has an unknown size, can't determine the last byte position.");
+                    }
+                } else {
+                    // This is not a valid range.
+                    throw new Error(
+                            "The range provides no index and no size, it is invalid.");
+                }
+            }
+
+            if (size != Representation.UNKNOWN_SIZE) {
+                b.append("/").append(size);
+            } else {
+                b.append("/*");
+            }
+
+            return b.toString();
+    	}
+    }
+});
+
+var TagWriter = new Class(HeaderWriter, {
+    initialize: function(header) {
+        this.callSuper(header);
+    },
+
+    appendObject: function(tag) {
+        return this.append(tag.format());
+    }
+});
+
+TagWriter.extend({
+	write: function(param) {
+		if (param instanceof Array) {
+			return new TagWriter().appendCollection(param).toString();
+		} else {
+			for (var elt in new TagWriter()) {
+				console.log("elt = "+elt);
+			}
+			return new TagWriter().appendObject(param).toString();
+		}
+	}
 });
 
 var DateUtils = new Class({});
@@ -4365,7 +4999,6 @@ var MediaType = new Class(Metadata, {
 		if (description==null) {
 			description = "Media type or range of media types";
 		}
-		//alert("MediaType = "+MediaType);
         this.callSuper(MediaTypeUtils.normalizeType(name, parameters), description);
     },
 
@@ -4446,8 +5079,6 @@ var MediaType = new Class(Metadata, {
         return result;
     }
 });
-
-//alert("after new Class MediaType");
 
 MediaType.extend({
 	APPLICATION_JSON: new MediaType("application/json"),
@@ -4612,6 +5243,12 @@ var Representation = new Class(RepresentationInfo, {
     },
     setSize: function(size) {
     	this.size = size;
+    },
+    getTag: function() {
+    	return this.tag;
+    },
+    setTag: function(tag) {
+    	this.tag = tag;
     },
     getText: function() {
 		return this.text;
@@ -4844,11 +5481,25 @@ var ClientResource = new Class({
 	setRequest: function(request) {
 		this.request = request;
 	},
+	getRequestAttributes: function() {
+		if (this.request!=null) {
+			return this.request.getAttributes();
+		} else {
+			return null;
+		}
+	},
 	getResponse: function() {
 		return this.response;
 	},
 	setResponse: function(response) {
 		this.response = response;
+	},
+	getResponseAttributes: function() {
+		if (this.response!=null) {
+			return this.response.getAttributes();
+		} else {
+			return null;
+		}
 	},
 	createClientInfo: function(mediaType) {
 		var clientInfo = null;

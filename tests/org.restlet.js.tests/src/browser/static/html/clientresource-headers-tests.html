@@ -12,58 +12,70 @@
 <script type="text/javascript"> 
 module("Simple Restlet JS client tests");
 
-asyncTest("Get with resource client", function() {
-  var clientResource = new ClientResource("/contact/1");
-  clientResource.get(function(representation) {
-	  console.log("representation = "+representation);
-	  var content = representation.getText();
-	  console.log("content = "+content);
-	  ok(content, "{\"id\":\"1\",\"lastName\":\"lastName1\",\"firstName\":\"firstName1\",\"email\":null}");
-	  var date = representation.getModificationDate();
-	  alert("date = "+date);
-	  alert("response = "+clientResource.getResponse());
-	  alert("response.getDate() = "+clientResource.getResponse().getDate());
-	  start();
-  }, MediaType.APPLICATION_JSON);
+/*asyncTest("Custom headers", function() {
+	var clientResource = new ClientResource("/contact/1");
+
+	var additionalHeaders = clientResource.getRequestAttributes()[HeaderConstants.ATTRIBUTE_HEADERS];
+	if (additionalHeaders==null) {
+		additionalHeaders = new Series();
+		clientResource.getRequestAttributes()[HeaderConstants.ATTRIBUTE_HEADERS] = additionalHeaders;
+	}
+	additionalHeaders.set("MyHeader", "MyValue");
+
+	clientResource.get(function(representation) {
+		console.log("representation = "+representation);
+		var content = representation.getText();
+		console.log("content = "+content);
+		ok(content, "{\"id\":\"1\",\"lastName\":\"lastName1\",\"firstName\":\"firstName1\",\"email\":null}");
+		var date = representation.getModificationDate();
+		start();
+	}, MediaType.APPLICATION_JSON);
+});*/
+
+/*asyncTest("Tag header", function() {
+	var clientResource = new ClientResource("/contact/1");
+
+	var contact = {
+			id: "1",
+			lastName: "lastName",
+			firstName: "firstName"
+	};
+	var jsonRepresentation = new JsonRepresentation(contact);
+	jsonRepresentation.setTag(new Tag("TAG"));
+
+	clientResource.put(jsonRepresentation, function(representation) {
+		console.log("representation.getText() = "+representation.getText());
+		var jsonRepresentation = new JsonRepresentation(representation);
+		var obj = jsonRepresentation.getObject();
+		ok(obj.id, "1");
+		ok(obj.lastName, "lastName");
+		ok(obj.firstName, "firstName");
+		start();
+	}, MediaType.APPLICATION_JSON);
+});*/
+
+asyncTest("Range header", function() {
+	var clientResource = new ClientResource("/contact/1");
+
+	var contact = {
+			id: "1",
+			lastName: "lastName",
+			firstName: "firstName"
+	};
+	var jsonRepresentation = new JsonRepresentation(contact);
+	jsonRepresentation.setRange(new Range(10, 30));
+
+	clientResource.put(jsonRepresentation, function(representation) {
+		console.log("representation.getText() = "+representation.getText());
+		var jsonRepresentation = new JsonRepresentation(representation);
+		var obj = jsonRepresentation.getObject();
+		ok(obj.id, "1");
+		ok(obj.lastName, "lastName");
+		ok(obj.firstName, "firstName");
+		start();
+	}, MediaType.APPLICATION_JSON);
 });
 
-/*asyncTest("Get with resource client (json)", function() {
-  var clientResource = new ClientResource("../resource/contact/1");
-  clientResource.get(function(representation) {
-	  var jsonRepresentation = new JsonRepresentation(representation);
-	  var obj = jsonRepresentation.getObject();
-	  ok(obj.id, "1");
-	  ok(obj.lastName, "lastName");
-	  ok(obj.firstName, "firstName");
-	  start();
-  }, MediaType.APPLICATION_JSON);
-});*/
-
-/*asyncTest("Put with resource client (json)", function() {
-  var clientResource = new ClientResource("/contact/1");
-  var contact = {
-	id: "1",
-	lastName: "lastName",
-	firstName: "firstName"
-  }
-  var jsonRepresentation = new JsonRepresentation(contact);
-  clientResource.put(jsonRepresentation, function(representation) {
-	  console.log("representation.getText() = "+representation.getText());
-	  var jsonRepresentation = new JsonRepresentation(representation);
-	  var obj = jsonRepresentation.getObject();
-	  ok(obj.id, "1");
-	  ok(obj.lastName, "lastName");
-	  ok(obj.firstName, "firstName");
-	  start();
-  }, MediaType.APPLICATION_JSON);
-});*/
-
-/*asyncTest("Delete with resource client (json)", function() {
-  var clientResource = new ClientResource("/contact/1");
-  clientResource.delete(function(representation) {
-	  start();
-  }, MediaType.APPLICATION_JSON);
-});*/
 </script> 
  </head>
  
