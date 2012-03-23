@@ -7,6 +7,7 @@ var StringBuilder = new Class({
 		if (value) {
 			this.strings.push(value);
 		}
+		return this;
 	},
 	clear: function() {
 		this.strings.length = 1;

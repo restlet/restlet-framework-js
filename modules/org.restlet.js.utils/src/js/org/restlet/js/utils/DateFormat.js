@@ -198,16 +198,31 @@ var DateFormat = new Class({
 				}
 				formattedDate += date.getMonth()+1;
 			} else if(token=="dd") {
+				if (date.getDate()<10) {
+					formattedDate += "0";
+				}
 				formattedDate += date.getDate();
 			} else if(token=="yyyy") {
 				formattedDate += date.getFullYear();
 			} else if(token=="yy") {
+				if (date.getYear()<10) {
+					formattedDate += "0";
+				}
 				formattedDate += date.getYear();
 			} else if(token=="HH") {
+				if (date.getHours()<10) {
+					formattedDate += "0";
+				}
 				formattedDate += date.getHours();
 			} else if(token=="mm") {
+				if (date.getMinutes()<10) {
+					formattedDate += "0";
+				}
 				formattedDate += date.getMinutes();
 			} else if(token=="ss") {
+				if (date.getSeconds()<10) {
+					formattedDate += "0";
+				}
 				formattedDate += date.getSeconds();
 			} else if(token=="zzz") {
 				// Pacific Daylight Time
@@ -233,5 +248,5 @@ DateFormat.extend({
 	DAYS_IN_WEEK: ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"],
 	SHORT_DAYS_IN_WEEK: ["Sun","Mon","Tue","Wed","Thu","Fri","Sat","Sun"],
 	MONTHS: ["January","February","March","April","May","June","July","August","September","October","November","December"],
-	SHORT_MONTHS: ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],
+	SHORT_MONTHS: ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]
 });
