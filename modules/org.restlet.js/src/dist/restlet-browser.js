@@ -70,11 +70,11 @@
 
 #include org/restlet/engine/headers/HeaderReader.js#
 
+#include org/restlet/engine/headers/HeaderWriter.js#
+
 #include org/restlet/engine/headers/CookieWriter.js#
 
 #include org/restlet/engine/headers/DateWriter.js#
-
-#include org/restlet/engine/headers/HeaderWriter.js#
 
 #include org/restlet/engine/headers/MetadataWriter.js#
 

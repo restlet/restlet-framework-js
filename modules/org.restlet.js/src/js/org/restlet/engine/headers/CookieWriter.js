@@ -1,5 +1,9 @@
 var CookieWriter = new Class(HeaderWriter, {
-    appendObject: function(cookie) {
+	initialize: function() {
+		this.callSuper();
+	},
+
+	appendObject: function(cookie) {
         var name = cookie.getName();
         var value = cookie.getValue();
         var version = cookie.getVersion();
@@ -12,7 +16,7 @@ var CookieWriter = new Class(HeaderWriter, {
         this.appendValue(name, 0).append('=');
 
         // Append the value
-        if ((value != null) && (value.length() > 0)) {
+        if ((value != null) && (value.length > 0)) {
         	this.appendValue(value, version);
         }
 
@@ -20,7 +24,7 @@ var CookieWriter = new Class(HeaderWriter, {
             // Append the path
             var path = cookie.getPath();
 
-            if ((path != null) && (path.length() > 0)) {
+            if ((path != null) && (path.length > 0)) {
             	this.append("; $Path=");
             	this.appendQuotedString(path);
             }
@@ -28,7 +32,7 @@ var CookieWriter = new Class(HeaderWriter, {
             // Append the domain
             var domain = cookie.getDomain();
 
-            if ((domain != null) && (domain.length() > 0)) {
+            if ((domain != null) && (domain.length > 0)) {
             	this.append("; $Domain=");
             	this.appendQuotedString(domain);
             }

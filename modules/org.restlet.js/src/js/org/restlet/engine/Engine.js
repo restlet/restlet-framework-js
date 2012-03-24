@@ -6,6 +6,14 @@ var Engine = new Class({
 		// [ifdef nodejs] uncomment
 		//return new NodeJsHttpClientHelper();
 		// [enddef]
+	},
+
+	getDebugHandler: function() {
+		return this.debugHandler;
+	},
+
+	setDebugHandler: function(debugHandler) {
+		this.debugHandler = debugHandler;
 	}
 });
 

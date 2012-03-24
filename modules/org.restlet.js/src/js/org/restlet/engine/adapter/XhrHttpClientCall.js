@@ -40,6 +40,11 @@ var XhrHttpClientCall = new Class(ClientCall, {
 			data = request.getEntity().getText();
 		}
 		console.log("> xhr.lowLevelSendRequest");
+		var debugHandler = Engine.getInstance().getDebugHandler();
+		console.log("debugHandler = "+debugHandler);
+		if (debugHandler!=null) {
+			debugHandler.beforeSendingRequest(url, method, headers, data);
+		}
 		this.lowLevelSendRequest(url, method, headers, data, function(xhr) {
 			console.log("> xhr.lowLevelSendRequest -> callback");
 			currentThis.extractResponseHeaders(xhr);
@@ -51,6 +56,9 @@ var XhrHttpClientCall = new Class(ClientCall, {
 			var status = new Status(xhr.status);
 			response.setStatus(status);
 			response.setEntity(representation);
+			if (debugHandler!=null) {
+				//debugHandler.afterReceivedResponse(status, statusCode, headers, data);
+			}
 			callback(response);
 		});
 	},
