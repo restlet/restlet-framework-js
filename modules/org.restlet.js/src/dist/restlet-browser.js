@@ -44,6 +44,8 @@
 
 #include org/restlet/data/Conditions.js#
 
+#include org/restlet/data/Disposition.js#
+
 #include org/restlet/engine/headers/ContentType.js#
 
 #include org/restlet/data/Parameter.js#
@@ -75,6 +77,8 @@
 #include org/restlet/engine/headers/CookieWriter.js#
 
 #include org/restlet/engine/headers/DateWriter.js#
+
+#include org/restlet/engine/headers/DispositionWriter.js#
 
 #include org/restlet/engine/headers/MetadataWriter.js#
 

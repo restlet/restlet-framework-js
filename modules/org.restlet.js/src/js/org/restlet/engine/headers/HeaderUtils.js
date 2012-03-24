@@ -56,13 +56,13 @@ HeaderUtils.extend({
                         TagWriter.write(entity.getTag()), headers);
             }
 
-            /*if (entity.getDisposition() != null
+            if (entity.getDisposition() != null
                     && !Disposition.TYPE_NONE.equals(entity.getDisposition()
                             .getType())) {
             	HeaderUtils.addHeader(HeaderConstants.HEADER_CONTENT_DISPOSITION,
-                        DispositionWriter.write(entity.getDisposition()),
+                        DispositionWriter.writeObject(entity.getDisposition()),
                         headers);
-            }*/
+            }
         }
 	},
 	addExtensionHeaders: function(existingHeaders, additionalHeaders) {
@@ -362,12 +362,11 @@ HeaderUtils.extend({
 
         // Add the security headers. NOTE: This must stay at the end because
         // the AWS challenge scheme requires access to all HTTP headers
-        //TODO:
-        /*ChallengeResponse challengeResponse = request.getChallengeResponse();
+        ChallengeResponse challengeResponse = request.getChallengeResponse();
         if (challengeResponse != null) {
-            addHeader(
+            this.addHeader(
                     HeaderConstants.HEADER_AUTHORIZATION,
-                    org.restlet.engine.security.AuthenticatorUtils
+                    AuthenticatorUtils
                             .formatResponse(challengeResponse, request, headers),
                     headers);
         }
@@ -376,10 +375,10 @@ HeaderUtils.extend({
                 .getProxyChallengeResponse();
         if (proxyChallengeResponse != null) {
             addHeader(HeaderConstants.HEADER_PROXY_AUTHORIZATION,
-                    org.restlet.engine.security.AuthenticatorUtils
+                    AuthenticatorUtils
                             .formatResponse(proxyChallengeResponse, request,
                                     headers), headers);
-        }*/
+        }
 	},
 	addResponseHeaders: function(response, headers) {
         if (response.getServerInfo().isAcceptingRanges()) {
