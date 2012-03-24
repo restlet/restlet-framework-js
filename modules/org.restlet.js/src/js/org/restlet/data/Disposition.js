@@ -1,0 +1,72 @@
+var Disposition = new Class({
+    initialize: function(type, parameters) {
+        this.type = type;
+        this.parameters = parameters;
+    },
+
+    addDate: function(name, value) {
+        this.getParameters().add(name,
+                DateUtils.format(value, DateUtils.FORMAT_RFC_822.get(0)));
+    },
+
+    getFilename: function() {
+        return this.getParameters().getFirstValue(NAME_FILENAME, true);
+    },
+
+    getParameters: function() {
+        if (this.parameters == null) {
+            this.parameters = new Series();
+        }
+
+        return this.parameters;
+    },
+
+    getType: function() {
+        return type;
+    },
+
+    setCreationDate: function(value) {
+        this.setDate(NAME_CREATION_DATE, value);
+    },
+
+    setDate: function(name, value) {
+        this.getParameters().set(name,
+                DateUtils.format(value, DateUtils.FORMAT_RFC_822.get(0)), true);
+    },
+
+    setFilename: function(fileName) {
+        this.getParameters().set(Disposition.NAME_FILENAME, fileName, true);
+    },
+
+    setModificationDate: function(value) {
+        this.setDate(NAME_MODIFICATION_DATE, value);
+    },
+
+    setParameters: function(parameters) {
+        this.parameters = parameters;
+    },
+
+    setReadDate: function(value) {
+        this.setDate(NAME_READ_DATE, value);
+    },
+
+    setSize: function(size) {
+        this.getParameters().set(Disposition.NAME_SIZE, Long.toString(size), true);
+    },
+
+    setType: function(type) {
+        this.type = type;
+    }
+
+});
+
+Disposition.extend({
+    NAME_CREATION_DATE: "creation-date",
+    NAME_FILENAME: "filename",
+    NAME_MODIFICATION_DATE: "modification-date",
+    NAME_READ_DATE: "read-date",
+    NAME_SIZE: "size",
+    TYPE_ATTACHMENT: "attachment",
+    TYPE_INLINE: "inline",
+    TYPE_NONE: "none"
+});
