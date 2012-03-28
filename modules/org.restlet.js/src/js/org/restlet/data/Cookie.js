@@ -1,6 +1,5 @@
 var Cookie = new Class({
     initialize: function() {
-    	console.log("cookie = "+arguments.length);
     	if (arguments.length==2 && typeof arguments[0]=="string") {
     		this.version = 0;
     		this.name = arguments[0];
@@ -22,8 +21,6 @@ var Cookie = new Class({
     			this.domain = arguments[4];
     		}
     	}
-    	console.log("cookie - name : "+this.name);
-    	console.log("cookie - value : "+this.value);
     },
 
     equals: function(obj) {

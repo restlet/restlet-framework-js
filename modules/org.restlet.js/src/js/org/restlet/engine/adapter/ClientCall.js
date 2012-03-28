@@ -9,13 +9,11 @@ var ClientCall = new Class(Call, {
 		return HeaderUtils.getContentLength(this.getResponseHeaders());
 	},
 	getResponseEntity: function(response) {
-		console.log("> getResponseEntity");
         var result = response.getEntity();
         var size = Representation.UNKNOWN_SIZE;
 
         // Compute the content length
         var responseHeaders = this.getResponseHeaders();
-        console.log("responseHeaders = "+responseHeaders);
         var transferEncoding = responseHeaders.getFirstValue(
         			HeaderConstants.HEADER_TRANSFER_ENCODING, true);
         if ((transferEncoding != null)
@@ -42,7 +40,6 @@ var ClientCall = new Class(Call, {
                         .fine("The length of the message body is unknown. The entity must be handled carefully and consumed entirely in order to surely release the connection.");*/
             }
         }
-        console.log("responseHeaders = "+responseHeaders.length);
         result = HeaderUtils.extractEntityHeaders(responseHeaders, result);
 
         return result;

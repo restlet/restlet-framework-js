@@ -207,11 +207,9 @@ HeaderUtils.extend({
                 WarningWriter.write(message.getWarnings()), headers);*/
 	},
 	addHeader: function(headerName, headerValue, headers) {
-		console.log("> addHeader");
         if ((headerName != null) && (headerValue != null)
                 && (headerValue.length > 0)) {
             try {
-            	console.log("  ## adding header "+headerName+" : "+headerValue);
                 headers.push(new Parameter(headerName, headerValue));
             } catch (err) {
             	console.log(err);
@@ -219,7 +217,6 @@ HeaderUtils.extend({
                         "Unable to format the " + headerName + " header", t);*/
             }
         }
-		console.log("< addHeader");
 	},
 	addNotModifiedEntityHeaders: function(entity, headers) {
         if (entity != null) {
@@ -362,7 +359,7 @@ HeaderUtils.extend({
 
         // Add the security headers. NOTE: This must stay at the end because
         // the AWS challenge scheme requires access to all HTTP headers
-        ChallengeResponse challengeResponse = request.getChallengeResponse();
+        /*ChallengeResponse challengeResponse = request.getChallengeResponse();
         if (challengeResponse != null) {
             this.addHeader(
                     HeaderConstants.HEADER_AUTHORIZATION,
@@ -378,7 +375,7 @@ HeaderUtils.extend({
                     AuthenticatorUtils
                             .formatResponse(proxyChallengeResponse, request,
                                     headers), headers);
-        }
+        }*/
 	},
 	addResponseHeaders: function(response, headers) {
         if (response.getServerInfo().isAcceptingRanges()) {
@@ -477,7 +474,6 @@ HeaderUtils.extend({
         HeaderUtils.addExtensionHeaders(headers, additionalHeaders);
 	},
 	extractEntityHeaders: function(headers, representation) {
-		console.log("### extractEntityHeaders - representation = "+representation);
 	    var result = (representation == null) ? new EmptyRepresentation()
 	            : representation;
 	    var entityHeaderFound = false;
@@ -485,10 +481,8 @@ HeaderUtils.extend({
 	    if (headers != null) {
 	        for (var cpt = 0; cpt<headers.length; cpt++) {
 	        	var header = headers[cpt];
-	        	console.log("- header : "+header.getName()+" - "+header.getValue());
 	            if (header.getName().equalsIgnoreCase(
 	                    HeaderConstants.HEADER_CONTENT_TYPE)) {
-	            	console.log("contenttype");
 	                var contentType = new ContentType(header.getValue());
 	                result.setMediaType(contentType.getMediaType());
 	
@@ -725,17 +719,17 @@ HeaderUtils.extend({
     	var code = HeaderUtils.getCharacterCode(character);
         return (code == 13);
     },
-    /*isChunkedEncoding: function(headers) {
-        boolean result = false;
+    isChunkedEncoding: function(headers) {
+        var result = false;
 
         if (headers != null) {
-            final String header = headers.getFirstValue(
+            var header = headers.getFirstValue(
                     HeaderConstants.HEADER_TRANSFER_ENCODING, true);
             result = "chunked".equalsIgnoreCase(header);
         }
 
         return result;
-    },*/
+    },
     isComma: function(character) {
     	if (character==-1) {
     		return false;
@@ -748,17 +742,17 @@ HeaderUtils.extend({
     	}
         return isText(character) && (character != '(') && (character != ')');
     },
-    /*isConnectionClose: function(headers) {
-        boolean result = false;
+    isConnectionClose: function(headers) {
+        var result = false;
 
         if (headers != null) {
-            String header = headers.getFirstValue(
+            var header = headers.getFirstValue(
                     HeaderConstants.HEADER_CONNECTION, true);
             result = "close".equalsIgnoreCase(header);
         }
 
         return result;
-    },*/
+    },
     isControlChar: function(character) {
     	if (character==-1) {
     		return false;

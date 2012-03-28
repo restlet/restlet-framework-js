@@ -76,11 +76,9 @@ var Call = new Class({
 		this.requestUri = requestUri;
 	},
 	getResponseHeaders: function() {
-		console.log("call - getResponseHeaders - "+this.responseHeaders.length);
 		return this.responseHeaders;
 	},
 	setResponseHeaders: function(responseHeaders) {
-		console.log("call - setResponseHeaders - "+this.responseHeaders+" | "+responseHeaders.length);
 		this.responseHeaders = responseHeaders;
 	},
 	getServerAddress: function() {

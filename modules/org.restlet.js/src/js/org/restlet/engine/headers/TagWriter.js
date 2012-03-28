@@ -13,9 +13,6 @@ TagWriter.extend({
 		if (param instanceof Array) {
 			return new TagWriter().appendCollection(param).toString();
 		} else {
-			for (var elt in new TagWriter()) {
-				console.log("elt = "+elt);
-			}
 			return new TagWriter().appendObject(param).toString();
 		}
 	}

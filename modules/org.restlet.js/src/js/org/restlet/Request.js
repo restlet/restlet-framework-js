@@ -3,9 +3,6 @@ var Request = new Class(Message, {
 		this.callSuper();
 		this.method = method;
 		this.clientInfo = new ClientInfo();
-		console.log("#### Request.initialize");
-		console.log("url = "+url);
-		console.log("typeof url = "+(typeof url));
 		if (typeof url == "string") {
 			this.reference = new Reference(url);
 		} else if (url instanceof Reference) {

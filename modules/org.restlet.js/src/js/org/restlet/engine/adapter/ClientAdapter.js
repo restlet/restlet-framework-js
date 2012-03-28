@@ -2,7 +2,6 @@ var ClientAdapter = new Class({
 	initialize: function(context) {
 	},
     readResponseHeaders: function(httpCall, response) {
-    	console.log("> readResponseHeaders");
         try {
             var responseHeaders = httpCall.getResponseHeaders();
 
@@ -14,24 +13,16 @@ var ClientAdapter = new Class({
         	console.log(err);
             response.setStatus(Status.CONNECTOR_ERROR_INTERNAL, err);
         }
-    	console.log("< readResponseHeaders");
     },
     toSpecific: function(client, request) {
-    	console.log("> toSpecific");
         // Create the low-level HTTP client call
         var result = client.create(request);
-        console.log("result = "+result);
-        console.log("result request headers = "+result.getRequestHeaders());
-        console.log("result response headers = "+result.getResponseHeaders());
-        console.log("request.getEntity() = "+request.getEntity());
 
         // Add the headers
         if (result != null) {
-            console.log("1");
             HeaderUtils.addGeneralHeaders(request, result.getRequestHeaders());
 
             if (request.getEntity() != null) {
-                console.log("2");
                 HeaderUtils.addEntityHeaders(request.getEntity(),
                         result.getRequestHeaders());
             }
@@ -41,11 +32,9 @@ var ClientAdapter = new Class({
             HeaderUtils.addRequestHeaders(request, result.getRequestHeaders());
         }
 
-    	console.log("< toSpecific");
         return result;
     },
     updateResponse: function(response, status, httpCall) {
-    	console.log("> updateResponse");
         // Send the request to the client
         response.setStatus(status);
 
@@ -79,16 +68,13 @@ var ClientAdapter = new Class({
                 response.setEntity(null);
             }
         }
-    	console.log("< updateResponse");
     },
     commit: function(httpCall, request, callback) {
-    	console.log("> commit");
         if (httpCall != null) {
             // Send the request to the client
         	var currentThis = this;
             httpCall.sendRequest(request, function(response) {
                 try {
-                	console.log("internal callback");
                 	currentThis.updateResponse(response,
                             new Status(httpCall.getStatusCode(), null,
                                     httpCall.getReasonPhrase(), null),
@@ -106,6 +92,5 @@ var ClientAdapter = new Class({
                 }
             });
         }
-    	console.log("< commit");
     }
 });

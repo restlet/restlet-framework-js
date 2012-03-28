@@ -95,10 +95,8 @@ var DateFormat = new Class({
 		return -1;
 	},
 	_getMonthIndex: function(month, shortNames) {
-		console.log("> _getMonthIndex");
 		var monthNames = shortNames ? DateFormat.SHORT_MONTHS : DateFormat.MONTHS;
 		for (var cpt=0;cpt<monthNames.length;cpt++) {
-			console.log(" - monthNames[cpt] = "+monthNames[cpt]+", month = "+month);
 			if (monthNames[cpt]==month) {
 				return cpt;
 			}
@@ -132,29 +130,21 @@ var DateFormat = new Class({
 		}
 	},
 	parse: function(s) {
-		console.log("s = "+s);
 		var tokens = this._getTokens(this.formatPattern);
-		console.log("tokens = "+tokens.join("|"));
 		var dateTokens = this._getDateTokens(tokens, s);
-		console.log("dateTokens = "+dateTokens.join("|"));
 		this._checkTokens(tokens, dateTokens);
 		var date = new Date();
 		date.setTime(0);
 		for (var cpt=0;cpt<tokens.length;cpt++) {
 			var token = tokens[cpt];
 			var dateToken = dateTokens[cpt];
-			console.log("token = "+token+", dateToken = "+dateToken);
 			if (token=="EEEE") {
 				//Do nothing
 			} else if(token=="EEE") {
 				//Do nothing
 			} else if(token=="MMMMM") {
-				console.log(" -> dateToken = "+dateToken);
-				console.log("this._getMonthIndex(dateToken, false) = "+this._getMonthIndex(dateToken, false));
 				date.setMonth(this._getMonthIndex(dateToken, false));
 			} else if(token=="MMM") {
-				console.log(" -> dateToken = "+dateToken);
-				console.log("this._getMonthIndex(dateToken, false) = "+this._getMonthIndex(dateToken, true));
 				date.setMonth(this._getMonthIndex(dateToken, true));
 			} else if(token=="MM") {
 				date.setMonth(parseInt(dateToken)-1);
@@ -180,7 +170,6 @@ var DateFormat = new Class({
 	},
 	format: function(date) {
 		var formattedDate = "";
-		console.log("this.formatPattern = "+this.formatPattern);
 		var tokens = this._getTokens(this.formatPattern);
 		for (var cpt=0;cpt<tokens.length;cpt++) {
 			var token = tokens[cpt];

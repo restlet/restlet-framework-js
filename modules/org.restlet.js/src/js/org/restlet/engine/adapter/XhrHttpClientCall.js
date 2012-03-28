@@ -19,51 +19,50 @@ var XhrHttpClientCall = new Class(ClientCall, {
 	            catch(e){}
 	        }
 	    }
-	    //window.alert("Votre navigateur ne prend pas en charge l'objet XMLHTTPRequest.");
 	    return null; // not supported
 	},
 	sendRequest: function(request, callback) {
-		console.log("> xhr.sendRequest");
 		var currentThis = this;
 		var response = new Response(request);
 		var url = request.getReference().getUrl();
 		var method = request.getMethod().getName();
 		this.method = request.getMethod();
 		var clientInfo = request.getClientInfo();
-		var headers = {};
+		var requestHeaders = {};
 		for (var i=0; i<this.requestHeaders.length; i++) {
 			var requestHeader = this.requestHeaders[i];
-			headers[requestHeader.getName()] = requestHeader.getValue();
+			requestHeaders[requestHeader.getName()] = requestHeader.getValue();
 		}
 		var data = "";
 		if (request.getEntity()!=null) {
 			data = request.getEntity().getText();
 		}
-		console.log("> xhr.lowLevelSendRequest");
 		var debugHandler = Engine.getInstance().getDebugHandler();
-		console.log("debugHandler = "+debugHandler);
-		if (debugHandler!=null) {
-			debugHandler.beforeSendingRequest(url, method, headers, data);
+		if (debugHandler!=null && debugHandler.beforeSendingRequest!=null) {
+			debugHandler.beforeSendingRequest(url, method, requestHeaders, data);
 		}
-		this.lowLevelSendRequest(url, method, headers, data, function(xhr) {
-			console.log("> xhr.lowLevelSendRequest -> callback");
+		this.lowLevelSendRequest(url, method, requestHeaders, data, function(xhr) {
 			currentThis.extractResponseHeaders(xhr);
 
 			var representation = new Representation();
 			representation = HeaderUtils.extractEntityHeaders(
 								currentThis.getResponseHeaders(xhr), representation);
 			representation.write(xhr);
-			var status = new Status(xhr.status);
+			var status = new Status(xhr.status, xhr.statusText);
 			response.setStatus(status);
 			response.setEntity(representation);
-			if (debugHandler!=null) {
-				//debugHandler.afterReceivedResponse(status, statusCode, headers, data);
+			if (debugHandler!=null && debugHandler.afterReceivedResponse!=null) {
+				var responseHeaders = {};
+				for (var i=0; i<currentThis.responseHeaders.length; i++) {
+					var header = currentThis.responseHeaders[i];
+					responseHeaders[header.getName()] = header.getValue();
+				}
+				debugHandler.afterReceivedResponse(xhr.status, xhr.statusText, responseHeaders, representation.getText());
 			}
 			callback(response);
 		});
 	},
 	extractResponseHeaders: function(xhr) {
-		console.log("> extractResponseHeaders");
 		var headersString = xhr.getAllResponseHeaders();
 		var headers = [];
 		var headerEntries = headersString.split("\n");
@@ -77,11 +76,7 @@ var XhrHttpClientCall = new Class(ClientCall, {
 				headers.push(header);
 			}
 		}
-		//this.responseHeaders = headers;
-		console.log("> this.responseHeaders = "+headers.length);
-		console.log("b1");
 		this.setResponseHeaders(headers);
-		console.log("a1");
 	},
 	lowLevelSendRequest: function(url,httpMethod,headers,data,onResponseCallback) {
 		var currentThis = this;

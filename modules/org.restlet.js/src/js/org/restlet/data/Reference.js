@@ -1,17 +1,13 @@
 var Reference = new Class({
 	initialize: function(urlString) {
         // [ifndef nodejs]
-		console.log("#### Reference.initialize");
 		this.url = urlString;
-		console.log("url = "+urlString);
 		var tmp = this.url;
-		console.log("tmp = "+tmp);
 		var index = tmp.indexOf("://");
 		if (index!=-1) {
 			this.protocol = tmp.substring(0, index);
 			tmp = tmp.substring(index+3);
 		}
-		console.log("tmp = "+tmp);
 		index = tmp.indexOf(":");
 		if (index!=-1) {
 			this.host = tmp.substring(0, index);
@@ -23,12 +19,10 @@ var Reference = new Class({
 			this.port = 443;
 			this.tmp = "/";
 		}
-		console.log("tmp = "+tmp);
 		index = tmp.indexOf("/");
 		if (index!=-1) {
 			this.port = parseInt(tmp.substring(0, index));
 			tmp = tmp.substring(index);
-			console.log("tmp = "+tmp);
 			this.path = tmp;
 		}
 		// [enddef]
