@@ -77,6 +77,7 @@
 				</filterreader>
 			</filterchain>
 	    </copy>
+		<delete dir="${target.browser.dir}/build"/>
 		<!-- Code quality -->
 		<!--jslint options="undef,white">
 			<formatter type="plain" />
@@ -88,7 +89,7 @@
 			<fileset dir="${target.browser.dir}" includes="restlet-browser.js"/>
 		</jsmin-->
 		<!-- Compile -->
-		<!-- jscomp compilationLevel="simple" warning="verbose" 
+		<!--jscomp compilationLevel="simple" warning="verbose" 
 				debug="false" output="${target.browser.dir}/restlet-browser-min.js">
 			<sources dir="${target.browser.dir}">
 				<file name="restlet-browser.js"/>
@@ -96,7 +97,7 @@
 			<sources dir="${lib.js.dir}/jsonparser">
 				<file name="json-minified.js"/>
 			</sources>
-		</jscomp -->
+		</jscomp-->
 	</target>
 	
 	<target name="install.browser.for.tests" depends="build.browser">
