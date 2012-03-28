@@ -233,10 +233,8 @@ var DateFormat = new Class({
 		return -1;
 	},
 	_getMonthIndex: function(month, shortNames) {
-		console.log("> _getMonthIndex");
 		var monthNames = shortNames ? DateFormat.SHORT_MONTHS : DateFormat.MONTHS;
 		for (var cpt=0;cpt<monthNames.length;cpt++) {
-			console.log(" - monthNames[cpt] = "+monthNames[cpt]+", month = "+month);
 			if (monthNames[cpt]==month) {
 				return cpt;
 			}
@@ -270,29 +268,21 @@ var DateFormat = new Class({
 		}
 	},
 	parse: function(s) {
-		console.log("s = "+s);
 		var tokens = this._getTokens(this.formatPattern);
-		console.log("tokens = "+tokens.join("|"));
 		var dateTokens = this._getDateTokens(tokens, s);
-		console.log("dateTokens = "+dateTokens.join("|"));
 		this._checkTokens(tokens, dateTokens);
 		var date = new Date();
 		date.setTime(0);
 		for (var cpt=0;cpt<tokens.length;cpt++) {
 			var token = tokens[cpt];
 			var dateToken = dateTokens[cpt];
-			console.log("token = "+token+", dateToken = "+dateToken);
 			if (token=="EEEE") {
 				//Do nothing
 			} else if(token=="EEE") {
 				//Do nothing
 			} else if(token=="MMMMM") {
-				console.log(" -> dateToken = "+dateToken);
-				console.log("this._getMonthIndex(dateToken, false) = "+this._getMonthIndex(dateToken, false));
 				date.setMonth(this._getMonthIndex(dateToken, false));
 			} else if(token=="MMM") {
-				console.log(" -> dateToken = "+dateToken);
-				console.log("this._getMonthIndex(dateToken, false) = "+this._getMonthIndex(dateToken, true));
 				date.setMonth(this._getMonthIndex(dateToken, true));
 			} else if(token=="MM") {
 				date.setMonth(parseInt(dateToken)-1);
@@ -318,7 +308,6 @@ var DateFormat = new Class({
 	},
 	format: function(date) {
 		var formattedDate = "";
-		console.log("this.formatPattern = "+this.formatPattern);
 		var tokens = this._getTokens(this.formatPattern);
 		for (var cpt=0;cpt<tokens.length;cpt++) {
 			var token = tokens[cpt];
@@ -543,17 +532,13 @@ var Message = new Class({
 
 var Reference = new Class({
 	initialize: function(urlString) {
-		console.log("#### Reference.initialize");
 		this.url = urlString;
-		console.log("url = "+urlString);
 		var tmp = this.url;
-		console.log("tmp = "+tmp);
 		var index = tmp.indexOf("://");
 		if (index!=-1) {
 			this.protocol = tmp.substring(0, index);
 			tmp = tmp.substring(index+3);
 		}
-		console.log("tmp = "+tmp);
 		index = tmp.indexOf(":");
 		if (index!=-1) {
 			this.host = tmp.substring(0, index);
@@ -565,12 +550,10 @@ var Reference = new Class({
 			this.port = 443;
 			this.tmp = "/";
 		}
-		console.log("tmp = "+tmp);
 		index = tmp.indexOf("/");
 		if (index!=-1) {
 			this.port = parseInt(tmp.substring(0, index));
 			tmp = tmp.substring(index);
-			console.log("tmp = "+tmp);
 			this.path = tmp;
 		}
 	},
@@ -845,14 +828,14 @@ var Request = new Class(Message, {
 		this.callSuper();
 		this.method = method;
 		this.clientInfo = new ClientInfo();
-		console.log("#### Request.initialize");
-		console.log("url = "+url);
-		console.log("typeof url = "+(typeof url));
 		if (typeof url == "string") {
 			this.reference = new Reference(url);
 		} else if (url instanceof Reference) {
 			this.reference = url;
 		}
+		this.ranges = [];
+		this.conditions = new Conditions();
+		this.cookies = new Series();
 
 /*		private volatile ChallengeResponse challengeResponse;
     $$ private volatile ClientInfo clientInfo;
@@ -882,6 +865,12 @@ var Request = new Class(Message, {
 	setClientInfo: function(clientInfo) {
 		this.clientInfo = clientInfo;
 	},
+	getConditions: function() {
+		return this.conditions;
+	},
+	setConditions: function() {
+		this.conditions = conditions;
+	},
 	getReference: function() {
 		return this.reference;
 	},
@@ -897,6 +886,12 @@ var Request = new Class(Message, {
     getOriginalRef: function() {
         return this.originalRef;
     },
+    getRanges: function() {
+    	return this.ranges;
+    },
+    setRanges: function(ranges) {
+    	this.ranges = ranges;
+    },
     getReferrerRef: function() {
         return this.referrerRef;
     },
@@ -905,7 +900,13 @@ var Request = new Class(Message, {
     },
     getRootRef: function() {
         return this.rootRef;
-    }
+    },
+    getCookies: function() {
+    	return this.cookies;
+    },
+    setCookies: function(cookies) {
+    	this.cookies = cookies;
+    },
 
 });
 
@@ -1140,6 +1141,556 @@ CharacterSet.extend({
         "windows-1252", "Windows 1232 character set")
 });
 
+var Cookie = new Class({
+    initialize: function() {
+    	if (arguments.length==2 && typeof arguments[0]=="string") {
+    		this.version = 0;
+    		this.name = arguments[0];
+    		this.value = arguments[1];
+    	} else {
+    		if (arguments.length>0) {
+    			this.version = arguments[0];
+    		}
+    		if (arguments.length>1) {
+    			this.name = arguments[1];
+    		}
+    		if (arguments.length>2) {
+    			this.value = arguments[2];
+    		}
+    		if (arguments.length>3) {
+    			this.path = arguments[3];
+    		}
+    		if (arguments.length>4) {
+    			this.domain = arguments[4];
+    		}
+    	}
+    },
+
+    equals: function(obj) {
+        // if obj == this no need to go further
+        var result = (obj == this);
+
+        if (!result) {
+            result = obj instanceof Cookie;
+
+            // if obj isn't a cookie or is null don't evaluate further
+            if (result) {
+                var that = obj;
+                result = (((that.getName() == null) && (this.getName() == null)) || ((this.getName() != null) && this.getName()
+                        .equals(that.getName())));
+
+                // if names are both null or equal continue
+                if (result) {
+                    result = (((that.getValue() == null) && (this.getValue() == null)) || ((this.getValue() != null) && this.getValue()
+                            .equals(that.getValue())));
+
+                    // if values are both null or equal continue
+                    if (result) {
+                        result = (this.version == that.version);
+
+                        // if versions are equal continue
+                        if (result) {
+                            result = (((that.getDomain() == null) && (this.getDomain() == null)) || ((this.getDomain() != null) && this.getDomain()
+                                    .equals(that.getDomain())));
+
+                            // if domains are equal continue
+                            if (result) {
+                                // compare paths taking
+                                result = (((that.getPath() == null) && (this.getPath() == null)) || ((this.getPath() != null) && this.getPath()
+                                        .equals(that.getPath())));
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return result;
+    },
+
+    getDomain: function() {
+        return this.domain;
+    },
+
+    getName: function() {
+        return this.name;
+    },
+
+    getPath: function() {
+        return this.path;
+    },
+
+    getValue: function() {
+        return this.value;
+    },
+
+    getVersion: function() {
+        return this.version;
+    },
+
+    setDomain: function(domain) {
+        this.domain = domain;
+    },
+
+    setName: function(name) {
+        this.name = name;
+    },
+
+    setPath: function(path) {
+        this.path = path;
+    },
+
+    setValue: function(value) {
+        this.value = value;
+    },
+
+    setVersion: function(version) {
+        this.version = version;
+    },
+
+    toString: function() {
+        return "Cookie [domain=" + this.domain + ", name=" + this.name + ", path=" + this.path
+                + ", value=" + this.value + ", version=" + this.version + "]";
+    }
+});
+
+var CookieSetting = new Class(Cookie, {
+	initialize: function() {
+    	if (arguments.length==2 && typeof arguments[0]=="string") {
+    		this.version = 0;
+    		this.name = arguments[0];
+    		this.value = arguments[1];
+    	} else {
+    		if (arguments.length>0) {
+    			this.version = arguments[0];
+    		}
+    		if (arguments.length>1) {
+    			this.name = arguments[1];
+    		}
+    		if (arguments.length>2) {
+    			this.value = arguments[2];
+    		}
+    		if (arguments.length>3) {
+    			this.path = arguments[3];
+    		}
+    		if (arguments.length>4) {
+    			this.domain = arguments[4];
+    		}
+    		if (arguments.length>5) {
+    			this.comment = arguments[5];
+    		}
+    		if (arguments.length>6) {
+    			this.maxAge = arguments[6];
+    		}
+    		if (arguments.length>7) {
+    			this.secure = arguments[7];
+    		}
+    		if (arguments.length>8) {
+    			this.accessRestricted = arguments[8];
+    		}
+    	}
+    },
+
+    equals: function(obj) {
+        var result = (obj == this);
+
+        // if obj == this no need to go further
+        if (!result) {
+            // test for equality at Cookie level i.e. name and value.
+            if (this.callSuper(obj)) {
+                // if obj isn't a cookie setting or is null don't evaluate
+                // further
+                if (obj instanceof CookieSetting) {
+                    var that = obj;
+                    result = (this.maxAge == that.maxAge)
+                            && (this.secure == that.secure);
+
+                    if (result) // if "maxAge" and "secure" properties are equal
+                    // test comments
+                    {
+                        if (!(this.comment == null)) // compare comments
+                        // taking care of nulls
+                        {
+                            result = (this.comment.equals(that.comment));
+                        } else {
+                            result = (that.comment == null);
+                        }
+                    }
+                }
+            }
+        }
+
+        return result;
+    },
+
+    getComment: function() {
+        return this.comment;
+    },
+
+    getDescription: function() {
+        return "Cookie setting";
+    },
+
+    getMaxAge: function() {
+        return this.maxAge;
+    },
+
+    isAccessRestricted: function() {
+        return this.accessRestricted;
+    },
+
+    isSecure: function() {
+        return this.secure;
+    },
+
+    setAccessRestricted: function(accessRestricted) {
+        this.accessRestricted = accessRestricted;
+    },
+
+    setComment: function(comment) {
+        this.comment = comment;
+    },
+
+    setMaxAge: function(maxAge) {
+        this.maxAge = maxAge;
+    },
+
+    setSecure: function(secure) {
+        this.secure = secure;
+    },
+
+    toString: function() {
+        return "CookieSetting [accessRestricted=" + this.accessRestricted
+                + ", comment=" + this.comment + ", maxAge=" + this.maxAge + ", secure="
+                + this.secure + ", domain=" + this.getDomain() + ", name=" + this.getName()
+                + ", path=" + this.getPath() + ", value=" + this.getValue()
+                + ", version=" + this.getVersion() + "]";
+    }
+});
+
+var Conditions = new Class({
+	initialize: function() {
+		this.match = [];
+		this.noneMatch = [];
+	},
+
+	getMatch: function() {
+		if (this.match == null) {
+			this.match = [];
+		}
+		return this.match;
+	},
+
+	getModifiedSince: function() {
+		return this.modifiedSince;
+	},
+
+	getNoneMatch: function() {
+		if (this.noneMatch == null) {
+			this.noneMatch = [];
+        }
+		return this.noneMatch;
+	},
+
+	getRangeDate: function() {
+		return this.rangeDate;
+	},
+
+	getRangeStatus: function() {
+		var tag = null;
+		var modificationDate = null;
+		if (arguments.length==1) {
+			var representationInfo = arguments[0];
+            tag = (representationInfo == null) ? null
+                    		: representationInfo.getTag();
+            modificationDate = (representationInfo == null) ? null
+            				: representationInfo.getModificationDate();
+		} else if (arguments.length==2) {
+			tag = arguments[0];
+			modificationDate = arguments[1];
+        } else {
+        	throw new Error("The number of arguments isn't correct.");
+		}
+
+		var result = Status.CLIENT_ERROR_PRECONDITION_FAILED;
+		if (this.getRangeTag() != null) {
+			var all = this.getRangeTag().equals(Tag.ALL);
+
+			// If a tag exists
+			if (tag != null) {
+				if (all || this.getRangeTag().equals(tag)) {
+					result = Status.SUCCESS_OK;
+				}
+			}
+		} else if (this.getRangeDate() != null) {
+			// If a modification date exists
+			if (this.getRangeDate().equals(modificationDate)) {
+				result = Status.SUCCESS_OK;
+			}
+		}
+		
+		return result;
+	},
+
+	getRangeTag: function() {
+		return this.rangeTag;
+	},
+
+	getStatus: function() {
+		var method = null;
+		var entityExists = false;
+		var tag = null;
+        var modificationDate = null;
+        if (arguments.length==2) {
+            method = arguments[0];
+            entityExists = (arguments[1] != null);
+            tag = (representationInfo == null) ? null : representationInfo.getTag();
+            modificationDate = (representationInfo == null) ? null
+                    		: representationInfo.getModificationDate();
+        } else if (arguments.length==4) {
+    		var method = arguments[0];
+    		var entityExists = arguments[1];
+    		var tag = arguments[2];
+            var modificationDate = arguments[3];
+        } else {
+        	throw new Error("The number of arguments isn't correct.");
+        }
+
+	    var result = null;
+	
+	    // Is the "if-Match" rule followed or not?
+	    if ((this.match != null) && !this.match.isEmpty()) {
+	        var matched = false;
+	        var failed = false;
+	        var all = (this.getMatch().length > 0)
+	                && this.getMatch()[0].equals(Tag.ALL);
+	        var statusMessage = null;
+	
+	        if (entityExists) {
+	            // If a tag exists
+	            if (!all && (tag != null)) {
+	                // Check if it matches one of the representations already
+	                // cached by the client
+	                var matchTag;
+	
+	                for (var i=0; !matched && i<this.getMatch().length; i++) {
+	                	matchTag = this.getMatch()[i];
+	                    matched = matchTag.equals(tag, false);
+	                }
+	            } else {
+	                matched = all;
+	            }
+	        } else {
+	            // See
+	            // http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.24
+	            // If none of the entity tags match, or if "*" is given and no
+	            // current entity exists, the server MUST NOT perform the
+	            // requested method
+	            failed = all;
+	            statusMessage = "A non existing resource can't match any tag.";
+	        }
+	
+	        failed = failed || !matched;
+	
+	        if (failed) {
+	            result = Status.CLIENT_ERROR_PRECONDITION_FAILED;
+	            if (statusMessage != null) {
+	                result = new Status(result, statusMessage);
+	            }
+	        }
+	    }
+	
+	    // Is the "if-None-Match" rule followed or not?
+	    if ((result == null) && (this.noneMatch != null)
+	            && !this.noneMatch.isEmpty()) {
+	        var matched = false;
+	
+	        if (entityExists) {
+	            // If a tag exists
+	            if (tag != null) {
+	                // Check if it matches one of the representations
+	                // already cached by the client
+	                var noneMatchTag;
+	
+	                for (var i=0; !matched && i<this.getNoneMatch().length; i++) {
+	                    noneMatchTag = this.getNoneMatch()[i];
+	                    matched = noneMatchTag.equals(tag, (Method.GET
+	                            .equals(method) || Method.HEAD.equals(method)));
+	                }
+	
+	                // The current representation matches one of those already
+	                // cached by the client
+	                if (matched) {
+	                    // Check if the current representation has been updated
+	                    // since the "if-modified-since" date. In this case, the
+	                    // rule is followed.
+	                    var modifiedSince = this.getModifiedSince();
+	                    var isModifiedSince = (modifiedSince != null)
+	                            && (DateUtils.after(new Date(), modifiedSince)
+	                                    || (modificationDate == null) || DateUtils
+	                                    .after(modifiedSince, modificationDate));
+	                    matched = !isModifiedSince;
+	                }
+	            } else {
+	                matched = (this.getNoneMatch().size() > 0)
+	                        && this.getNoneMatch().get(0).equals(Tag.ALL);
+	            }
+	        }
+	
+	        if (matched) {
+	            if (Method.GET.equals(method) || Method.HEAD.equals(method)) {
+	                result = Status.REDIRECTION_NOT_MODIFIED;
+	            } else {
+	                result = Status.CLIENT_ERROR_PRECONDITION_FAILED;
+	            }
+	        }
+	    }
+	
+	    // Is the "if-Modified-Since" rule followed or not?
+	    if ((result == null) && (this.getModifiedSince() != null)) {
+	        var modifiedSince = this.getModifiedSince();
+	        var isModifiedSince = (DateUtils.after(new Date(),
+	                modifiedSince) || (modificationDate == null) || DateUtils
+	                .after(modifiedSince, modificationDate));
+	
+	        if (!isModifiedSince) {
+	            if (Method.GET.equals(method) || Method.HEAD.equals(method)) {
+	                result = Status.REDIRECTION_NOT_MODIFIED;
+	            } else {
+	                result = Status.CLIENT_ERROR_PRECONDITION_FAILED;
+	            }
+	        }
+	    }
+	
+	    // Is the "if-Unmodified-Since" rule followed or not?
+	    if ((result == null) && (this.getUnmodifiedSince() != null)) {
+	        var unModifiedSince = this.getUnmodifiedSince();
+	        var isUnModifiedSince = ((unModifiedSince == null)
+	                || (modificationDate == null) || !DateUtils.before(
+	                modificationDate, unModifiedSince));
+	
+	        if (!isUnModifiedSince) {
+	            result = Status.CLIENT_ERROR_PRECONDITION_FAILED;
+	        }
+	    }
+	
+	    return result;
+	},
+
+	getUnmodifiedSince: function() {
+		return this.unmodifiedSince;
+	},
+
+	hasSome: function() {
+		return (((this.match != null) && !this.match.isEmpty())
+				|| ((this.noneMatch != null) && !this.noneMatch.isEmpty())
+				|| (this.getModifiedSince() != null) || (this.getUnmodifiedSince() != null));
+	},
+
+	hasSomeRange: function() {
+		return this.getRangeTag() != null || this.getRangeDate() != null;
+	},
+
+	setMatch: function(tags) {
+		this.match = tags;
+	},
+
+	setModifiedSince: function(date) {
+		//TODO: unmodifiable date
+		this.modifiedSince = date;
+	},
+
+	setNoneMatch: function(tags) {
+		this.noneMatch = tags;
+	},
+
+	setRangeDate: function(rangeDate) {
+		this.rangeDate = rangeDate;
+	},
+
+	setRangeTag: function(rangeTag) {
+		this.rangeTag = rangeTag;
+	},
+
+	setUnmodifiedSince: function(date) {
+		//TODO: unmodifiable date
+		this.unmodifiedSince = date;
+	}
+});
+
+var Disposition = new Class({
+    initialize: function(type, parameters) {
+        this.type = type;
+        this.parameters = parameters;
+    },
+
+    addDate: function(name, value) {
+        this.getParameters().add(name,
+                DateUtils.format(value, DateUtils.FORMAT_RFC_822.get(0)));
+    },
+
+    getFilename: function() {
+        return this.getParameters().getFirstValue(NAME_FILENAME, true);
+    },
+
+    getParameters: function() {
+        if (this.parameters == null) {
+            this.parameters = new Series();
+        }
+
+        return this.parameters;
+    },
+
+    getType: function() {
+        return type;
+    },
+
+    setCreationDate: function(value) {
+        this.setDate(NAME_CREATION_DATE, value);
+    },
+
+    setDate: function(name, value) {
+        this.getParameters().set(name,
+                DateUtils.format(value, DateUtils.FORMAT_RFC_822.get(0)), true);
+    },
+
+    setFilename: function(fileName) {
+        this.getParameters().set(Disposition.NAME_FILENAME, fileName, true);
+    },
+
+    setModificationDate: function(value) {
+        this.setDate(NAME_MODIFICATION_DATE, value);
+    },
+
+    setParameters: function(parameters) {
+        this.parameters = parameters;
+    },
+
+    setReadDate: function(value) {
+        this.setDate(NAME_READ_DATE, value);
+    },
+
+    setSize: function(size) {
+        this.getParameters().set(Disposition.NAME_SIZE, Long.toString(size), true);
+    },
+
+    setType: function(type) {
+        this.type = type;
+    }
+
+});
+
+Disposition.extend({
+    NAME_CREATION_DATE: "creation-date",
+    NAME_FILENAME: "filename",
+    NAME_MODIFICATION_DATE: "modification-date",
+    NAME_READ_DATE: "read-date",
+    NAME_SIZE: "size",
+    TYPE_ATTACHMENT: "attachment",
+    TYPE_INLINE: "inline",
+    TYPE_NONE: "none"
+});
+
 var ContentType = new Class({
 	initialize: function(value) {
 		var index = -1;
@@ -1264,8 +1815,20 @@ var Series = new Class({
 		return this.array.length;
 	},
 	
-	add: function(name, value) {
-		return this.array.push(this.createEntry(name, value));
+	isEmpty: function() {
+		return (this.size()==0);
+	},
+	
+	add: function() {
+		if (arguments.length==1) {
+			return this.array.push(arguments[0]);
+		} else if (arguments.length==2) {
+			var name = arguments[0];
+			var value = arguments[1];
+			return this.array.push(this.createEntry(name, value));
+		} else {
+			throw new Error("The number of arguments isn't correct.");
+		}
 	},
 
 	createEntry: function(name, value) {
@@ -1832,13 +2395,13 @@ HeaderUtils.extend({
                         TagWriter.write(entity.getTag()), headers);
             }
 
-            /*if (entity.getDisposition() != null
+            if (entity.getDisposition() != null
                     && !Disposition.TYPE_NONE.equals(entity.getDisposition()
                             .getType())) {
             	HeaderUtils.addHeader(HeaderConstants.HEADER_CONTENT_DISPOSITION,
-                        DispositionWriter.write(entity.getDisposition()),
+                        DispositionWriter.writeObject(entity.getDisposition()),
                         headers);
-            }*/
+            }
         }
 	},
 	addExtensionHeaders: function(existingHeaders, additionalHeaders) {
@@ -1983,11 +2546,9 @@ HeaderUtils.extend({
                 WarningWriter.write(message.getWarnings()), headers);*/
 	},
 	addHeader: function(headerName, headerValue, headers) {
-		console.log("> addHeader");
         if ((headerName != null) && (headerValue != null)
                 && (headerValue.length > 0)) {
             try {
-            	console.log("  ## adding header "+headerName+" : "+headerValue);
                 headers.push(new Parameter(headerName, headerValue));
             } catch (err) {
             	console.log(err);
@@ -1995,7 +2556,6 @@ HeaderUtils.extend({
                         "Unable to format the " + headerName + " header", t);*/
             }
         }
-		console.log("< addHeader");
 	},
 	addNotModifiedEntityHeaders: function(entity, headers) {
         if (entity != null) {
@@ -2064,7 +2624,7 @@ HeaderUtils.extend({
             HeaderUtils.addHeader(HeaderConstants.HEADER_HOST, host, headers);
         }*/
 
-        /*var conditions = request.getConditions();
+        var conditions = request.getConditions();
         HeaderUtils.addHeader(HeaderConstants.HEADER_IF_MATCH,
                 TagWriter.write(conditions.getMatch()), headers);
         HeaderUtils.addHeader(HeaderConstants.HEADER_IF_NONE_MATCH,
@@ -2101,7 +2661,7 @@ HeaderUtils.extend({
         if (!request.getRanges().isEmpty()) {
         	HeaderUtils.addHeader(HeaderConstants.HEADER_RANGE,
                     RangeWriter.write(request.getRanges()), headers);
-        }*/
+        }
 
         if (request.getReferrerRef() != null) {
         	HeaderUtils.addHeader(HeaderConstants.HEADER_REFERRER, request.getReferrerRef()
@@ -2120,17 +2680,16 @@ HeaderUtils.extend({
         // 3) Add supported extension headers
         // ----------------------------------
 
-        /*if (request.getCookies().size() > 0) {
+        if (request.getCookies().size() > 0) {
         	HeaderUtils.addHeader(HeaderConstants.HEADER_COOKIE,
-                    CookieWriter.write(request.getCookies()), headers);
-        }*/
+                    CookieWriter.writeCollection(request.getCookies()), headers);
+        }
 
         // -------------------------------------
         // 4) Add user-defined extension headers
         // -------------------------------------
         var additionalHeaders = request
                 .getAttributes()[HeaderConstants.ATTRIBUTE_HEADERS];
-        console.log("additionalHeaders = "+additionalHeaders);
         HeaderUtils.addExtensionHeaders(headers, additionalHeaders);
 
         // ---------------------------------------
@@ -2139,12 +2698,11 @@ HeaderUtils.extend({
 
         // Add the security headers. NOTE: This must stay at the end because
         // the AWS challenge scheme requires access to all HTTP headers
-        //TODO:
         /*ChallengeResponse challengeResponse = request.getChallengeResponse();
         if (challengeResponse != null) {
-            addHeader(
+            this.addHeader(
                     HeaderConstants.HEADER_AUTHORIZATION,
-                    org.restlet.engine.security.AuthenticatorUtils
+                    AuthenticatorUtils
                             .formatResponse(challengeResponse, request, headers),
                     headers);
         }
@@ -2153,7 +2711,7 @@ HeaderUtils.extend({
                 .getProxyChallengeResponse();
         if (proxyChallengeResponse != null) {
             addHeader(HeaderConstants.HEADER_PROXY_AUTHORIZATION,
-                    org.restlet.engine.security.AuthenticatorUtils
+                    AuthenticatorUtils
                             .formatResponse(proxyChallengeResponse, request,
                                     headers), headers);
         }*/
@@ -2255,7 +2813,6 @@ HeaderUtils.extend({
         HeaderUtils.addExtensionHeaders(headers, additionalHeaders);
 	},
 	extractEntityHeaders: function(headers, representation) {
-		console.log("### extractEntityHeaders - representation = "+representation);
 	    var result = (representation == null) ? new EmptyRepresentation()
 	            : representation;
 	    var entityHeaderFound = false;
@@ -2263,10 +2820,8 @@ HeaderUtils.extend({
 	    if (headers != null) {
 	        for (var cpt = 0; cpt<headers.length; cpt++) {
 	        	var header = headers[cpt];
-	        	console.log("- header : "+header.getName()+" - "+header.getValue());
 	            if (header.getName().equalsIgnoreCase(
 	                    HeaderConstants.HEADER_CONTENT_TYPE)) {
-	            	console.log("contenttype");
 	                var contentType = new ContentType(header.getValue());
 	                result.setMediaType(contentType.getMediaType());
 	
@@ -2495,17 +3050,17 @@ HeaderUtils.extend({
     	var code = HeaderUtils.getCharacterCode(character);
         return (code == 13);
     },
-    /*isChunkedEncoding: function(headers) {
-        boolean result = false;
+    isChunkedEncoding: function(headers) {
+        var result = false;
 
         if (headers != null) {
-            final String header = headers.getFirstValue(
+            var header = headers.getFirstValue(
                     HeaderConstants.HEADER_TRANSFER_ENCODING, true);
             result = "chunked".equalsIgnoreCase(header);
         }
 
         return result;
-    },*/
+    },
     isComma: function(character) {
     	if (character==-1) {
     		return false;
@@ -2518,17 +3073,17 @@ HeaderUtils.extend({
     	}
         return isText(character) && (character != '(') && (character != ')');
     },
-    /*isConnectionClose: function(headers) {
-        boolean result = false;
+    isConnectionClose: function(headers) {
+        var result = false;
 
         if (headers != null) {
-            String header = headers.getFirstValue(
+            var header = headers.getFirstValue(
                     HeaderConstants.HEADER_CONNECTION, true);
             result = "close".equalsIgnoreCase(header);
         }
 
         return result;
-    },*/
+    },
     isControlChar: function(character) {
     	if (character==-1) {
     		return false;
@@ -3039,20 +3594,6 @@ var HeaderReader = new Class({
     }
 });
 
-var DateWriter = new Class({});
-
-DateWriter.extend({
-    /*write: function(date) {
-        return DateWriter.write(date, false);
-    },*/
-    write: function(date, cookie) {
-        if (cookie) {
-            return DateUtils.format(date, DateUtils.FORMAT_RFC_1036[0]);
-        }
-        return DateUtils.format(date);
-    }
-});
-
 var HeaderWriter = new Class({
     initialize: function() {
     	this.content = [];
@@ -3200,6 +3741,157 @@ var HeaderWriter = new Class({
     }
 });
 
+var CookieWriter = new Class(HeaderWriter, {
+	initialize: function() {
+		this.callSuper();
+	},
+
+	appendObject: function(cookie) {
+        var name = cookie.getName();
+        var value = cookie.getValue();
+        var version = cookie.getVersion();
+
+        if ((name == null) || (name.length == 0)) {
+            throw new Error(
+                    "Can't write cookie. Invalid name detected");
+        }
+
+        this.appendValue(name, 0).append('=');
+
+        // Append the value
+        if ((value != null) && (value.length > 0)) {
+        	this.appendValue(value, version);
+        }
+
+        if (version > 0) {
+            // Append the path
+            var path = cookie.getPath();
+
+            if ((path != null) && (path.length > 0)) {
+            	this.append("; $Path=");
+            	this.appendQuotedString(path);
+            }
+
+            // Append the domain
+            var domain = cookie.getDomain();
+
+            if ((domain != null) && (domain.length > 0)) {
+            	this.append("; $Domain=");
+            	this.appendQuotedString(domain);
+            }
+        }
+
+        return this;
+    },
+
+    appendCollection: function(cookies) {
+        if ((cookies != null) && !cookies.isEmpty()) {
+            var cookie;
+
+            var elements = cookies.getElements();
+            for (var i = 0; i < elements.length; i++) {
+                cookie = elements[i];
+
+                if (i == 0) {
+                    if (cookie.getVersion() > 0) {
+                    	this.append("$Version=\"").append(cookie.getVersion())
+                                .append("\"; ");
+                    }
+                } else {
+                	this.append("; ");
+                }
+
+                this.appendObject(cookie);
+            }
+        }
+
+        return this;
+    },
+
+    appendValue: function(value, version) {
+        if (version == 0) {
+        	this.append(value.toString());
+        } else {
+        	this.appendQuotedString(value);
+        }
+
+        return this;
+    }
+});
+
+CookieWriter.extend({
+	getCookies: function(source, destination) {
+	    var cookie;
+
+	    for (var i=0; i<source.length; i++) {
+	        cookie = source[i];
+
+	        if (destination.containsKey(cookie.getName())) {
+	            destination.put(cookie.getName(), cookie);
+	        }
+	    }
+	},
+
+	writeObject: function(cookie) {
+	    return new CookieWriter().appendObject(cookie).toString();
+	},
+
+	writeCollection: function(cookies) {
+	    return new CookieWriter().appendCollection(cookies).toString();
+	}
+});
+
+var DateWriter = new Class({});
+
+DateWriter.extend({
+    /*write: function(date) {
+        return DateWriter.write(date, false);
+    },*/
+    write: function(date, cookie) {
+        if (cookie) {
+            return DateUtils.format(date, DateUtils.FORMAT_RFC_1036[0]);
+        }
+        return DateUtils.format(date);
+    }
+});
+
+var DispositionWriter = new Class(HeaderWriter, {
+	initialize: function() {
+		this.callSuper();
+	},
+
+    appendObject: function(disposition) {
+        if (Disposition.TYPE_NONE.equals(disposition.getType())
+                || disposition.getType() == null) {
+            return this;
+        }
+
+        this.append(disposition.getType());
+
+        var elements = disposition.getParameters().getElements();
+        for (var i=0; i<elements.length; i++) {
+        	var parameter = elements[i];
+        	this.append("; ");
+        	this.append(parameter.getName());
+        	this.append("=");
+
+            if (HeaderUtils.isToken(parameter.getValue())) {
+            	this.append(parameter.getValue());
+            } else {
+            	this.appendQuotedString(parameter.getValue());
+            }
+        }
+
+        return this;
+    }
+});
+
+DispositionWriter.extend({
+	writeObject: function(disposition) {
+	    return new DispositionWriter().appendObject(disposition).toString();
+	}
+});
+
 var MetadataWriter = new Class(HeaderWriter, {
     appendObject: function(metadata) {
         return this.append(metadata.getName());
@@ -3315,7 +4007,7 @@ var RangeWriter = new Class(HeaderWriter, {
             	this.append(", ");
             }
 
-            this.appendObject(ranges.get(i));
+            this.appendObject(ranges[i]);
         }
 
         return this;
@@ -3324,16 +4016,16 @@ var RangeWriter = new Class(HeaderWriter, {
     appendObject: function(range) {
         if (range.getIndex() >= Range.INDEX_FIRST) {
             this.append(range.getIndex());
-            append("-");
+            this.append("-");
 
             if (range.getSize() != Range.SIZE_MAX) {
-                append(range.getIndex() + range.getSize() - 1);
+            	this.append(range.getIndex() + range.getSize() - 1);
             }
         } else if (range.getIndex() == Range.INDEX_LAST) {
-            append("-");
+        	this.append("-");
 
             if (range.getSize() != Range.SIZE_MAX) {
-                append(range.getSize());
+            	this.append(range.getSize());
             }
         }
 
@@ -3414,9 +4106,6 @@ TagWriter.extend({
 		if (param instanceof Array) {
 			return new TagWriter().appendCollection(param).toString();
 		} else {
-			for (var elt in new TagWriter()) {
-				console.log("elt = "+elt);
-			}
 			return new TagWriter().appendObject(param).toString();
 		}
 	}
@@ -4451,6 +5140,14 @@ var Connector = new Class(Restlet, {
 var Engine = new Class({
 	createHelper: function(restlet) {
 		return new XhrHttpClientHelper();
+	},
+
+	getDebugHandler: function() {
+		return this.debugHandler;
+	},
+
+	setDebugHandler: function(debugHandler) {
+		this.debugHandler = debugHandler;
 	}
 });
 
@@ -4541,11 +5238,9 @@ var Call = new Class({
 		this.requestUri = requestUri;
 	},
 	getResponseHeaders: function() {
-		console.log("call - getResponseHeaders - "+this.responseHeaders.length);
 		return this.responseHeaders;
 	},
 	setResponseHeaders: function(responseHeaders) {
-		console.log("call - setResponseHeaders - "+this.responseHeaders+" | "+responseHeaders.length);
 		this.responseHeaders = responseHeaders;
 	},
 	getServerAddress: function() {
@@ -4591,13 +5286,11 @@ var ClientCall = new Class(Call, {
 		return HeaderUtils.getContentLength(this.getResponseHeaders());
 	},
 	getResponseEntity: function(response) {
-		console.log("> getResponseEntity");
         var result = response.getEntity();
         var size = Representation.UNKNOWN_SIZE;
 
         // Compute the content length
         var responseHeaders = this.getResponseHeaders();
-        console.log("responseHeaders = "+responseHeaders);
         var transferEncoding = responseHeaders.getFirstValue(
         			HeaderConstants.HEADER_TRANSFER_ENCODING, true);
         if ((transferEncoding != null)
@@ -4624,7 +5317,6 @@ var ClientCall = new Class(Call, {
                         .fine("The length of the message body is unknown. The entity must be handled carefully and consumed entirely in order to surely release the connection.");*/
             }
         }
-        console.log("responseHeaders = "+responseHeaders.length);
         result = HeaderUtils.extractEntityHeaders(responseHeaders, result);
 
         return result;
@@ -4652,43 +5344,50 @@ var XhrHttpClientCall = new Class(ClientCall, {
 	            catch(e){}
 	        }
 	    }
-	    //window.alert("Votre navigateur ne prend pas en charge l'objet XMLHTTPRequest.");
 	    return null; // not supported
 	},
 	sendRequest: function(request, callback) {
-		console.log("> xhr.sendRequest");
 		var currentThis = this;
 		var response = new Response(request);
 		var url = request.getReference().getUrl();
 		var method = request.getMethod().getName();
 		this.method = request.getMethod();
 		var clientInfo = request.getClientInfo();
-		var headers = {};
+		var requestHeaders = {};
 		for (var i=0; i<this.requestHeaders.length; i++) {
 			var requestHeader = this.requestHeaders[i];
-			headers[requestHeader.getName()] = requestHeader.getValue();
+			requestHeaders[requestHeader.getName()] = requestHeader.getValue();
 		}
 		var data = "";
 		if (request.getEntity()!=null) {
 			data = request.getEntity().getText();
 		}
-		console.log("> xhr.lowLevelSendRequest");
-		this.lowLevelSendRequest(url, method, headers, data, function(xhr) {
-			console.log("> xhr.lowLevelSendRequest -> callback");
+		var debugHandler = Engine.getInstance().getDebugHandler();
+		if (debugHandler!=null && debugHandler.beforeSendingRequest!=null) {
+			debugHandler.beforeSendingRequest(url, method, requestHeaders, data);
+		}
+		this.lowLevelSendRequest(url, method, requestHeaders, data, function(xhr) {
 			currentThis.extractResponseHeaders(xhr);
 
 			var representation = new Representation();
 			representation = HeaderUtils.extractEntityHeaders(
 								currentThis.getResponseHeaders(xhr), representation);
 			representation.write(xhr);
-			var status = new Status(xhr.status);
+			var status = new Status(xhr.status, xhr.statusText);
 			response.setStatus(status);
 			response.setEntity(representation);
+			if (debugHandler!=null && debugHandler.afterReceivedResponse!=null) {
+				var responseHeaders = {};
+				for (var i=0; i<currentThis.responseHeaders.length; i++) {
+					var header = currentThis.responseHeaders[i];
+					responseHeaders[header.getName()] = header.getValue();
+				}
+				debugHandler.afterReceivedResponse(xhr.status, xhr.statusText, responseHeaders, representation.getText());
+			}
 			callback(response);
 		});
 	},
 	extractResponseHeaders: function(xhr) {
-		console.log("> extractResponseHeaders");
 		var headersString = xhr.getAllResponseHeaders();
 		var headers = [];
 		var headerEntries = headersString.split("\n");
@@ -4702,11 +5401,7 @@ var XhrHttpClientCall = new Class(ClientCall, {
 				headers.push(header);
 			}
 		}
-		//this.responseHeaders = headers;
-		console.log("> this.responseHeaders = "+headers.length);
-		console.log("b1");
 		this.setResponseHeaders(headers);
-		console.log("a1");
 	},
 	lowLevelSendRequest: function(url,httpMethod,headers,data,onResponseCallback) {
 		var currentThis = this;
@@ -4735,7 +5430,6 @@ var ClientAdapter = new Class({
 	initialize: function(context) {
 	},
     readResponseHeaders: function(httpCall, response) {
-    	console.log("> readResponseHeaders");
         try {
             var responseHeaders = httpCall.getResponseHeaders();
 
@@ -4747,24 +5441,16 @@ var ClientAdapter = new Class({
         	console.log(err);
             response.setStatus(Status.CONNECTOR_ERROR_INTERNAL, err);
         }
-    	console.log("< readResponseHeaders");
     },
     toSpecific: function(client, request) {
-    	console.log("> toSpecific");
         // Create the low-level HTTP client call
         var result = client.create(request);
-        console.log("result = "+result);
-        console.log("result request headers = "+result.getRequestHeaders());
-        console.log("result response headers = "+result.getResponseHeaders());
-        console.log("request.getEntity() = "+request.getEntity());
 
         // Add the headers
         if (result != null) {
-            console.log("1");
             HeaderUtils.addGeneralHeaders(request, result.getRequestHeaders());
 
             if (request.getEntity() != null) {
-                console.log("2");
                 HeaderUtils.addEntityHeaders(request.getEntity(),
                         result.getRequestHeaders());
             }
@@ -4774,11 +5460,9 @@ var ClientAdapter = new Class({
             HeaderUtils.addRequestHeaders(request, result.getRequestHeaders());
         }
 
-    	console.log("< toSpecific");
         return result;
     },
     updateResponse: function(response, status, httpCall) {
-    	console.log("> updateResponse");
         // Send the request to the client
         response.setStatus(status);
 
@@ -4812,16 +5496,13 @@ var ClientAdapter = new Class({
                 response.setEntity(null);
             }
         }
-    	console.log("< updateResponse");
     },
     commit: function(httpCall, request, callback) {
-    	console.log("> commit");
         if (httpCall != null) {
             // Send the request to the client
         	var currentThis = this;
             httpCall.sendRequest(request, function(response) {
                 try {
-                	console.log("internal callback");
                 	currentThis.updateResponse(response,
                             new Status(httpCall.getStatusCode(), null,
                                     httpCall.getReasonPhrase(), null),
@@ -4839,7 +5520,6 @@ var ClientAdapter = new Class({
                 }
             });
         }
-    	console.log("< commit");
     }
 });
 
