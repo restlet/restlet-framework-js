@@ -1,44 +1,9 @@
 var CacheDirective = new Class(Parameter, {
-
-    /** Indicates if the directive is a digit value. */
-    private boolean digit;
-
-    /**
-     * Constructor for directives with no value.
-     * 
-     * @param name
-     *            The directive name.
-     */
-    public CacheDirective(String name) {
-        this(name, null);
-    }
-
-    /**
-     * Constructor for directives with a value.
-     * 
-     * @param name
-     *            The directive name.
-     * @param value
-     *            The directive value.
-     */
-    public CacheDirective(String name, String value) {
-        this(name, value, false);
-    }
-
-    /**
-     * Constructor for directives with a value.
-     * 
-     * @param name
-     *            The directive name.
-     * @param value
-     *            The directive value.
-     * @param digit
-     *            The kind of value (true for a digit value, false otherwise).
-     */
-    public CacheDirective(String name, String value, boolean digit) {
-        super(name, value);
+    initialize: function(name, value, digit) {
+        this.name = name;
+        this.value = value;
         this.digit = digit;
-    }
+    },
 
     isDigit: function() {
         return this.digit;
@@ -54,96 +19,91 @@ CacheDirective.extend({
             .toString(maxAge), true);
 	},
 
-	maxStale: function() {
-    return new CacheDirective(HeaderConstants.CACHE_MAX_STALE);
-}
+	maxStale: function(maxStale) {
+		if (maxStale==null) {
+			return new CacheDirective(HeaderConstants.CACHE_MAX_STALE);
+		} else {
+		    return new CacheDirective(HeaderConstants.CACHE_MAX_STALE,
+		            		maxStale.toString(), true);
+		}
+	},
 
-public static CacheDirective maxStale(int maxStale) {
-    return new CacheDirective(HeaderConstants.CACHE_MAX_STALE, Integer
-            .toString(maxStale), true);
-}
+	minFresh: function(minFresh) {
+		return new CacheDirective(HeaderConstants.CACHE_MIN_FRESH,
+						minFresh.toString(), true);
+	},
 
-public static CacheDirective minFresh(int minFresh) {
-    return new CacheDirective(HeaderConstants.CACHE_MIN_FRESH, Integer
-            .toString(minFresh), true);
-}
+	mustRevalidate: function() {
+		return new CacheDirective(HeaderConstants.CACHE_MUST_REVALIDATE);
+	},
 
-public static CacheDirective mustRevalidate() {
-    return new CacheDirective(HeaderConstants.CACHE_MUST_REVALIDATE);
-}
+	noCache: function(fieldNames) {
+		if (fieldNames==null) {
+			return new CacheDirective(HeaderConstants.CACHE_NO_CACHE);
+		} else if (typeof fieldNames == "string") {
+		    return new CacheDirective(HeaderConstants.CACHE_NO_CACHE, "\""
+		            + fieldNames + "\"");
+		} else {
+		    var sb = new StringBuilder();
 
-public static CacheDirective noCache() {
-    return new CacheDirective(HeaderConstants.CACHE_NO_CACHE);
-}
+		    if (fieldNames != null) {
+		        for (var i = 0; i < fieldNames.length; i++) {
+		            sb.append("\"" + fieldNames[i] + "\"");
 
-public static CacheDirective noCache(List<String> fieldNames) {
-    StringBuilder sb = new StringBuilder();
+		            if (i < fieldNames.length - 1) {
+		                sb.append(',');
+		            }
+		        }
+		    }
 
-    if (fieldNames != null) {
-        for (int i = 0; i < fieldNames.size(); i++) {
-            sb.append("\"" + fieldNames.get(i) + "\"");
+		    return new CacheDirective(HeaderConstants.CACHE_NO_CACHE, sb.toString());
+		}
+	},
 
-            if (i < fieldNames.size() - 1) {
-                sb.append(',');
-            }
-        }
-    }
+	noStore: function() {
+		return new CacheDirective(HeaderConstants.CACHE_NO_STORE);
+	},
 
-    return new CacheDirective(HeaderConstants.CACHE_NO_CACHE, sb.toString());
-}
+	noTransform: function() {
+		return new CacheDirective(HeaderConstants.CACHE_NO_TRANSFORM);
+	},
 
-public static CacheDirective noCache(String fieldName) {
-    return new CacheDirective(HeaderConstants.CACHE_NO_CACHE, "\""
-            + fieldName + "\"");
-}
+	onlyIfCached: function() {
+		return new CacheDirective(HeaderConstants.CACHE_ONLY_IF_CACHED);
+	},
 
-public static CacheDirective noStore() {
-    return new CacheDirective(HeaderConstants.CACHE_NO_STORE);
-}
+	privateInfo: function(fieldNames) {
+		if (fieldNames==null) {
+			return new CacheDirective(HeaderConstants.CACHE_PRIVATE);
+		} else if (typeof fieldNames == "string") {
+			return new CacheDirective(HeaderConstants.CACHE_PRIVATE, "\"" + fieldName + "\"");
+		} else {
+			var sb = new StringBuilder();
 
-public static CacheDirective noTransform() {
-    return new CacheDirective(HeaderConstants.CACHE_NO_TRANSFORM);
-}
+			if (fieldNames != null) {
+				for (int i = 0; i < fieldNames.length; i++) {
+					sb.append("\"" + fieldNames[i] + "\"");
 
-public static CacheDirective onlyIfCached() {
-    return new CacheDirective(HeaderConstants.CACHE_ONLY_IF_CACHED);
-}
+					if (i < fieldNames.length - 1) {
+						sb.append(',');
+					}
+				}
+			}
 
-public static CacheDirective privateInfo() {
-    return new CacheDirective(HeaderConstants.CACHE_PRIVATE);
-}
+			return new CacheDirective(HeaderConstants.CACHE_PRIVATE, sb.toString());
+		}
+	},
 
-public static CacheDirective privateInfo(List<String> fieldNames) {
-    StringBuilder sb = new StringBuilder();
+	proxyMustRevalidate: function() {
+		return new CacheDirective(HeaderConstants.CACHE_PROXY_MUST_REVALIDATE);
+	},
 
-    if (fieldNames != null) {
-        for (int i = 0; i < fieldNames.size(); i++) {
-            sb.append("\"" + fieldNames.get(i) + "\"");
+	publicInfo: function() {
+		return new CacheDirective(HeaderConstants.CACHE_PUBLIC);
+	},
 
-            if (i < fieldNames.size() - 1) {
-                sb.append(',');
-            }
-        }
-    }
-
-    return new CacheDirective(HeaderConstants.CACHE_PRIVATE, sb.toString());
-}
-
-public static CacheDirective privateInfo(String fieldName) {
-    return new CacheDirective(HeaderConstants.CACHE_PRIVATE, "\"" + fieldName
-            + "\"");
-}
-
-public static CacheDirective proxyMustRevalidate() {
-    return new CacheDirective(HeaderConstants.CACHE_PROXY_MUST_REVALIDATE);
-}
-
-public static CacheDirective publicInfo() {
-    return new CacheDirective(HeaderConstants.CACHE_PUBLIC);
-}
-
-public static CacheDirective sharedMaxAge(int sharedMaxAge) {
-    return new CacheDirective(HeaderConstants.CACHE_SHARED_MAX_AGE, Integer
-            .toString(sharedMaxAge), true);
-}
+	sharedMaxAge: function(sharedMaxAge) {
+		return new CacheDirective(HeaderConstants.CACHE_SHARED_MAX_AGE,
+						sharedMaxAge.toString(), true);
+	}
 });

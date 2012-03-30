@@ -193,18 +193,18 @@ HeaderUtils.extend({
         }
 	},
 	addGeneralHeaders: function(message, headers) {
-		/*HeaderUtils.addHeader(HeaderConstants.HEADER_CACHE_CONTROL,
+		HeaderUtils.addHeader(HeaderConstants.HEADER_CACHE_CONTROL,
                 CacheDirectiveWriter.write(message.getCacheDirectives()),
-                headers);*/
+                headers);
         if (message.getDate() == null) {
             message.setDate(new Date());
         }
         HeaderUtils.addHeader(HeaderConstants.HEADER_DATE,
                 DateWriter.write(message.getDate()), headers);
-        /*HeaderUtils.addHeader(HeaderConstants.HEADER_VIA,
+        HeaderUtils.addHeader(HeaderConstants.HEADER_VIA,
                 RecipientInfoWriter.write(message.getRecipientsInfo()), headers);
         HeaderUtils.addHeader(HeaderConstants.HEADER_WARNING,
-                WarningWriter.write(message.getWarnings()), headers);*/
+                WarningWriter.write(message.getWarnings()), headers);
 	},
 	addHeader: function(headerName, headerValue, headers) {
         if ((headerName != null) && (headerValue != null)
@@ -269,7 +269,7 @@ HeaderUtils.extend({
 
         // Manually add the host name and port when it is potentially
         // different from the one specified in the target resource reference.
-        /*var hostRef = (request.getResourceRef().getBaseRef() != null) ? request
+        var hostRef = (request.getResourceRef().getBaseRef() != null) ? request
                 .getResourceRef().getBaseRef() : request.getResourceRef();
 
         if (hostRef.getHostDomain() != null) {
@@ -283,7 +283,7 @@ HeaderUtils.extend({
             }
 
             HeaderUtils.addHeader(HeaderConstants.HEADER_HOST, host, headers);
-        }*/
+        }
 
         var conditions = request.getConditions();
         HeaderUtils.addHeader(HeaderConstants.HEADER_IF_MATCH,

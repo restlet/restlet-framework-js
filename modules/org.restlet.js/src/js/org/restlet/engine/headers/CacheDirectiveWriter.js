@@ -1,5 +1,5 @@
 var CacheDirectiveWriter = new Class(HeaderWriter, {
-	append: function(directive) {
+	appendObject: function(directive) {
         this.appendExtension(directive);
         return this;
     }
@@ -7,6 +7,6 @@ var CacheDirectiveWriter = new Class(HeaderWriter, {
 
 CacheDirectiveWriter.extend({
 	write: function(directives) {
-		return new CacheDirectiveWriter().append(directives).toString();
+		return new CacheDirectiveWriter().appendCollection(directives).toString();
 	}
 });

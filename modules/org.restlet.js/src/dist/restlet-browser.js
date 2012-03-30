@@ -36,6 +36,8 @@
 
 #include org/restlet/engine/headers/HeaderConstants.js#
 
+#include org/restlet/data/CacheDirective.js#
+
 #include org/restlet/data/CharacterSet.js#
 
 #include org/restlet/data/Cookie.js#
@@ -62,7 +64,11 @@
 
 #include org/restlet/data/Range.js#
 
+#include org/restlet/data/RecipientInfo.js#
+
 #include org/restlet/data/Tag.js#
+
+#include org/restlet/data/Warning.js#
 
 #include org/restlet/engine/headers/HeaderReaderUtils.js#
 
@@ -73,6 +79,8 @@
 #include org/restlet/engine/headers/HeaderReader.js#
 
 #include org/restlet/engine/headers/HeaderWriter.js#
+
+#include org/restlet/engine/headers/CacheDirectiveWriter.js#
 
 #include org/restlet/engine/headers/CookieWriter.js#
 
@@ -92,7 +100,11 @@
 
 #include org/restlet/engine/headers/RangeWriter.js#
 
+#include org/restlet/engine/headers/RecipientInfoWriter.js#
+
 #include org/restlet/engine/headers/TagWriter.js#
+
+#include org/restlet/engine/headers/WarningWriter.js#
 
 #include org/restlet/engine/util/DateUtils.js#
 
