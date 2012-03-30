@@ -16,3 +16,7 @@ Array.prototype.getFirstValue = function(key, ignoreCase) {
 Array.prototype.isEmpty = function() {
 	return (this.length==0);
 };
+
+Array.prototype.size = function() {
+	return this.length;
+};
