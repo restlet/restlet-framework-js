@@ -3861,6 +3861,38 @@ Range.extend({
 	SIZE_MAX: -1
 });
 
+var RecipientInfo = new Class({
+	initialize: function(protocol, name, agent) {
+        this.protocol = protocol;
+        this.name = name;
+        this.comment = agent;
+    },
+
+    getComment: function() {
+        return this.comment;
+    },
+
+    getName: function() {
+        return this.name;
+    },
+
+    getProtocol: function() {
+        return this.protocol;
+    },
+
+    setComment: function(comment) {
+        this.comment = comment;
+    },
+
+    setName: function(name) {
+        this.name = name;
+    },
+
+    setProtocol: function(protocol) {
+        this.protocol = protocol;
+    }
+});
+
 var Tag = new Class({
 	initialize: function(opaqueTag, weak) {
 		this.name = opaqueTag;
@@ -3947,6 +3979,40 @@ Tag.extend({
 });
 
 Tag.ALL = Tag.parse("*");
+
+var Warning = new Class({
+    getAgent: function() {
+        return this.agent;
+    },
+
+    getDate: function() {
+        return this.date;
+    },
+
+    getStatus: function() {
+        return this.status;
+    },
+
+    getText: function() {
+        return this.text;
+    },
+
+    setAgent: function(agent) {
+        this.agent = agent;
+    },
+
+    setDate: function(date) {
+        this.date = date;
+    },
+
+    setStatus: function(status) {
+        this.status = status;
+    },
+
+    setText: function(text) {
+        this.text = text;
+    }
+});
 
 var HeaderReaderUtils = new Class({});
 
@@ -5714,6 +5780,44 @@ RangeWriter.extend({
     }
 });
 
+var RecipientInfoWriter = new Class(HeaderWriter, {
+	initialize: function() {
+		this.callSuper();
+	},
+
+    appendObject: function(recipientInfo) {
+        if (recipientInfo.getProtocol() != null) {
+            this.appendToken(recipientInfo.getProtocol().getName());
+            this.append('/');
+            this.appendToken(recipientInfo.getProtocol().getVersion());
+            this.appendSpace();
+
+            if (recipientInfo.getName() != null) {
+            	this.append(recipientInfo.getName());
+
+                if (recipientInfo.getComment() != null) {
+                	this.appendSpace();
+                	this.appendComment(recipientInfo.getComment());
+                }
+            } else {
+                throw new Error(
+                        "The name (host or pseudonym) of a recipient can't be null");
+            }
+        } else {
+            throw new Error(
+                    "The protocol of a recipient can't be null");
+        }
+
+        return this;
+    }
+});
+
+RangeWriter.extend({
+    writeCollection: function(recipientsInfo) {
+        return new RecipientInfoWriter().appendCollection(recipientsInfo).toString();
+    }
+});
+
 var TagWriter = new Class(HeaderWriter, {
     initialize: function(header) {
         this.callSuper(header);
@@ -5733,6 +5837,51 @@ TagWriter.extend({
 		}
 	}
 });
+
+var WarningWriter = new Class(HeaderWriter, {
+    initialize: function() {
+        this.callSuper();
+    },
+
+    appendObject: function(warning) {
+        var agent = warning.getAgent();
+        var text = warning.getText();
+
+        if (warning.getStatus() == null) {
+            throw new Error(
+                    "Can't write warning. Invalid status code detected");
+        }
+
+        if ((agent == null) || (agent.length == 0)) {
+            throw new Error(
+                    "Can't write warning. Invalid agent detected");
+        }
+
+        if ((text == null) || (text.length == 0)) {
+            throw new Error(
+                    "Can't write warning. Invalid text detected");
+        }
+
+        this.append(Integer.toString(warning.getStatus().getCode()));
+        this.append(" ");
+        this.append(agent);
+        this.append(" ");
+        this.appendQuotedString(text);
+
+        if (warning.getDate() != null) {
+        	this.appendQuotedString(DateUtils.format(warning.getDate()));
+        }
+
+        return this;
+    }
+});
+
+TagWriter.extend({
+	write: function(warnings) {
+		return new WarningWriter().appendCollection(warnings).toString();
+	}
+});
+
 
 var DateUtils = new Class({});
 
