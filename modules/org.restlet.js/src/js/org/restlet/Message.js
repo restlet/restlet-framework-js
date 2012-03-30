@@ -1,9 +1,9 @@
 var Message = new Class({
-	initialize: function() {
+	initialize: function(entity) {
     	this.attributes = {};
     	this.cacheDirectives = null;
     	this.date = null;
-    	this.entity = null;
+    	this.entity = entity;
     	this.entityText = null;
     	this.recipientsInfo = null;
 	},

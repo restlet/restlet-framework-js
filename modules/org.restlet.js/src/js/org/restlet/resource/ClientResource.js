@@ -1,13 +1,10 @@
-var ClientResource = new Class({
+var ClientResource = new Class(UniformResource, {
 	initialize: function(url) {
 		this.request = new Request(null, url);
 	},
-	getRequest: function() {
-		return this.request;
-	},
-	setRequest: function(request) {
-		this.request = request;
-	},
+    addQueryParameter: function() {
+        return this.getReference().addQueryParameter.apply(this.getReference(), arguments);
+    },
 	getRequestAttributes: function() {
 		if (this.request!=null) {
 			return this.request.getAttributes();

@@ -108,13 +108,13 @@
 
 #include org/restlet/engine/adapter/ClientCall.js#
 
-#include org/restlet/engine/adapter/XhrHttpClientCall.js#
+#include org/restlet/engine/adapter/BrowserHttpClientCall.js#
 
 #include org/restlet/engine/adapter/ClientAdapter.js#
 
 #include org/restlet/engine/adapter/HttpClientHelper.js#
 
-#include org/restlet/engine/adapter/XhrHttpClientHelper.js#
+#include org/restlet/engine/adapter/BrowserHttpClientHelper.js#
 
 #include org/restlet/Client.js#
 
@@ -133,6 +133,10 @@
 #include org/restlet/representation/DomRepresentation.js# 
 
 #include org/restlet/representation/XmlRepresentation.js#
+
+#include org/restlet/resource/Resource.js#
+
+#include org/restlet/resource/UniformResource.js#
 
 #include org/restlet/resource/ClientResource.js#
 

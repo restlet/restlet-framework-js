@@ -1,7 +1,11 @@
 var Engine = new Class({
+	initialize: function() {
+	},
+
 	createHelper: function(restlet) {
 		// [ifndef nodejs]
-		return new XhrHttpClientHelper();
+		//return new XhrHttpClientHelper();
+		return new BrowserHttpClientHelper();
 		// [enddef]
 		// [ifdef nodejs] uncomment
 		//return new NodeJsHttpClientHelper();

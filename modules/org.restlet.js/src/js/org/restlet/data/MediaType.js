@@ -160,6 +160,7 @@ var MediaType = new Class(Metadata, {
 
 MediaType.extend({
 	APPLICATION_JSON: new MediaType("application/json"),
+	APPLICATION_JSONP: new MediaType("application/jsonp"),
 	TEXT_JSON: new MediaType("text/json"),
 	APPLICATION_XML: new MediaType("application/xml"),
 	TEXT_XML: new MediaType("text/xml"),

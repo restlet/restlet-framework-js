@@ -26,6 +26,9 @@ var JsonRepresentation = new Class(Representation, {
 			return "";
 		}
 	},
+	setObject: function(obj) {
+		this.obj = obj
+	},
 	getObject: function() {
 		if (this.text!=null) {
 	        // [ifndef nodejs]
@@ -41,6 +44,8 @@ var JsonRepresentation = new Class(Representation, {
 			// [ifdef nodejs] uncomment
 			//return JSON.parse(this.representation.getText());
 			// [enddef]
+		} else if (this.obj!=null) {
+			return this.obj; 
 		} else {
 			return null;
 		}

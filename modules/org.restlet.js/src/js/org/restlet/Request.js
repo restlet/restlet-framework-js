@@ -1,12 +1,13 @@
 var Request = new Class(Message, {
-	initialize: function(method, url) {
-		this.callSuper();
+	//initialize: function(method, resourceRef, url) {
+	initialize: function(method, resourceRef, entity) {
+		this.callSuper(entity);
 		this.method = method;
 		this.clientInfo = new ClientInfo();
-		if (typeof url == "string") {
-			this.reference = new Reference(url);
-		} else if (url instanceof Reference) {
-			this.reference = url;
+		if (typeof resourceRef == "string") {
+			this.resourceRef = new Reference(resourceRef);
+		} else if (resourceRef instanceof Reference) {
+			this.resourceRef = resourceRef;
 		}
 		this.ranges = [];
 		this.conditions = new Conditions();
@@ -45,12 +46,6 @@ var Request = new Class(Message, {
 	},
 	setConditions: function() {
 		this.conditions = conditions;
-	},
-	getReference: function() {
-		return this.reference;
-	},
-	setReference: function(reference) {
-		this.reference = reference;
 	},
     getHostRef: function() {
         return this.hostRef;
