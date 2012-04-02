@@ -15,43 +15,210 @@ var Response = new Class(Message, {
         this.serverInfo = new ServerInfo();
         this.status = Status.SUCCESS_OK;
 	},
-    /*this.age = 0;
-    this.allowedMethods = null;
-    this.autoCommitting = true;
-    this.challengeRequests = null;
-    this.cookieSettings = null;
-    this.committed = false;
-    this.dimensions = null;
-    this.locationRef = null;
-    this.proxyChallengeRequests = null;*/
-	getRequest: function() {
-		return this.request;
-	},
-	setRequest: function(request) {
-		this.request = request;
-	},
-	getRetryAfter: function() {
-	    return this.retryAfter;
-	},
-	setRetryAfter: function(retryAfter) {
-	    this.retryAfter = retryAfter;
-	},
-	getServerInfo: function() {
-	    return this.serverInfo;
-	},
-	setServerInfo: function(serverInfo) {
-	    this.serverInfo = serverInfo;
-	},
-	getStatus: function() {
-		return this.status;
-	},
-	setStatus: function(status) {
-		this.status = status;
-	},
-	getLocationRef: function() {
-		return this.locationRef;
-	},
-	setLocationRef: function(locationRef) {
-		this.locationRef = locationRef;
-	}
+	
+    abort: function() {
+        this.getRequest().abort();
+    },
+
+    commit: function() {
+        getRequest().commit(this);
+    },
+
+    getAge: function() {
+        return age;
+    },
+
+    getAllowedMethods: function() {
+        if (this.allowedMethods==null) {
+        	this.allowedMethods = [];
+        }
+        return this.allowedMethods;
+    },
+
+    functiongetAuthenticationInfo: function() {
+        return this.authenticationInfo;
+    },
+
+    getChallengeRequests: function() {
+        if (this.challengeRequests==null) {
+        	this.challengeRequests = [];
+        }
+        return this.challengeRequests;
+    },
+
+    getCookieSettings: function() {
+        if (this.cookieSettings==null) {
+        	this.cookieSettings = new Series();
+        }
+        return this.cookieSettings;
+    },
+
+    getDimensions: function() {
+        if (this.dimensions==null) {
+            this.dimensions = new [];
+        }
+        return this.dimensions;
+    },
+
+    getLocationRef: function() {
+        return this.locationRef;
+    },
+
+    getProxyChallengeRequests: function() {
+    	if (this.proxyChallengeRequests==null) {
+    		this.proxyChallengeRequests = [];
+    	}
+    	return this.proxyChallengeRequests;
+    },
+
+    getRequest: function() {
+        return this.request;
+    },
+
+    getRetryAfter: function() {
+        return this.retryAfter;
+    },
+
+    getServerInfo: function() {
+    	if (this.serverInfo==null) {
+    		this.serverInfo = new ServerInfo();
+    	}
+        return this.serverInfo;
+    },
+
+    getStatus: function() {
+        return this.status;
+    },
+
+    isAutoCommitting: function() {
+        return autoCommitting;
+    },
+
+    isCommitted: function() {
+        return committed;
+    },
+
+    isConfidential: function() {
+        return this.getRequest().isConfidential();
+    },
+
+    isFinal: function() {
+        return !this.getStatus().isInformational();
+    },
+
+    isProvisional: function() {
+        return this.getStatus().isInformational();
+    },
+
+    redirectPermanent: function(target) {
+        this.setLocationRef(target);
+        this.setStatus(Status.REDIRECTION_PERMANENT);
+    },
+
+    redirectSeeOther: function(target) {
+    	this.setLocationRef(targetRef);
+    	this.setStatus(Status.REDIRECTION_SEE_OTHER);
+    },
+
+    redirectTemporary: function(target) {
+    	this.setLocationRef(target);
+    	this.setStatus(Status.REDIRECTION_TEMPORARY);
+    },
+
+    setAge: function(age) {
+        this.age = age;
+    },
+
+	setAllowedMethods: function(allowedMethods) {
+		this.allowedMethods = allowedMethods;
+    },
+
+    setAuthenticationInfo: function(authenticationInfo) {
+        this.authenticationInfo = authenticationInfo;
+    },
+
+    setAutoCommitting: function(autoCommitting) {
+        this.autoCommitting = autoCommitting;
+    },
+
+    setChallengeRequests: function(challengeRequests) {
+    	this.challengeRequests = challengeRequests;
+    },
+
+    setCommitted: function(committed) {
+        this.committed = committed;
+    },
+
+    setCookieSettings: function(cookieSettings) {
+    	this.cookieSettings = cookieSettings;
+    },
+
+    setDimensions: function(dimensions) {
+    	this.dimensions = dimensions;
+    },
+
+    _setLocationRef: function(locationRef) {
+        this.locationRef = locationRef;
+    },
+
+    setLocationRef: function(location) {
+    	if (typeof location == "string") {
+    		var baseRef = null;
+
+    		if (this.getRequest().getResourceRef() != null) {
+    			if (this.getRequest().getResourceRef().getBaseRef() != null) {
+    				baseRef = this.getRequest().getResourceRef().getBaseRef();
+    			} else {
+    				baseRef = this.getRequest().getResourceRef();
+    			}
+    		}
+
+    		this._setLocationRef(new Reference(baseRef, locationUri).getTargetRef());
+    	} else {
+    		this._setLocationRef(location);
+    	}
+    },
+
+	setProxyChallengeRequests: function(proxyChallengeRequests) {
+		this.proxyChallengeRequests = proxyChallengeRequests;
+    },
+
+    setRequest: function(request) {
+        this.request = request;
+    },
+
+    setRetryAfter: function(retryAfter) {
+        this.retryAfter = retryAfter;
+    },
+
+    setServerInfo: function(serverInfo) {
+        this.serverInfo = serverInfo;
+    },
+
+    _setStatus: function(status) {
+        this.status = status;
+    },
+
+    setStatus: function(status, description) {
+    	if (arguments.length==2 && arguments[0] instanceof Status && typeof arguments[1] == "string") {
+    		var status = arguments[0];
+    		var description = arguments[1];
+            this._setStatus(new Status(status, description));
+    	} else if (arguments.length==2 && arguments[0] instanceof Status && arguments[1] instanceof Error) {
+    		var status = arguments[0];
+    		var error = arguments[1];
+    		this._setStatus(new Status(status, error));
+    	} else if (arguments.length==3 && arguments[0] instanceof Status
+    			&& arguments[1] instanceof Error && typeof arguments[2] == "string") {
+    		var status = arguments[0];
+    		var error = arguments[1];
+    		var message = arguments[2];
+    		this._setStatus(new Status(status, error, message));
+    	}
+    },
+
+    toString: function() {
+        return ((this.getRequest() == null) ? "?" : this.getRequest().getProtocol())
+                					+ " - " + this.getStatus();
+    }
 });

@@ -30,8 +30,8 @@ var RecipientInfoWriter = new Class(HeaderWriter, {
     }
 });
 
-RangeWriter.extend({
-    writeCollection: function(recipientsInfo) {
+RecipientInfoWriter.extend({
+    write: function(recipientsInfo) {
         return new RecipientInfoWriter().appendCollection(recipientsInfo).toString();
     }
 });

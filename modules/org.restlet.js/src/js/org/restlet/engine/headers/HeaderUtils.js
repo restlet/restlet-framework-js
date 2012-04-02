@@ -384,7 +384,7 @@ HeaderUtils.extend({
 
         if (response.getAge() > 0) {
         	HeaderUtils.addHeader(HeaderConstants.HEADER_AGE,
-                    Integer.toString(response.getAge()), headers);
+                    	response.getAge().toString(), headers);
         }
 
         if (response.getStatus().equals(Status.CLIENT_ERROR_METHOD_NOT_ALLOWED)
@@ -497,27 +497,27 @@ HeaderUtils.extend({
 	                entityHeaderFound = true;
 	            } else if (header.getName().equalsIgnoreCase(
 	                    HeaderConstants.HEADER_EXPIRES)) {
-	                /*result.setExpirationDate(HeaderReader.readDate(
-	                        header.getValue(), false));*/
+	                result.setExpirationDate(HeaderReader.readDate(
+	                        header.getValue(), false));
 	                entityHeaderFound = true;
 	            } else if (header.getName().equalsIgnoreCase(
 	                    HeaderConstants.HEADER_CONTENT_ENCODING)) {
-	                /*new EncodingReader(header.getValue()).addValues(result
-	                        .getEncodings());*/
+	                new EncodingReader(header.getValue()).addValues(result
+	                        .getEncodings());
 	                entityHeaderFound = true;
 	            } else if (header.getName().equalsIgnoreCase(
 	                    HeaderConstants.HEADER_CONTENT_LANGUAGE)) {
-	                /*new LanguageReader(header.getValue()).addValues(result
-	                        .getLanguages());*/
+	                new LanguageReader(header.getValue()).addValues(result
+	                        .getLanguages());
 	                entityHeaderFound = true;
 	            } else if (header.getName().equalsIgnoreCase(
 	                    HeaderConstants.HEADER_LAST_MODIFIED)) {
-	                /*result.setModificationDate(HeaderReader.readDate(
-	                        header.getValue(), false));*/
+	                result.setModificationDate(HeaderReader.readDate(
+	                        header.getValue(), false));
 	                entityHeaderFound = true;
 	            } else if (header.getName().equalsIgnoreCase(
 	                    HeaderConstants.HEADER_ETAG)) {
-	                /*result.setTag(Tag.parse(header.getValue()));*/
+	                result.setTag(Tag.parse(header.getValue()));
 	                entityHeaderFound = true;
 	            } else if (header.getName().equalsIgnoreCase(
 	                    HeaderConstants.HEADER_CONTENT_LOCATION)) {
@@ -566,16 +566,16 @@ HeaderUtils.extend({
                 if (header.getName().equalsIgnoreCase(
                         HeaderConstants.HEADER_LOCATION)) {
                     response.setLocationRef(header.getValue());
-                /*} else if (header.getName().equalsIgnoreCase(
+                } else if (header.getName().equalsIgnoreCase(
                         HeaderConstants.HEADER_AGE)) {
                     try {
                         response.setAge(parseInt(header.getValue()));
                     } catch (err) {
-                        Context.getCurrentLogger().log(
+                        /*Context.getCurrentLogger().log(
                                 Level.WARNING,
                                 "Error during Age header parsing. Header: "
-                                        + header.getValue(), nfe);
-                    }*/
+                                        + header.getValue(), nfe);*/
+                    }
                 } else if (header.getName().equalsIgnoreCase(
                         HeaderConstants.HEADER_DATE)) {
                     var date = DateUtils.parse(header.getValue());
@@ -644,18 +644,18 @@ HeaderUtils.extend({
                     AuthenticationInfo authenticationInfo = org.restlet.engine.security.AuthenticatorUtils
                             .parseAuthenticationInfo(header.getValue());
                     response.setAuthenticationInfo(authenticationInfo);
-                    // [enddef]
+                    // [enddef]*/
                 } else if (header.getName().equalsIgnoreCase(
                         HeaderConstants.HEADER_SERVER)) {
                     response.getServerInfo().setAgent(header.getValue());
-                } else if (header.getName().equalsIgnoreCase(
+                /*} else if (header.getName().equalsIgnoreCase(
                         HeaderConstants.HEADER_ALLOW)) {
                     MethodReader
-                            .addValues(header, response.getAllowedMethods());
+                            .addValues(header, response.getAllowedMethods());*/
                 } else if (header.getName().equalsIgnoreCase(
                         HeaderConstants.HEADER_VARY)) {
                     DimensionReader.addValues(header, response.getDimensions());
-                } else if (header.getName().equalsIgnoreCase(
+                /*} else if (header.getName().equalsIgnoreCase(
                         HeaderConstants.HEADER_VIA)) {
                     RecipientInfoReader.addValues(header,
                             response.getRecipientsInfo());

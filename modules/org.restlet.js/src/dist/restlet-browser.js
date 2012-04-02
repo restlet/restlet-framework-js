@@ -84,19 +84,31 @@
 
 #include org/restlet/engine/headers/CookieWriter.js#
 
+#include org/restlet/engine/headers/CookieSettingWriter.js#
+
 #include org/restlet/engine/headers/DateWriter.js#
+
+#include org/restlet/engine/headers/DimensionReader.js#
+
+#include org/restlet/engine/headers/DispositionReader.js#
 
 #include org/restlet/engine/headers/DispositionWriter.js#
 
 #include org/restlet/engine/headers/MetadataWriter.js#
 
+#include org/restlet/engine/headers/EncodingReader.js#
+
 #include org/restlet/engine/headers/EncodingWriter.js#
+
+#include org/restlet/engine/headers/LanguageReader.js#
 
 #include org/restlet/engine/headers/LanguageWriter.js#
 
-// org/restlet/engine/headers/CacheDirectiveWriter.js#
+#include org/restlet/engine/headers/MethodWriter.js#
 
 #include org/restlet/engine/headers/PreferenceWriter.js#
+
+#include org/restlet/engine/headers/ProductWriter.js#
 
 #include org/restlet/engine/headers/RangeWriter.js#
 

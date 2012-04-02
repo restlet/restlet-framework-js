@@ -36,7 +36,7 @@ var WarningWriter = new Class(HeaderWriter, {
     }
 });
 
-TagWriter.extend({
+WarningWriter.extend({
 	write: function(warnings) {
 		return new WarningWriter().appendCollection(warnings).toString();
 	}

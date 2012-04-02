@@ -1,5 +1,9 @@
 var MetadataWriter = new Class(HeaderWriter, {
-    appendObject: function(metadata) {
+	initialize: function() {
+		this.callSuper();
+	},
+
+	appendObject: function(metadata) {
         return this.append(metadata.getName());
     }
 });

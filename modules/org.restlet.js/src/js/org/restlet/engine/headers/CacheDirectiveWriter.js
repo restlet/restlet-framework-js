@@ -1,4 +1,8 @@
 var CacheDirectiveWriter = new Class(HeaderWriter, {
+	initialize: function() {
+		this.callSuper();
+	},
+
 	appendObject: function(directive) {
         this.appendExtension(directive);
         return this;

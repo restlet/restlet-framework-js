@@ -81,7 +81,7 @@ CacheDirective.extend({
 			var sb = new StringBuilder();
 
 			if (fieldNames != null) {
-				for (int i = 0; i < fieldNames.length; i++) {
+				for (var i = 0; i < fieldNames.length; i++) {
 					sb.append("\"" + fieldNames[i] + "\"");
 
 					if (i < fieldNames.length - 1) {
