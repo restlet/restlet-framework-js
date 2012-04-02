@@ -1,5 +1,6 @@
 var ChallengeWriter = new Class(HeaderWriter, {
 	initialize: function() {
+		this.callSuper();
         this.firstChallengeParameter = true;
 	},
 
