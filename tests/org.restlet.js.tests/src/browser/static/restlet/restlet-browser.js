@@ -498,40 +498,102 @@ var ServerInfo =new Class({
 
 var Message = new Class({
 	initialize: function(entity) {
-    	this.attributes = {};
+    	this.attributes = null;
     	this.cacheDirectives = null;
     	this.date = null;
     	this.entity = entity;
     	this.entityText = null;
     	this.recipientsInfo = null;
 	},
+
+	getAttributes: function() {
+		if (this.attributes==null) {
+			this.attributes = {};
+		}
+		return this.attributes;
+	}, 
+
+	getCacheDirectives: function() {
+		if (this.cacheDirectives==null) {
+			this.cacheDirectives = [];
+		}
+		return this.cacheDirectives;
+	}, 
+
+	getDate: function() {
+		return this.date;
+	},
+
 	getEntity: function() {
 		return this.entity;
 	},
-	setEntity: function(entity) {
-		this.entity = entity;
-	},
-    getEntityAsText: function() {
+
+	getEntityAsText: function() {
         if (this.entityText == null) {
             this.entityText = (this.getEntity() == null) ? null : this.getEntity()
                         .getText();
         }
         return this.entityText;
     },
-	getAttributes: function() {
-		return this.attributes;
-	}, 
+
+    getRecipientsInfo: function() {
+		if (this.recipientsInfo==null) {
+			this.recipientsInfo = [];
+		}
+		return this.recipientsInfo;
+	},
+
+	getWarnings: function() {
+		if (this.warnings==null) {
+			this.warnings = [];
+		}
+		return this.warnings;
+	},
+
+    isConfidential: function() {
+    	return false;
+    },
+
+    isEntityAvailable: function() {
+        return (this.getEntity() != null) && this.getEntity().isAvailable();
+    },
+
+    release: function() {
+        if (this.getEntity() != null) {
+        	this.getEntity().release();
+        }
+    },
+
 	setAttributes: function(attributes) {
 		this.attributes = attributes;
 	},
-	//this.cacheDirectives = null;
-	getDate: function() {
-		return this.date;
-	},
+
+	setCacheDirectives: function(cacheDirectives) {
+		this.cacheDirectives = cacheDirectives;
+	}, 
+
 	setDate: function(date) {
 		this.date = date;
+	},
+
+	setEntity: function(entity) {
+		if (arguments.length==1) {
+			var entity = arguments[0];
+			this.entity = entity;
+		} else if (arguments.length==2) {
+			var value = arguments[0];
+			var mediaType = arguments[1];
+			this.entity = new StringRepresentation(value, mediaType);
+		}
+	},
+
+	setRecipientsInfo: function(recipientsInfo) {
+		this.recipientsInfo = recipientsInfo;
+	}, 
+
+	setWarnings: function(warnings) {
+		this.warnings = warnings;
 	}
-	//this.recipientsInfo = null;
 });
 
 var Reference = new Class({
@@ -2465,72 +2527,228 @@ var Request = new Class(Message, {
 		this.ranges = [];
 		this.conditions = new Conditions();
 		this.cookies = new Series();
+	},
+	
+    abort: function() {
+        return false;
+    },
 
-/*		private volatile ChallengeResponse challengeResponse;
-    $$ private volatile ClientInfo clientInfo;
-    private volatile Conditions conditions;
-    private volatile Series<Cookie> cookies;
-    private volatile Reference hostRef;
-    private volatile boolean loggable;
-    private volatile int maxForwards;
-    $$ private volatile Method method;
-    private volatile Reference originalRef;
-    private volatile Protocol protocol;
-    private volatile ChallengeResponse proxyChallengeResponse;
-    private volatile List<Range> ranges;
-    private volatile Reference referrerRef;
-    private volatile Reference resourceRef;
-    private volatile Reference rootRef;*/
-	},
-	getMethod: function() {
-		return this.method;
-	},
-	setMethod: function(method) {
-		this.method = method;
-	},
-	getClientInfo: function() {
-		return this.clientInfo;
-	},
-	setClientInfo: function(clientInfo) {
-		this.clientInfo = clientInfo;
-	},
-	getConditions: function() {
-		return this.conditions;
-	},
-	setConditions: function() {
-		this.conditions = conditions;
-	},
+    commit: function(response) {
+    },
+
+    getChallengeResponse: function() {
+        return this.challengeResponse;
+    },
+
+    getClientInfo: function() {
+        if (this.clientInfo==null) {
+        	this.clientInfo = new ClientInfo();
+        }
+        return this.clientInfo;
+    },
+
+    getConditions: function() {
+        if (this.conditions==null) {
+        	this.conditions = new Conditions();
+        }
+        return this.conditions;
+    },
+
+    getCookies: function() {
+        if (this.cookies==null) {
+        	this.cookies = new Series();
+        }
+        return this.cookies;
+    },
+
     getHostRef: function() {
         return this.hostRef;
     },
+
     getMaxForwards: function() {
         return this.maxForwards;
     },
+
+    getMethod: function() {
+        return this.method;
+    },
+
     getOriginalRef: function() {
         return this.originalRef;
     },
+
+    getProtocol: function() {
+        var result = this.protocol;
+
+        if ((result == null) && (this.getResourceRef() != null)) {
+            // Attempt to guess the protocol to use
+            // from the target reference scheme
+            result = this.getResourceRef().getSchemeProtocol();
+            // Fallback: look at base reference scheme
+            if (result == null) {
+                result = (this.getResourceRef().getBaseRef() != null) ? this.getResourceRef()
+                        .getBaseRef().getSchemeProtocol() : null;
+            }
+        }
+
+        return result;
+    },
+
+    getProxyChallengeResponse: function() {
+        return this.proxyChallengeResponse;
+    },
+
     getRanges: function() {
-    	return this.ranges;
+        if (this.ranges==null) {
+        	this.ranges = [];
+        }
+        return this.ranges;
     },
-    setRanges: function(ranges) {
-    	this.ranges = ranges;
-    },
+
     getReferrerRef: function() {
         return this.referrerRef;
     },
+
     getResourceRef: function() {
         return this.resourceRef;
     },
+
     getRootRef: function() {
         return this.rootRef;
     },
-    getCookies: function() {
-    	return this.cookies;
+
+    isConfidential: function() {
+        return (this.getProtocol() == null) ? false : this.getProtocol().isConfidential();
     },
+
+    isEntityAvailable: function() {
+        var result = (Method.GET.equals(this.getMethod())
+                || Method.HEAD.equals(this.getMethod()) || Method.DELETE
+                .equals(this.getMethod()));
+        if (result) {
+            return false;
+        }
+
+        //return super.isEntityAvailable();
+        return (this.getEntity() != null) && this.getEntity().isAvailable();
+
+    },
+
+    isExpectingResponse: function() {
+        return (this.getMethod() == null) ? false : this.getMethod().isReplying();
+    },
+
+    isLoggable: function() {
+        return this.loggable;
+    },
+
+    setChallengeResponse: function(challengeResponse) {
+        this.challengeResponse = challengeResponse;
+    },
+
+    setClientInfo: function(clientInfo) {
+        this.clientInfo = clientInfo;
+    },
+
+    setConditions: function(conditions) {
+        this.conditions = conditions;
+    },
+
     setCookies: function(cookies) {
     	this.cookies = cookies;
     },
 
+    _setHostRef: function(hostRef) {
+        this.hostRef = hostRef;
+    },
+
+    setHostRef: function(hostUri) {
+    	if (typeof host == "string") {
+    		this._setHostRef(new Reference(host));
+    	} else {
+    		this._setHostRef(host);
+    	}
+    },
+
+    setLoggable: function(loggable) {
+        this.loggable = loggable;
+    },
+
+    setMaxForwards: function(maxForwards) {
+        this.maxForwards = maxForwards;
+    },
+
+    setMethod: function(method) {
+        this.method = method;
+    },
+
+    setOriginalRef: function(originalRef) {
+        this.originalRef = originalRef;
+    },
+
+    setProtocol: function(protocol) {
+        this.protocol = protocol;
+    },
+
+    setProxyChallengeResponse: function(challengeResponse) {
+        this.proxyChallengeResponse = challengeResponse;
+    },
+
+    setRanges: function(ranges) {
+    	this.ranges = ranges;
+    },
+
+    _setReferrerRef: function(referrerRef) {
+        this.referrerRef = referrerRef;
+
+        // A referrer reference must not include a fragment.
+        if ((this.referrerRef != null)
+                && (this.referrerRef.getFragment() != null)) {
+            this.referrerRef.setFragment(null);
+        }
+    },
+
+    setReferrerRef: function(referrer) {
+    	if (typeof referrer == "string") {
+    		this._setReferrerRef(new Reference(referrer));
+    	} else {
+    		this._setReferrerRef(referrer);
+    	}
+    },
+
+    _setResourceRef: function(resourceRef) {
+        this.resourceRef = resourceRef;
+    },
+
+    setResourceRef: function(resource) {
+    	if (typeof resource == "string") {
+    		if (this.getResourceRef() != null) {
+    			// Allow usage of URIs relative to the current base reference
+    			setResourceRef(new Reference(getResourceRef().getBaseRef(),
+    								resource));
+    		} else {
+    			setResourceRef(new Reference(resource));
+    		}
+    	} else {
+    		this._setResourceRef(resource);
+    	}
+    },
+
+    setRootRef: function(rootRef) {
+        this.rootRef = rootRef;
+    },
+
+    toString: function() {
+        return ((this.getMethod() == null) ? "" : this.getMethod().toString())
+                + " "
+                + ((this.getResourceRef() == null) ? "" : this.getResourceRef()
+                        .toString())
+                + " "
+                + ((this.getProtocol() == null) ? ""
+                        : (this.getProtocol().getName() + ((this.getProtocol()
+                                .getVersion() == null) ? "" : "/"
+                                + this.getProtocol().getVersion())));
+    }
 });
 
 var Response = new Class(Message, {
@@ -2550,45 +2768,212 @@ var Response = new Class(Message, {
         this.serverInfo = new ServerInfo();
         this.status = Status.SUCCESS_OK;
 	},
-    /*this.age = 0;
-    this.allowedMethods = null;
-    this.autoCommitting = true;
-    this.challengeRequests = null;
-    this.cookieSettings = null;
-    this.committed = false;
-    this.dimensions = null;
-    this.locationRef = null;
-    this.proxyChallengeRequests = null;*/
-	getRequest: function() {
-		return this.request;
-	},
-	setRequest: function(request) {
-		this.request = request;
-	},
-	getRetryAfter: function() {
-	    return this.retryAfter;
-	},
-	setRetryAfter: function(retryAfter) {
-	    this.retryAfter = retryAfter;
-	},
-	getServerInfo: function() {
-	    return this.serverInfo;
-	},
-	setServerInfo: function(serverInfo) {
-	    this.serverInfo = serverInfo;
-	},
-	getStatus: function() {
-		return this.status;
-	},
-	setStatus: function(status) {
-		this.status = status;
-	},
-	getLocationRef: function() {
-		return this.locationRef;
-	},
-	setLocationRef: function(locationRef) {
-		this.locationRef = locationRef;
-	}
+	
+    abort: function() {
+        this.getRequest().abort();
+    },
+
+    commit: function() {
+        getRequest().commit(this);
+    },
+
+    getAge: function() {
+        return age;
+    },
+
+    getAllowedMethods: function() {
+        if (this.allowedMethods==null) {
+        	this.allowedMethods = [];
+        }
+        return this.allowedMethods;
+    },
+
+    functiongetAuthenticationInfo: function() {
+        return this.authenticationInfo;
+    },
+
+    getChallengeRequests: function() {
+        if (this.challengeRequests==null) {
+        	this.challengeRequests = [];
+        }
+        return this.challengeRequests;
+    },
+
+    getCookieSettings: function() {
+        if (this.cookieSettings==null) {
+        	this.cookieSettings = new Series();
+        }
+        return this.cookieSettings;
+    },
+
+    getDimensions: function() {
+        if (this.dimensions==null) {
+            this.dimensions = new [];
+        }
+        return this.dimensions;
+    },
+
+    getLocationRef: function() {
+        return this.locationRef;
+    },
+
+    getProxyChallengeRequests: function() {
+    	if (this.proxyChallengeRequests==null) {
+    		this.proxyChallengeRequests = [];
+    	}
+    	return this.proxyChallengeRequests;
+    },
+
+    getRequest: function() {
+        return this.request;
+    },
+
+    getRetryAfter: function() {
+        return this.retryAfter;
+    },
+
+    getServerInfo: function() {
+    	if (this.serverInfo==null) {
+    		this.serverInfo = new ServerInfo();
+    	}
+        return this.serverInfo;
+    },
+
+    getStatus: function() {
+        return this.status;
+    },
+
+    isAutoCommitting: function() {
+        return autoCommitting;
+    },
+
+    isCommitted: function() {
+        return committed;
+    },
+
+    isConfidential: function() {
+        return this.getRequest().isConfidential();
+    },
+
+    isFinal: function() {
+        return !this.getStatus().isInformational();
+    },
+
+    isProvisional: function() {
+        return this.getStatus().isInformational();
+    },
+
+    redirectPermanent: function(target) {
+        this.setLocationRef(target);
+        this.setStatus(Status.REDIRECTION_PERMANENT);
+    },
+
+    redirectSeeOther: function(target) {
+    	this.setLocationRef(targetRef);
+    	this.setStatus(Status.REDIRECTION_SEE_OTHER);
+    },
+
+    redirectTemporary: function(target) {
+    	this.setLocationRef(target);
+    	this.setStatus(Status.REDIRECTION_TEMPORARY);
+    },
+
+    setAge: function(age) {
+        this.age = age;
+    },
+
+	setAllowedMethods: function(allowedMethods) {
+		this.allowedMethods = allowedMethods;
+    },
+
+    setAuthenticationInfo: function(authenticationInfo) {
+        this.authenticationInfo = authenticationInfo;
+    },
+
+    setAutoCommitting: function(autoCommitting) {
+        this.autoCommitting = autoCommitting;
+    },
+
+    setChallengeRequests: function(challengeRequests) {
+    	this.challengeRequests = challengeRequests;
+    },
+
+    setCommitted: function(committed) {
+        this.committed = committed;
+    },
+
+    setCookieSettings: function(cookieSettings) {
+    	this.cookieSettings = cookieSettings;
+    },
+
+    setDimensions: function(dimensions) {
+    	this.dimensions = dimensions;
+    },
+
+    _setLocationRef: function(locationRef) {
+        this.locationRef = locationRef;
+    },
+
+    setLocationRef: function(location) {
+    	if (typeof location == "string") {
+    		var baseRef = null;
+
+    		if (this.getRequest().getResourceRef() != null) {
+    			if (this.getRequest().getResourceRef().getBaseRef() != null) {
+    				baseRef = this.getRequest().getResourceRef().getBaseRef();
+    			} else {
+    				baseRef = this.getRequest().getResourceRef();
+    			}
+    		}
+
+    		this._setLocationRef(new Reference(baseRef, locationUri).getTargetRef());
+    	} else {
+    		this._setLocationRef(location);
+    	}
+    },
+
+	setProxyChallengeRequests: function(proxyChallengeRequests) {
+		this.proxyChallengeRequests = proxyChallengeRequests;
+    },
+
+    setRequest: function(request) {
+        this.request = request;
+    },
+
+    setRetryAfter: function(retryAfter) {
+        this.retryAfter = retryAfter;
+    },
+
+    setServerInfo: function(serverInfo) {
+        this.serverInfo = serverInfo;
+    },
+
+    _setStatus: function(status) {
+        this.status = status;
+    },
+
+    setStatus: function(status, description) {
+    	if (arguments.length==2 && arguments[0] instanceof Status && typeof arguments[1] == "string") {
+    		var status = arguments[0];
+    		var description = arguments[1];
+            this._setStatus(new Status(status, description));
+    	} else if (arguments.length==2 && arguments[0] instanceof Status && arguments[1] instanceof Error) {
+    		var status = arguments[0];
+    		var error = arguments[1];
+    		this._setStatus(new Status(status, error));
+    	} else if (arguments.length==3 && arguments[0] instanceof Status
+    			&& arguments[1] instanceof Error && typeof arguments[2] == "string") {
+    		var status = arguments[0];
+    		var error = arguments[1];
+    		var message = arguments[2];
+    		this._setStatus(new Status(status, error, message));
+    	}
+    },
+
+    toString: function() {
+        return ((this.getRequest() == null) ? "?" : this.getRequest().getProtocol())
+                					+ " - " + this.getStatus();
+    }
 });
 
 var Method = new Class({
@@ -2715,6 +3100,116 @@ HeaderConstants.extend({
 	ATTRIBUTE_HTTPS_CIPHER_SUITE: "org.restlet.https.cipherSuite",
 	ATTRIBUTE_HTTPS_KEY_SIZE: "org.restlet.https.keySize",
 	ATTRIBUTE_HTTPS_SSL_SESSION_ID: "org.restlet.https.sslSessionId"
+});
+
+var CacheDirective = new Class(Parameter, {
+    initialize: function(name, value, digit) {
+        this.name = name;
+        this.value = value;
+        this.digit = digit;
+    },
+
+    isDigit: function() {
+        return this.digit;
+    },
+    setDigit: function(digit) {
+        this.digit = digit;
+    }
+});
+
+CacheDirective.extend({ 
+	maxAge: function(maxAge) {
+		return new CacheDirective(HeaderConstants.CACHE_MAX_AGE, Integer
+            .toString(maxAge), true);
+	},
+
+	maxStale: function(maxStale) {
+		if (maxStale==null) {
+			return new CacheDirective(HeaderConstants.CACHE_MAX_STALE);
+		} else {
+		    return new CacheDirective(HeaderConstants.CACHE_MAX_STALE,
+		            		maxStale.toString(), true);
+		}
+	},
+
+	minFresh: function(minFresh) {
+		return new CacheDirective(HeaderConstants.CACHE_MIN_FRESH,
+						minFresh.toString(), true);
+	},
+
+	mustRevalidate: function() {
+		return new CacheDirective(HeaderConstants.CACHE_MUST_REVALIDATE);
+	},
+
+	noCache: function(fieldNames) {
+		if (fieldNames==null) {
+			return new CacheDirective(HeaderConstants.CACHE_NO_CACHE);
+		} else if (typeof fieldNames == "string") {
+		    return new CacheDirective(HeaderConstants.CACHE_NO_CACHE, "\""
+		            + fieldNames + "\"");
+		} else {
+		    var sb = new StringBuilder();
+
+		    if (fieldNames != null) {
+		        for (var i = 0; i < fieldNames.length; i++) {
+		            sb.append("\"" + fieldNames[i] + "\"");
+
+		            if (i < fieldNames.length - 1) {
+		                sb.append(',');
+		            }
+		        }
+		    }
+
+		    return new CacheDirective(HeaderConstants.CACHE_NO_CACHE, sb.toString());
+		}
+	},
+
+	noStore: function() {
+		return new CacheDirective(HeaderConstants.CACHE_NO_STORE);
+	},
+
+	noTransform: function() {
+		return new CacheDirective(HeaderConstants.CACHE_NO_TRANSFORM);
+	},
+
+	onlyIfCached: function() {
+		return new CacheDirective(HeaderConstants.CACHE_ONLY_IF_CACHED);
+	},
+
+	privateInfo: function(fieldNames) {
+		if (fieldNames==null) {
+			return new CacheDirective(HeaderConstants.CACHE_PRIVATE);
+		} else if (typeof fieldNames == "string") {
+			return new CacheDirective(HeaderConstants.CACHE_PRIVATE, "\"" + fieldName + "\"");
+		} else {
+			var sb = new StringBuilder();
+
+			if (fieldNames != null) {
+				for (var i = 0; i < fieldNames.length; i++) {
+					sb.append("\"" + fieldNames[i] + "\"");
+
+					if (i < fieldNames.length - 1) {
+						sb.append(',');
+					}
+				}
+			}
+
+			return new CacheDirective(HeaderConstants.CACHE_PRIVATE, sb.toString());
+		}
+	},
+
+	proxyMustRevalidate: function() {
+		return new CacheDirective(HeaderConstants.CACHE_PROXY_MUST_REVALIDATE);
+	},
+
+	publicInfo: function() {
+		return new CacheDirective(HeaderConstants.CACHE_PUBLIC);
+	},
+
+	sharedMaxAge: function(sharedMaxAge) {
+		return new CacheDirective(HeaderConstants.CACHE_SHARED_MAX_AGE,
+						sharedMaxAge.toString(), true);
+	}
 });
 
 var CharacterSet = new Class(Metadata, {
@@ -4221,18 +4716,18 @@ HeaderUtils.extend({
         }
 	},
 	addGeneralHeaders: function(message, headers) {
-		/*HeaderUtils.addHeader(HeaderConstants.HEADER_CACHE_CONTROL,
+		HeaderUtils.addHeader(HeaderConstants.HEADER_CACHE_CONTROL,
                 CacheDirectiveWriter.write(message.getCacheDirectives()),
-                headers);*/
+                headers);
         if (message.getDate() == null) {
             message.setDate(new Date());
         }
         HeaderUtils.addHeader(HeaderConstants.HEADER_DATE,
                 DateWriter.write(message.getDate()), headers);
-        /*HeaderUtils.addHeader(HeaderConstants.HEADER_VIA,
+        HeaderUtils.addHeader(HeaderConstants.HEADER_VIA,
                 RecipientInfoWriter.write(message.getRecipientsInfo()), headers);
         HeaderUtils.addHeader(HeaderConstants.HEADER_WARNING,
-                WarningWriter.write(message.getWarnings()), headers);*/
+                WarningWriter.write(message.getWarnings()), headers);
 	},
 	addHeader: function(headerName, headerValue, headers) {
         if ((headerName != null) && (headerValue != null)
@@ -4297,7 +4792,7 @@ HeaderUtils.extend({
 
         // Manually add the host name and port when it is potentially
         // different from the one specified in the target resource reference.
-        /*var hostRef = (request.getResourceRef().getBaseRef() != null) ? request
+        var hostRef = (request.getResourceRef().getBaseRef() != null) ? request
                 .getResourceRef().getBaseRef() : request.getResourceRef();
 
         if (hostRef.getHostDomain() != null) {
@@ -4311,7 +4806,7 @@ HeaderUtils.extend({
             }
 
             HeaderUtils.addHeader(HeaderConstants.HEADER_HOST, host, headers);
-        }*/
+        }
 
         var conditions = request.getConditions();
         HeaderUtils.addHeader(HeaderConstants.HEADER_IF_MATCH,
@@ -4412,7 +4907,7 @@ HeaderUtils.extend({
 
         if (response.getAge() > 0) {
         	HeaderUtils.addHeader(HeaderConstants.HEADER_AGE,
-                    Integer.toString(response.getAge()), headers);
+                    	response.getAge().toString(), headers);
         }
 
         if (response.getStatus().equals(Status.CLIENT_ERROR_METHOD_NOT_ALLOWED)
@@ -4525,27 +5020,27 @@ HeaderUtils.extend({
 	                entityHeaderFound = true;
 	            } else if (header.getName().equalsIgnoreCase(
 	                    HeaderConstants.HEADER_EXPIRES)) {
-	                /*result.setExpirationDate(HeaderReader.readDate(
-	                        header.getValue(), false));*/
+	                result.setExpirationDate(HeaderReader.readDate(
+	                        header.getValue(), false));
 	                entityHeaderFound = true;
 	            } else if (header.getName().equalsIgnoreCase(
 	                    HeaderConstants.HEADER_CONTENT_ENCODING)) {
-	                /*new EncodingReader(header.getValue()).addValues(result
-	                        .getEncodings());*/
+	                new EncodingReader(header.getValue()).addValues(result
+	                        .getEncodings());
 	                entityHeaderFound = true;
 	            } else if (header.getName().equalsIgnoreCase(
 	                    HeaderConstants.HEADER_CONTENT_LANGUAGE)) {
-	                /*new LanguageReader(header.getValue()).addValues(result
-	                        .getLanguages());*/
+	                new LanguageReader(header.getValue()).addValues(result
+	                        .getLanguages());
 	                entityHeaderFound = true;
 	            } else if (header.getName().equalsIgnoreCase(
 	                    HeaderConstants.HEADER_LAST_MODIFIED)) {
-	                /*result.setModificationDate(HeaderReader.readDate(
-	                        header.getValue(), false));*/
+	                result.setModificationDate(HeaderReader.readDate(
+	                        header.getValue(), false));
 	                entityHeaderFound = true;
 	            } else if (header.getName().equalsIgnoreCase(
 	                    HeaderConstants.HEADER_ETAG)) {
-	                /*result.setTag(Tag.parse(header.getValue()));*/
+	                result.setTag(Tag.parse(header.getValue()));
 	                entityHeaderFound = true;
 	            } else if (header.getName().equalsIgnoreCase(
 	                    HeaderConstants.HEADER_CONTENT_LOCATION)) {
@@ -4594,16 +5089,16 @@ HeaderUtils.extend({
                 if (header.getName().equalsIgnoreCase(
                         HeaderConstants.HEADER_LOCATION)) {
                     response.setLocationRef(header.getValue());
-                /*} else if (header.getName().equalsIgnoreCase(
+                } else if (header.getName().equalsIgnoreCase(
                         HeaderConstants.HEADER_AGE)) {
                     try {
                         response.setAge(parseInt(header.getValue()));
                     } catch (err) {
-                        Context.getCurrentLogger().log(
+                        /*Context.getCurrentLogger().log(
                                 Level.WARNING,
                                 "Error during Age header parsing. Header: "
-                                        + header.getValue(), nfe);
-                    }*/
+                                        + header.getValue(), nfe);*/
+                    }
                 } else if (header.getName().equalsIgnoreCase(
                         HeaderConstants.HEADER_DATE)) {
                     var date = DateUtils.parse(header.getValue());
@@ -4668,14 +5163,14 @@ HeaderUtils.extend({
                 } else if (header.getName().equalsIgnoreCase(
                         HeaderConstants.HEADER_SERVER)) {
                     response.getServerInfo().setAgent(header.getValue());
-                } else if (header.getName().equalsIgnoreCase(
+                /*} else if (header.getName().equalsIgnoreCase(
                         HeaderConstants.HEADER_ALLOW)) {
                     MethodReader
-                            .addValues(header, response.getAllowedMethods());
+                            .addValues(header, response.getAllowedMethods());*/
                 } else if (header.getName().equalsIgnoreCase(
                         HeaderConstants.HEADER_VARY)) {
                     DimensionReader.addValues(header, response.getDimensions());
-                } else if (header.getName().equalsIgnoreCase(
+                /*} else if (header.getName().equalsIgnoreCase(
                         HeaderConstants.HEADER_VIA)) {
                     RecipientInfoReader.addValues(header,
                             response.getRecipientsInfo());
@@ -5430,6 +5925,23 @@ var HeaderWriter = new Class({
     }
 });
 
+var CacheDirectiveWriter = new Class(HeaderWriter, {
+	initialize: function() {
+		this.callSuper();
+	},
+
+	appendObject: function(directive) {
+        this.appendExtension(directive);
+        return this;
+    }
+});
+
+CacheDirectiveWriter.extend({
+	write: function(directives) {
+		return new CacheDirectiveWriter().appendCollection(directives).toString();
+	}
+});
+
 var CookieWriter = new Class(HeaderWriter, {
 	initialize: function() {
 		this.callSuper();
@@ -5530,6 +6042,128 @@ CookieWriter.extend({
 	}
 });
 
+var CookieSettingWriter = new Class(HeaderWriter, {
+	initialize: function() {
+		this.callSuper();
+	},
+
+    appendObject: function(cookieSetting) {
+        var name = cookieSetting.getName();
+        var value = cookieSetting.getValue();
+        var version = cookieSetting.getVersion();
+
+        if ((name == null) || (name.length == 0)) {
+            throw new Error(
+                    "Can't write cookie. Invalid name detected");
+        }
+
+        this.append(name).append('=');
+
+        // Append the value
+        if ((value != null) && (value.length > 0)) {
+        	this.appendValue(value, version);
+        }
+
+        // Append the version
+        if (version > 0) {
+        	this.append("; Version=");
+        	this.appendValue(Integer.toString(version), version);
+        }
+
+        // Append the path
+        var path = cookieSetting.getPath();
+
+        if ((path != null) && (path.length > 0)) {
+        	this.append("; Path=");
+
+            if (version == 0) {
+            	this.append(path);
+            } else {
+            	this.appendQuotedString(path);
+            }
+        }
+
+        // Append the expiration date
+        var maxAge = cookieSetting.getMaxAge();
+
+        if (maxAge >= 0) {
+            if (version == 0) {
+                var currentTime = (new Date()).getTime();
+                var maxTime = (maxAge * 1000);
+                var expiresTime = currentTime + maxTime;
+                var expires = new Date(expiresTime);
+
+                this.append("; Expires=");
+                this.appendValue(DateUtils.format(expires, DateUtils.FORMAT_RFC_1036
+                        .get(0)), version);
+            } else {
+            	this.append("; Max-Age=");
+            	this.appendValue(Integer.toString(cookieSetting.getMaxAge()),
+                        version);
+            }
+        } else if ((maxAge == -1) && (version > 0)) {
+            // Discard the cookie at the end of the user's session (RFC
+            // 2965)
+        	this.append("; Discard");
+        } else {
+            // NetScape cookies automatically expire at the end of the
+            // user's session
+        }
+
+        // Append the domain
+        var domain = cookieSetting.getDomain();
+
+        if ((domain != null) && (domain.length > 0)) {
+        	this.append("; Domain=");
+        	this.appendValue(domain.toLowerCase(), version);
+        }
+
+        // Append the secure flag
+        if (cookieSetting.isSecure()) {
+        	this.append("; Secure");
+        }
+
+        // Append the secure flag
+        if (cookieSetting.isAccessRestricted()) {
+        	this.append("; HttpOnly");
+        }
+
+        // Append the comment
+        if (version > 0) {
+            var comment = cookieSetting.getComment();
+
+            if ((comment != null) && (comment.length > 0)) {
+            	this.append("; Comment=");
+            	this.appendValue(comment, version);
+            }
+        }
+
+        return this;
+    },
+
+    appendValue: function(value, version) {
+        if (version == 0) {
+        	this.append(value.toString());
+        } else {
+        	this.appendQuotedString(value);
+        }
+
+        return this;
+    }
+});
+
+CookieSettingWriter.extend({
+	write: function() {
+		if (arguments[0] instanceof Array) {
+			var cookieSettings = arguments[0];
+			return new CookieSettingWriter().appendCollection(cookieSettings).toString();
+		} else {
+			var cookieSetting = arguments[0];
+			return new CookieSettingWriter().appendObject(cookieSetting).toString();
+		}
+	}
+});
+
 var DateWriter = new Class({});
 
 DateWriter.extend({
@@ -5541,6 +6175,81 @@ DateWriter.extend({
             return DateUtils.format(date, DateUtils.FORMAT_RFC_1036[0]);
         }
         return DateUtils.format(date);
+    }
+});
+
+var DimensionReader = new Class(HeaderReader, {
+    initialize: function(header) {
+        this.callSuper(header);
+    },
+
+    readValue: function() {
+        var result = null;
+        var value = this.readRawValue();
+
+        if (value != null) {
+            if (value.equalsIgnoreCase(HeaderConstants.HEADER_ACCEPT)) {
+                result = Dimension.MEDIA_TYPE;
+            } else if (value
+                    .equalsIgnoreCase(HeaderConstants.HEADER_ACCEPT_CHARSET)) {
+                result = Dimension.CHARACTER_SET;
+            } else if (value
+                    .equalsIgnoreCase(HeaderConstants.HEADER_ACCEPT_ENCODING)) {
+                result = Dimension.ENCODING;
+            } else if (value
+                    .equalsIgnoreCase(HeaderConstants.HEADER_ACCEPT_LANGUAGE)) {
+                result = Dimension.LANGUAGE;
+            } else if (value
+                    .equalsIgnoreCase(HeaderConstants.HEADER_AUTHORIZATION)) {
+                result = Dimension.AUTHORIZATION;
+            } else if (value
+                    .equalsIgnoreCase(HeaderConstants.HEADER_USER_AGENT)) {
+                result = Dimension.CLIENT_AGENT;
+            } else if (value.equals("*")) {
+                result = Dimension.UNSPECIFIED;
+            }
+        }
+
+        return result;
+    }
+});
+
+DimensionReader.extend({
+	addValues: function(header, collection) {
+	    new DimensionReader(header.getValue()).addValues(collection);
+	}
+});
+
+
+var DispositionReader = new Class(HeaderReader, {
+    initialize: function(header) {
+        this.callSuper(header);
+    },
+
+	readValue: function() {
+        var result = null;
+        var type = this.readToken();
+
+        if (type.length > 0) {
+            result = new Disposition();
+            result.setType(type);
+
+            if (this.skipParameterSeparator()) {
+                var param = this.readParameter();
+
+                while (param != null) {
+                    result.getParameters().add(param);
+
+                    if (this.skipParameterSeparator()) {
+                        param = this.readParameter();
+                    } else {
+                        param = null;
+                    }
+                }
+            }
+        }
+
+        return result;
     }
 });
 
@@ -5582,8 +6291,27 @@ DispositionWriter.extend({
 });
 
 var MetadataWriter = new Class(HeaderWriter, {
-    appendObject: function(metadata) {
+	initialize: function() {
+		this.callSuper();
+	},
+
+	appendObject: function(metadata) {
         return this.append(metadata.getName());
+    }
+});
+
+var EncodingReader = new Class(HeaderReader, {
+    initialize: function(header) {
+        this.callSuper(header);
+        /*this.header = header;
+        this.index = ((header == null) || (header.length == 0)) ? -1 : 0;
+        this.mark = this.index;*/
+    },
+    canAdd: function(value, values) {
+        return value != null && !Encoding.IDENTITY.getName().equals(value.getName());
+    },
+    readValue: function() {
+        return Encoding.valueOf(this.readToken());
     }
 });
 
@@ -5605,6 +6333,16 @@ EncodingWriter.extend({
     }
 });
 
+var LanguageReader = new Class(HeaderReader, {
+    initialize: function(header) {
+        this.callSuper(header);
+    },
+
+    readValue: function() {
+        return Language.valueOf(this.readRawValue());
+    }
+});
+
 var LanguageWriter = new Class(MetadataWriter, {
     initialize: function(header) {
         this.callSuper(header);
@@ -5617,7 +6355,22 @@ LanguageWriter.extend({
     }
 });
 
-// org/restlet/engine/headers/CacheDirectiveWriter.js#
+var MethodWriter = new Class(HeaderWriter, {
+	initialize: function() {
+		this.callSuper();
+	},
+
+    appendObject: function(method) {
+        this.appendToken(method.getName());
+    }
+});
+
+MethodWriter.extend({
+	write: function(methods) {
+		return new MethodWriter().appendCollection(methods).toString();
+	}
+});
+
 
 var PreferenceWriter = new Class(HeaderWriter, {
 	initialize: function() {
@@ -5676,6 +6429,39 @@ PreferenceWriter.extend({
 
     write: function(prefs) {
         return new PreferenceWriter().appendCollection(prefs).toString();
+    }
+});
+
+var ProductWriter = new Class({});
+
+ProductWriter.extend({
+    write: function(products) {
+        var builder = new StringBuilder();
+
+        for (var i=0; i<products.length; i++) {
+            var product = products[i];
+
+            if ((product.getName() == null)
+                    || (product.getName().length == 0)) {
+                throw new Error("Product name cannot be null.");
+            }
+
+            builder.append(product.getName());
+
+            if (product.getVersion() != null) {
+                builder.append("/").append(product.getVersion());
+            }
+
+            if (product.getComment() != null) {
+                builder.append(" (").append(product.getComment()).append(")");
+            }
+
+            if (i!=products.length-1) {
+                builder.append(" ");
+            }
+        }
+
+        return builder.toString();
     }
 });
 
@@ -5812,8 +6598,8 @@ var RecipientInfoWriter = new Class(HeaderWriter, {
     }
 });
 
-RangeWriter.extend({
-    writeCollection: function(recipientsInfo) {
+RecipientInfoWriter.extend({
+    write: function(recipientsInfo) {
         return new RecipientInfoWriter().appendCollection(recipientsInfo).toString();
     }
 });
@@ -5876,7 +6662,7 @@ var WarningWriter = new Class(HeaderWriter, {
     }
 });
 
-TagWriter.extend({
+WarningWriter.extend({
 	write: function(warnings) {
 		return new WarningWriter().appendCollection(warnings).toString();
 	}
