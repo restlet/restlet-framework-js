@@ -89,19 +89,73 @@
 			<fileset dir="${target.browser.dir}" includes="restlet-browser.js"/>
 		</jsmin-->
 		<!-- Compile -->
-		<!--jscomp compilationLevel="simple" warning="verbose" 
-				debug="false" output="${target.browser.dir}/restlet-browser-min.js">
+		<jscomp compilationLevel="simple"  
+				debug="false" output="${target.browser.dir}/restlet-browser-min1.js"> <!-- warning="verbose" -->
+			<!--externs dir="${src.dist.dir}">
+				<file name="extern.js"/>
+			</externs-->
 			<sources dir="${target.browser.dir}">
 				<file name="restlet-browser.js"/>
 			</sources>
 			<sources dir="${lib.js.dir}/jsonparser">
 				<file name="json-minified.js"/>
 			</sources>
-		</jscomp-->
+		</jscomp>
 	</target>
 	
 	<target name="install.browser.for.tests" depends="build.browser">
 		<copy file="${target.browser.dir}/restlet-browser.js" todir="${tests.browser.dir}"/>
+	</target>
+
+	<target name="build.browser.light" depends="init">
+		<!-- Including files in the file -->
+		<replaceInclude srcFile="${src.dist.dir}/restlet-browser.js"
+				destFile="${target.browser.dir}/build/restlet-browser-light.js">
+			<fileset dir="${src.js.dir}"/>
+			<fileset dir="${utils.src.js.dir}"/>
+		</replaceInclude>
+		<!-- Cleaning and moving the file -->
+		<copy todir="${target.browser.dir}" overwrite="true" includeEmptyDirs="false">
+			<fileset dir="${target.browser.dir}/build" excludes="forge/**,target/**">
+				<custom classname="selector.EditionFileSelector" classpathref="forge-path">
+					<param name="edition" value="browser"/>
+				</custom>
+	        	<include name="**/*.js" />
+			</fileset>
+			<filterchain>
+				<filterreader classname="filter.EditionFilterReader" classpathref="forge-path">
+					<param name="edition" value="browser" />
+				</filterreader>
+			</filterchain>
+	    </copy>
+		<delete dir="${target.browser.dir}/build"/>
+		<!-- Code quality -->
+		<!--jslint options="undef,white">
+			<formatter type="plain" />
+			<formatter type="xml" destfile="${target.browser.dir}/jslint.xml" />
+			<fileset dir="${target.browser.dir}" includes="restlet-browser.js"/>
+		</jslint-->
+		<!-- Minimizing the file -->
+		<!--jsmin suffix="true" destdir="${target.browser.dir}">
+			<fileset dir="${target.browser.dir}" includes="restlet-browser.js"/>
+		</jsmin-->
+		<!-- Compile -->
+		<jscomp compilationLevel="simple"  
+				debug="false" output="${target.browser.dir}/restlet-browser-light-min.js"> <!-- warning="verbose" -->
+			<!--externs dir="${src.dist.dir}">
+				<file name="extern.js"/>
+			</externs-->
+			<sources dir="${target.browser.dir}">
+				<file name="restlet-browser-light.js"/>
+			</sources>
+			<sources dir="${lib.js.dir}/jsonparser">
+				<file name="json-minified.js"/>
+			</sources>
+		</jscomp>
+	</target>
+	
+	<target name="install.browser.light.for.tests" depends="build.browser.light">
+		<copy file="${target.browser.dir}/restlet-browser-light.js" todir="${tests.browser.dir}"/>
 	</target>
 
 </project>
