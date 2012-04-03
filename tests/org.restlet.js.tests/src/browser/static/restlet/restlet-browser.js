@@ -844,7 +844,7 @@ var Reference = new Class({
 
     getExtensionsAsArray: function() {
         var result = null;
-        var extensions = getExtensions();
+        var extensions = this.getExtensions();
 
         if (extensions != null) {
         	//TODO: check if split function correctly works
@@ -953,7 +953,7 @@ var Reference = new Class({
 
     _getHostIdentifier: function() {
         var result = new StringBuilder();
-        result.append(getScheme()).append("://").append(getAuthority());
+        result.append(this.getScheme()).append("://").append(this.getAuthority());
         return result.toString();
     },
 
@@ -1009,7 +1009,7 @@ var Reference = new Class({
 
     _getLastSegment: function() {
         var result = null;
-        var path = getPath();
+        var path = this.getPath();
 
         if (path != null) {
             if (path.endsWith("/")) {
@@ -1033,7 +1033,7 @@ var Reference = new Class({
     	if (excludeMatrix==null) {
     		excludeMatrix = false;
     	}
-        varresult = this._getLastSegment();
+        var result = this._getLastSegment();
 
         if (excludeMatrix && (result != null)) {
             var matrixIndex = result.indexOf(';');
@@ -1082,13 +1082,13 @@ var Reference = new Class({
 
         if (this.isHierarchical()) {
             var parentRef = null;
-            var path = getPath();
+            var path = this.getPath();
             if (!path.equals("/") && !path.equals("")) {
                 if (path.endsWith("/")) {
                     path = path.substring(0, path.length() - 1);
                 }
 
-                parentRef = getHostIdentifier()
+                parentRef = this.getHostIdentifier()
                         + path.substring(0, path.lastIndexOf('/') + 1);
             } else {
                 parentRef = this.internalRef;
@@ -1338,8 +1338,8 @@ var Reference = new Class({
 
             // Build the result reference
             result = new Reference();
-            var query = getQuery();
-            var fragment = getFragment();
+            var query = this.getQuery();
+            var fragment = this.getFragment();
             var modified = false;
 
             if ((query != null) && (!query.equals(base.getQuery()))) {
@@ -1652,7 +1652,7 @@ var Reference = new Class({
 
         if ((childRef != null) && (childRef.isHierarchical())) {
             result = childRef.toString(false, false).startsWith(
-                    toString(false, false));
+                    				this.toString(false, false));
         }
 
         return result;
@@ -1812,11 +1812,11 @@ var Reference = new Class({
         }
     },
 
-    setBaseRef: function(baseRef) {
-    	if (typeof baseRef == "string") {
-    		this.baseRef = new Reference(baseUri);
+    setBaseRef: function(base) {
+    	if (typeof base == "string") {
+    		this.baseRef = new Reference(base);
     	} else {
-    		this.baseRef = baseRef;
+    		this.baseRef = base;
     	}
     },
 
@@ -2285,7 +2285,7 @@ var Reference = new Class({
                 if (this.hasFragment()) {
                     // Fragment found
                     return this.internalRef.substring(0, this.queryIndex) + "#"
-                            + getFragment();
+                            + this.getFragment();
                 }
 
                 // No fragment found
@@ -2662,7 +2662,7 @@ var Request = new Class(Message, {
         this.hostRef = hostRef;
     },
 
-    setHostRef: function(hostUri) {
+    setHostRef: function(host) {
     	if (typeof host == "string") {
     		this._setHostRef(new Reference(host));
     	} else {
@@ -2724,10 +2724,10 @@ var Request = new Class(Message, {
     	if (typeof resource == "string") {
     		if (this.getResourceRef() != null) {
     			// Allow usage of URIs relative to the current base reference
-    			setResourceRef(new Reference(getResourceRef().getBaseRef(),
+    			this._setResourceRef(new Reference(this.getResourceRef().getBaseRef(),
     								resource));
     		} else {
-    			setResourceRef(new Reference(resource));
+    			this._setResourceRef(new Reference(resource));
     		}
     	} else {
     		this._setResourceRef(resource);
@@ -2774,11 +2774,11 @@ var Response = new Class(Message, {
     },
 
     commit: function() {
-        getRequest().commit(this);
+        this.getRequest().commit(this);
     },
 
     getAge: function() {
-        return age;
+        return this.age;
     },
 
     getAllowedMethods: function() {
@@ -2844,11 +2844,11 @@ var Response = new Class(Message, {
     },
 
     isAutoCommitting: function() {
-        return autoCommitting;
+        return this.autoCommitting;
     },
 
     isCommitted: function() {
-        return committed;
+        return this.committed;
     },
 
     isConfidential: function() {
@@ -2869,7 +2869,7 @@ var Response = new Class(Message, {
     },
 
     redirectSeeOther: function(target) {
-    	this.setLocationRef(targetRef);
+    	this.setLocationRef(target);
     	this.setStatus(Status.REDIRECTION_SEE_OTHER);
     },
 
@@ -2926,7 +2926,7 @@ var Response = new Class(Message, {
     			}
     		}
 
-    		this._setLocationRef(new Reference(baseRef, locationUri).getTargetRef());
+    		this._setLocationRef(new Reference(baseRef, location).getTargetRef());
     	} else {
     		this._setLocationRef(location);
     	}
@@ -3119,8 +3119,8 @@ var CacheDirective = new Class(Parameter, {
 
 CacheDirective.extend({ 
 	maxAge: function(maxAge) {
-		return new CacheDirective(HeaderConstants.CACHE_MAX_AGE, Integer
-            .toString(maxAge), true);
+		return new CacheDirective(HeaderConstants.CACHE_MAX_AGE,
+						maxAge.toString(), true);
 	},
 
 	maxStale: function(maxStale) {
@@ -3180,6 +3180,7 @@ CacheDirective.extend({
 		if (fieldNames==null) {
 			return new CacheDirective(HeaderConstants.CACHE_PRIVATE);
 		} else if (typeof fieldNames == "string") {
+			var fieldName = fieldNames;
 			return new CacheDirective(HeaderConstants.CACHE_PRIVATE, "\"" + fieldName + "\"");
 		} else {
 			var sb = new StringBuilder();
@@ -3561,7 +3562,7 @@ var Conditions = new Class({
         var modificationDate = null;
         if (arguments.length==2) {
             method = arguments[0];
-            entityExists = (arguments[1] != null);
+            var representationInfo = arguments[1];
             tag = (representationInfo == null) ? null : representationInfo.getTag();
             modificationDate = (representationInfo == null) ? null
                     		: representationInfo.getModificationDate();
@@ -3736,6 +3737,20 @@ var Conditions = new Class({
 	}
 });
 
+var Dimension = new Class({});
+
+Dimension.extend({
+	AUTHORIZATION: "authorization",
+	CHARACTER_SET: "character_set",
+	CLIENT_ADDRESS: "client_address",
+	CLIENT_AGENT: "client_agent",
+	UNSPECIFIED: "unspecified",
+	ENCODING: "encoding",
+	LANGUAGE: "language",
+	MEDIA_TYPE: "media_type",
+	TIME: "time"
+});
+
 var Disposition = new Class({
     initialize: function(type, parameters) {
         this.type = type;
@@ -3748,7 +3763,7 @@ var Disposition = new Class({
     },
 
     getFilename: function() {
-        return this.getParameters().getFirstValue(NAME_FILENAME, true);
+        return this.getParameters().getFirstValue(Disposition.NAME_FILENAME, true);
     },
 
     getParameters: function() {
@@ -3760,11 +3775,11 @@ var Disposition = new Class({
     },
 
     getType: function() {
-        return type;
+        return this.type;
     },
 
     setCreationDate: function(value) {
-        this.setDate(NAME_CREATION_DATE, value);
+        this.setDate(Disposition.NAME_CREATION_DATE, value);
     },
 
     setDate: function(name, value) {
@@ -3777,7 +3792,7 @@ var Disposition = new Class({
     },
 
     setModificationDate: function(value) {
-        this.setDate(NAME_MODIFICATION_DATE, value);
+        this.setDate(Disposition.NAME_MODIFICATION_DATE, value);
     },
 
     setParameters: function(parameters) {
@@ -3785,11 +3800,11 @@ var Disposition = new Class({
     },
 
     setReadDate: function(value) {
-        this.setDate(NAME_READ_DATE, value);
+        this.setDate(Disposition.NAME_READ_DATE, value);
     },
 
     setSize: function(size) {
-        this.getParameters().set(Disposition.NAME_SIZE, Long.toString(size), true);
+        this.getParameters().set(Disposition.NAME_SIZE, size.toString(), true);
     },
 
     setType: function(type) {
@@ -4144,7 +4159,6 @@ var Series = new Class({
 			if (this.equals(param.getName(), name, ignoreCase)) {
 				if (found) {
 					// Remove other entries with the same name
-					iter.remove();
 					this.array.splice(i, i);
 					i--;
 				} else {
@@ -4172,6 +4186,7 @@ var Series = new Class({
 		var result = [];
 
 		for (var i=0; i<this.array.length; i++) {
+			var param = this.array[i];
 			if (this.equals(param.getName(), name, ignoreCase)) {
 				result.add(param);
 			}
@@ -4217,7 +4232,7 @@ var Form = new Class(Series, {
 		}
 
 		try {
-			return encode(characterSet, ';');
+			return this.encode(characterSet, ';');
 		} catch (err) {
 			return null;
 		}
@@ -4242,6 +4257,118 @@ var Form = new Class(Series, {
 
 		return new StringRepresentation(this.getQueryString(characterSet),
 				MediaType.APPLICATION_WWW_FORM, null, characterSet);
+	}
+});
+
+var Language = new Class(Metadata, {
+    initialize: function(name, description) {
+        if (description==null) {
+        	description = "Language or range of languages";
+        }
+        this.callSuper(name, description);
+        this.subTags = null;
+    },
+
+    equals: function(object) {
+        return (object instanceof Language)
+                && this.getName().equalsIgnoreCase(object.getName());
+    },
+
+    getParent: function() {
+        var result = null;
+
+        if ((this.getSubTags() != null) && !this.getSubTags().isEmpty()) {
+            result = Language.valueOf(this.getPrimaryTag());
+        } else {
+            result = this.equals(Language.ALL) ? null : Language.ALL;
+        }
+
+        return result;
+    },
+
+    getPrimaryTag: function() {
+        var separator = this.getName().indexOf('-');
+
+        if (separator == -1) {
+            return this.getName();
+        }
+
+        return this.getName().substring(0, separator);
+    },
+
+    getSubTags: function() {
+        if (this.subTags==null) {
+        	this.subTags = [];
+            if (this.getName() != null) {
+                var tags = this.getName().split("-");
+                var tokens = [];
+                if (tags.length > 0) {
+                    for (var i = 1; i < tags.length; i++) {
+                        tokens.push(tags[i]);
+                    }
+                }
+                this.subTags = tokens;
+            }
+        }
+        return this.subTags;
+    },
+
+    includes: function(included) {
+        var result = this.equals(Language.ALL) || (included == null) || this.equals(included);
+
+        if (!result && (included instanceof Language)) {
+            var includedLanguage = included;
+
+            if (this.getPrimaryTag().equals(includedLanguage.getPrimaryTag())) {
+                // Both languages are different
+                if (this.getSubTags().equals(includedLanguage.getSubTags())) {
+                    result = true;
+                } else if (this.getSubTags().isEmpty()) {
+                    result = true;
+                }
+            }
+        }
+
+        return result;
+    }
+});
+
+Language.extend({
+	/** All languages acceptable. */
+	ALL: new Language("*", "All languages"),
+	/** English language. */
+	ENGLISH: new Language("en", "English language"),
+	/** English language spoken in USA. */
+	ENGLISH_US: new Language("en-us", "English language in USA"),
+	/** French language. */
+	FRENCH: new Language("fr", "French language"),
+	/** French language spoken in France. */
+	FRENCH_FRANCE: new Language("fr-fr", "French language in France"),
+	/** Spanish language. */
+	SPANISH: new Language("es", "Spanish language"),
+
+	valueOf: function(name) {
+		var result = null;
+
+		if ((name != null) && !name.equals("")) {
+			if (name.equalsIgnoreCase(Language.ALL.getName())) {
+				result = Language.ALL;
+			} else if (name.equalsIgnoreCase(Language.ENGLISH.getName())) {
+				result = Language.ENGLISH;
+			} else if (name.equalsIgnoreCase(Language.ENGLISH_US.getName())) {
+				result = Language.ENGLISH_US;
+			} else if (name.equalsIgnoreCase(Language.FRENCH.getName())) {
+				result = Language.FRENCH;
+			} else if (name.equalsIgnoreCase(Language.FRENCH_FRANCE.getName())) {
+				result = Language.FRENCH_FRANCE;
+			} else if (name.equalsIgnoreCase(Language.SPANISH.getName())) {
+				result = Language.SPANISH;
+			} else {
+				result = new Language(name);
+			}
+		}
+
+		return result;
 	}
 });
 
@@ -4290,7 +4417,7 @@ var Preference = new Class({
     }
 });
 
-Range = new Class({
+var Range = new Class({
 	initialize: function(index, size) {
 		if (index==null) {
 			this.index = Range.INDEX_FIRST;
@@ -4333,7 +4460,7 @@ Range = new Class({
             // The range starts from the beginning
             result = position >= this.getIndex();
 
-            if (result && (this.getSize() != SIZE_MAX)) {
+            if (result && (this.getSize() != Range.SIZE_MAX)) {
                 result = position < this.getIndex() + this.getSize();
             }
         }
@@ -4444,7 +4571,7 @@ var Tag = new Class({
     },
 
     toString: function() {
-        return getName();
+        return this.getName();
     }
 });
 
@@ -4529,7 +4656,7 @@ HeaderUtils.extend({
         	HeaderUtils.addHeader(HeaderConstants.HEADER_CONTENT_LENGTH, "0", headers);
         } else if (entity.getAvailableSize() != Representation.UNKNOWN_SIZE) {
         	HeaderUtils.addHeader(HeaderConstants.HEADER_CONTENT_LENGTH,
-                    Long.toString(entity.getAvailableSize()), headers);
+                    entity.getAvailableSize().toString(), headers);
         }
 
         if (entity != null) {
@@ -4735,7 +4862,6 @@ HeaderUtils.extend({
             try {
                 headers.push(new Parameter(headerName, headerValue));
             } catch (err) {
-            	console.log(err);
                 /*Context.getCurrentLogger().log(Level.WARNING,
                         "Unable to format the " + headerName + " header", t);*/
             }
@@ -4839,7 +4965,7 @@ HeaderUtils.extend({
 
         if (request.getMaxForwards() > -1) {
         	HeaderUtils.addHeader(HeaderConstants.HEADER_MAX_FORWARDS,
-                    Integer.toString(request.getMaxForwards()), headers);
+                    request.getMaxForwards().toString(), headers);
         }
 
         if (!request.getRanges().isEmpty()) {
@@ -4973,12 +5099,12 @@ HeaderUtils.extend({
         // ----------------------------------
 
         // Add the Authentication-Info header
-        if (response.getAuthenticationInfo() != null) {
+        /*if (response.getAuthenticationInfo() != null) {
         	HeaderUtils.addHeader(HeaderConstants.HEADER_AUTHENTICATION_INFO,
                     org.restlet.engine.security.AuthenticatorUtils
                             .formatAuthenticationInfo(response
                                     .getAuthenticationInfo()), headers);
-        }
+        }*/
 
         // Cookies settings should be written in a single header, but Web
         // browsers does not seem to support it.
@@ -5255,7 +5381,7 @@ HeaderUtils.extend({
     	if (character==-1) {
     		return false;
     	}
-        return isText(character) && (character != '(') && (character != ')');
+        return HeaderUtils.isText(character) && (character != '(') && (character != ')');
     },
     isConnectionClose: function(headers) {
         var result = false;
@@ -5491,7 +5617,6 @@ var HeaderReader = new Class({
         } catch (err) {
             //Context.getCurrentLogger().log(Level.INFO,
             //        "Unable to read a header", ioe);
-        	console.log(err);
         }
     },
     canAdd: function(value, values) {
@@ -5546,7 +5671,7 @@ var HeaderReader = new Class({
                     buffer.append(next);
                 } else if (HeaderUtils.isQuoteCharacter(next)) {
                     // Start of a quoted pair (escape sequence)
-                    buffer.append(read());
+                    buffer.append(this.read());
                 } else if (next == '(') {
                     // Nested comment
                     buffer.append('(').append(this.readComment()).append(')');
@@ -5634,7 +5759,7 @@ var HeaderReader = new Class({
                     buffer.append(next);
                 } else if (HeaderUtils.isQuoteCharacter(next)) {
                     // Start of a quoted pair (escape sequence)
-                    buffer.append(read());
+                    buffer.append(this.read());
                 } else if (HeaderUtils.isDoubleQuote(next)) {
                     // End of quoted string
                     result = buffer.toString();
@@ -5671,7 +5796,7 @@ var HeaderReader = new Class({
 
         // Unread the separator
         if (HeaderUtils.isSpace(next) || HeaderUtils.isComma(next)) {
-            unread();
+            this.unread();
         }
 
         return (sb == null) ? null : sb.toString();
@@ -5727,7 +5852,7 @@ var HeaderReader = new Class({
     },*/
     readValues: function() {
         var result = [];
-        addValues(result);
+        this.addValues(result);
         return result;
     },
     reset: function() {
@@ -5738,7 +5863,7 @@ var HeaderReader = new Class({
         // Skip leading spaces
         this.skipSpaces();
         // Check if next character is a parameter separator
-        if (HeaderUtils.isSemiColon(read())) {
+        if (HeaderUtils.isSemiColon(this.read())) {
             result = true;
             // Skip trailing spaces
             this.skipSpaces();
@@ -6067,7 +6192,7 @@ var CookieSettingWriter = new Class(HeaderWriter, {
         // Append the version
         if (version > 0) {
         	this.append("; Version=");
-        	this.appendValue(Integer.toString(version), version);
+        	this.appendValue(version.toString(), version);
         }
 
         // Append the path
@@ -6098,7 +6223,7 @@ var CookieSettingWriter = new Class(HeaderWriter, {
                         .get(0)), version);
             } else {
             	this.append("; Max-Age=");
-            	this.appendValue(Integer.toString(cookieSetting.getMaxAge()),
+            	this.appendValue(cookieSetting.getMaxAge().toString(),
                         version);
             }
         } else if ((maxAge == -1) && (version > 0)) {
@@ -6220,6 +6345,59 @@ DimensionReader.extend({
 	}
 });
 
+
+var DimensionWriter = new Class(HeaderWriter, {
+    appendCollection: function(dimensions) {
+        if ((dimensions != null) && !dimensions.isEmpty()) {
+            if (dimensions.contains(Dimension.CLIENT_ADDRESS)
+                    || dimensions.contains(Dimension.TIME)
+                    || dimensions.contains(Dimension.UNSPECIFIED)) {
+                // From an HTTP point of view the representations can
+                // vary in unspecified ways
+                this.append("*");
+            } else {
+                var first = true;
+
+                for (var i=0; i<dimensions.length; i++) {
+                	var dimension = dimensions[i];
+                    if (first) {
+                        first = false;
+                    } else {
+                    	this.append(", ");
+                    }
+
+                    this.appendObject(dimension);
+                }
+            }
+        }
+
+        return this;
+    },
+
+    appendObject: function(dimension) {
+        if (dimension == Dimension.CHARACTER_SET) {
+            this.append(HeaderConstants.HEADER_ACCEPT_CHARSET);
+        } else if (dimension == Dimension.CLIENT_AGENT) {
+        	this.append(HeaderConstants.HEADER_USER_AGENT);
+        } else if (dimension == Dimension.ENCODING) {
+        	this.append(HeaderConstants.HEADER_ACCEPT_ENCODING);
+        } else if (dimension == Dimension.LANGUAGE) {
+        	this.append(HeaderConstants.HEADER_ACCEPT_LANGUAGE);
+        } else if (dimension == Dimension.MEDIA_TYPE) {
+        	this.append(HeaderConstants.HEADER_ACCEPT);
+        } else if (dimension == Dimension.AUTHORIZATION) {
+        	this.append(HeaderConstants.HEADER_AUTHORIZATION);
+        }
+
+        return this;
+    }
+});
+
+DimensionWriter.extend({
+	write: function(dimensions) {
+		return new DimensionWriter().appendCollection(dimensions).toString();
+	}
+});
 
 var DispositionReader = new Class(HeaderReader, {
     initialize: function(header) {
@@ -6648,7 +6826,7 @@ var WarningWriter = new Class(HeaderWriter, {
                     "Can't write warning. Invalid text detected");
         }
 
-        this.append(Integer.toString(warning.getStatus().getCode()));
+        this.append(warning.getStatus().getCode().toString());
         this.append(" ");
         this.append(agent);
         this.append(" ");
@@ -7149,7 +7327,7 @@ var Status = new Class({
         var result = this.uri;
 
         if (result == null) {
-            switch (this.code) {
+           /* switch (this.code) {
             case 100:
                 result = Status.BASE_HTTP + "#sec10.1.1";
                 break;
@@ -7314,7 +7492,7 @@ var Status = new Class({
                 result = Status.BBASE_RESTLET
                         + "org/restlet/data/Status.html#CONNECTOR_ERROR_INTERNAL";
                 break;
-            }
+            }*/
         }
 
         return result;
@@ -8050,7 +8228,6 @@ var ClientAdapter = new Class({
 
             HeaderUtils.copyResponseTransportHeaders(responseHeaders, response);
         } catch (err) {
-        	console.log(err);
             response.setStatus(Status.CONNECTOR_ERROR_INTERNAL, err);
         }
     },
@@ -8121,7 +8298,6 @@ var ClientAdapter = new Class({
                             httpCall);
                     callback(response);
                 } catch (err) {
-                	console.log(err);
                     // Unexpected exception occurred
                     if ((response.getStatus() == null)
                             || !response.getStatus().isError()) {
@@ -8149,7 +8325,6 @@ var HttpClientHelper = new Class({
             var clientCall = this.getAdapter().toSpecific(this, request);
             this.getAdapter().commit(clientCall, request, callback);
         } catch (err) {
-        	console.log(err);
             /*getLogger().log(Level.INFO,
                     "Error while handling an HTTP client call", e);*/
         	var response = new Response(request);
@@ -8207,7 +8382,7 @@ var Client = new Class(Connector, {
             sb.append("'").append(request.getProtocol().getName()).append("'.");
             sb.append(" Please add the JAR of a matching connector to your classpath.");
             response.setStatus(Status.CONNECTOR_ERROR_INTERNAL, sb.toString());*/
-        	console.log("No available client connector supports the required protocol: ");
+        	//console.log("No available client connector supports the required protocol: ");
         }
     }
 });
@@ -8230,7 +8405,7 @@ MediaTypeUtils.extend({
         for (var i = 0; i < length; i++) {
             c = token.charAt(i);
             if (c <= 32 || c >= 127 || MediaTypeUtils._TSPECIALS.indexOf(c) != -1)
-                throw new ERROR("Illegal token: " + token);
+                throw new Error("Illegal token: " + token);
         }
 
         return token;
@@ -8394,7 +8569,7 @@ MediaType.extend({
         for (var i = 0; i < length; i++) {
             c = token.charAt(i);
             if (c <= 32 || c >= 127 || MediaType._TSPECIALS.indexOf(c) != -1)
-                throw new ERROR("Illegal token: " + token);
+                throw new Error("Illegal token: " + token);
         }
 
         return token;
@@ -8464,6 +8639,9 @@ var Variant = new Class({
 		this.characterSet = characterSet;
 	},
 	getEncodings: function() {
+		if (this.encodings==null) {
+			this.encodings = [];
+		}
 		return this.encodings;
 	},
 	setEncodings: function(encodings) {
@@ -8476,6 +8654,9 @@ var Variant = new Class({
 		this.locationRef = locationRef;
 	},
     getLanguages: function() {
+		if (this.languages==null) {
+			this.languages = [];
+		}
 		return this.languages;
 	},
 	setLanguages: function(languages) {
@@ -8562,6 +8743,10 @@ var Representation = new Class(RepresentationInfo, {
 	release: function() {
         this.setAvailable(false);
     }
+});
+
+Representation.extend({
+	UNKNOWN_SIZE: -1
 });
 
 var EmptyRepresentation = new Class(Representation, { 
@@ -8661,6 +8846,50 @@ var DomRepresentation = new Class(Representation, {
 			} 
 		} else {
 			return this.xml;
+		}
+	}
+});
+
+var StringRepresentation = new Class(Representation, {
+	initialize: function(text, mediaType, language, characterSet) {
+        this.callSuper(mediaType);
+        this.setMediaType(mediaType);
+        if (language != null) {
+            this.getLanguages().add(language);
+        }
+
+        this.setCharacterSet(characterSet);
+        this.setText(text);
+	},
+
+	getText: function() {
+		return this.text;
+	},
+
+	release: function() {
+		this.setText(null);
+        this.setAvailable(false);
+	},
+
+	setCharacterSet: function(characterSet) {
+		this.characterSet = characterSet;
+		this.updateSize();
+	},
+
+	setText: function(text) {
+		this.text = text;
+		this.updateSize();
+	},
+
+	toString: function() {
+		return this.getText();
+	},
+
+	updateSize: function() {
+		if (this.getText() != null) {
+			this.setSize(this.getText().length);
+		} else {
+			this.setSize(Representation.UNKNOWN_SIZE);
 		}
 	}
 });
@@ -8793,7 +9022,7 @@ var Resource = new Class({
         return this.getResponse() == null ? null : this.getResponse().getAllowedMethods();
     },
 
-    getApplication: function() {
+    /*getApplication: function() {
         var result = this.application;
 
         if (result == null) {
@@ -8807,7 +9036,7 @@ var Resource = new Class({
         }
 
         return result;
-    },
+    },*/
 
     getChallengeRequests: function() {
         return this.getResponse() == null ? null : this.getResponse()
