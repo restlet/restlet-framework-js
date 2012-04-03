@@ -10,7 +10,6 @@ var ClientAdapter = new Class({
 
             HeaderUtils.copyResponseTransportHeaders(responseHeaders, response);
         } catch (err) {
-        	console.log(err);
             response.setStatus(Status.CONNECTOR_ERROR_INTERNAL, err);
         }
     },
@@ -81,7 +80,6 @@ var ClientAdapter = new Class({
                             httpCall);
                     callback(response);
                 } catch (err) {
-                	console.log(err);
                     // Unexpected exception occurred
                     if ((response.getStatus() == null)
                             || !response.getStatus().isError()) {

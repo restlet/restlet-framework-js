@@ -77,7 +77,6 @@ var HeaderReader = new Class({
         } catch (err) {
             //Context.getCurrentLogger().log(Level.INFO,
             //        "Unable to read a header", ioe);
-        	console.log(err);
         }
     },
     canAdd: function(value, values) {
@@ -132,7 +131,7 @@ var HeaderReader = new Class({
                     buffer.append(next);
                 } else if (HeaderUtils.isQuoteCharacter(next)) {
                     // Start of a quoted pair (escape sequence)
-                    buffer.append(read());
+                    buffer.append(this.read());
                 } else if (next == '(') {
                     // Nested comment
                     buffer.append('(').append(this.readComment()).append(')');
@@ -220,7 +219,7 @@ var HeaderReader = new Class({
                     buffer.append(next);
                 } else if (HeaderUtils.isQuoteCharacter(next)) {
                     // Start of a quoted pair (escape sequence)
-                    buffer.append(read());
+                    buffer.append(this.read());
                 } else if (HeaderUtils.isDoubleQuote(next)) {
                     // End of quoted string
                     result = buffer.toString();
@@ -257,7 +256,7 @@ var HeaderReader = new Class({
 
         // Unread the separator
         if (HeaderUtils.isSpace(next) || HeaderUtils.isComma(next)) {
-            unread();
+            this.unread();
         }
 
         return (sb == null) ? null : sb.toString();
@@ -313,7 +312,7 @@ var HeaderReader = new Class({
     },*/
     readValues: function() {
         var result = [];
-        addValues(result);
+        this.addValues(result);
         return result;
     },
     reset: function() {
@@ -324,7 +323,7 @@ var HeaderReader = new Class({
         // Skip leading spaces
         this.skipSpaces();
         // Check if next character is a parameter separator
-        if (HeaderUtils.isSemiColon(read())) {
+        if (HeaderUtils.isSemiColon(this.read())) {
             result = true;
             // Skip trailing spaces
             this.skipSpaces();

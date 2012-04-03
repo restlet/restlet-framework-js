@@ -39,7 +39,7 @@ var Form = new Class(Series, {
 		}
 
 		try {
-			return encode(characterSet, ';');
+			return this.encode(characterSet, ';');
 		} catch (err) {
 			return null;
 		}

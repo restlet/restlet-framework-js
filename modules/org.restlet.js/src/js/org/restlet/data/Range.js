@@ -1,4 +1,4 @@
-Range = new Class({
+var Range = new Class({
 	initialize: function(index, size) {
 		if (index==null) {
 			this.index = Range.INDEX_FIRST;
@@ -41,7 +41,7 @@ Range = new Class({
             // The range starts from the beginning
             result = position >= this.getIndex();
 
-            if (result && (this.getSize() != SIZE_MAX)) {
+            if (result && (this.getSize() != Range.SIZE_MAX)) {
                 result = position < this.getIndex() + this.getSize();
             }
         }

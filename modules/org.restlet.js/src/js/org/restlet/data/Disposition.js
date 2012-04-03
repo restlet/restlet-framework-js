@@ -10,7 +10,7 @@ var Disposition = new Class({
     },
 
     getFilename: function() {
-        return this.getParameters().getFirstValue(NAME_FILENAME, true);
+        return this.getParameters().getFirstValue(Disposition.NAME_FILENAME, true);
     },
 
     getParameters: function() {
@@ -22,11 +22,11 @@ var Disposition = new Class({
     },
 
     getType: function() {
-        return type;
+        return this.type;
     },
 
     setCreationDate: function(value) {
-        this.setDate(NAME_CREATION_DATE, value);
+        this.setDate(Disposition.NAME_CREATION_DATE, value);
     },
 
     setDate: function(name, value) {
@@ -39,7 +39,7 @@ var Disposition = new Class({
     },
 
     setModificationDate: function(value) {
-        this.setDate(NAME_MODIFICATION_DATE, value);
+        this.setDate(Disposition.NAME_MODIFICATION_DATE, value);
     },
 
     setParameters: function(parameters) {
@@ -47,11 +47,11 @@ var Disposition = new Class({
     },
 
     setReadDate: function(value) {
-        this.setDate(NAME_READ_DATE, value);
+        this.setDate(Disposition.NAME_READ_DATE, value);
     },
 
     setSize: function(size) {
-        this.getParameters().set(Disposition.NAME_SIZE, Long.toString(size), true);
+        this.getParameters().set(Disposition.NAME_SIZE, size.toString(), true);
     },
 
     setType: function(type) {

@@ -68,3 +68,7 @@ var Representation = new Class(RepresentationInfo, {
         this.setAvailable(false);
     }
 });
+
+Representation.extend({
+	UNKNOWN_SIZE: -1
+});

@@ -15,8 +15,8 @@ var CacheDirective = new Class(Parameter, {
 
 CacheDirective.extend({ 
 	maxAge: function(maxAge) {
-		return new CacheDirective(HeaderConstants.CACHE_MAX_AGE, Integer
-            .toString(maxAge), true);
+		return new CacheDirective(HeaderConstants.CACHE_MAX_AGE,
+						maxAge.toString(), true);
 	},
 
 	maxStale: function(maxStale) {
@@ -76,6 +76,7 @@ CacheDirective.extend({
 		if (fieldNames==null) {
 			return new CacheDirective(HeaderConstants.CACHE_PRIVATE);
 		} else if (typeof fieldNames == "string") {
+			var fieldName = fieldNames;
 			return new CacheDirective(HeaderConstants.CACHE_PRIVATE, "\"" + fieldName + "\"");
 		} else {
 			var sb = new StringBuilder();

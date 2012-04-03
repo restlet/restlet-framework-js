@@ -22,7 +22,7 @@ var WarningWriter = new Class(HeaderWriter, {
                     "Can't write warning. Invalid text detected");
         }
 
-        this.append(Integer.toString(warning.getStatus().getCode()));
+        this.append(warning.getStatus().getCode().toString());
         this.append(" ");
         this.append(agent);
         this.append(" ");

@@ -223,7 +223,6 @@ var Series = new Class({
 			if (this.equals(param.getName(), name, ignoreCase)) {
 				if (found) {
 					// Remove other entries with the same name
-					iter.remove();
 					this.array.splice(i, i);
 					i--;
 				} else {
@@ -251,6 +250,7 @@ var Series = new Class({
 		var result = [];
 
 		for (var i=0; i<this.array.length; i++) {
+			var param = this.array[i];
 			if (this.equals(param.getName(), name, ignoreCase)) {
 				result.add(param);
 			}

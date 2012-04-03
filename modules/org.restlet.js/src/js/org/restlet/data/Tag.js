@@ -54,7 +54,7 @@ var Tag = new Class({
     },
 
     toString: function() {
-        return getName();
+        return this.getName();
     }
 });
 

@@ -46,6 +46,8 @@
 
 #include org/restlet/data/Conditions.js#
 
+#include org/restlet/data/Dimension.js#
+
 #include org/restlet/data/Disposition.js#
 
 #include org/restlet/engine/headers/ContentType.js#
@@ -59,6 +61,8 @@
 #include org/restlet/util/Series.js#
 
 #include org/restlet/data/Form.js#
+
+#include org/restlet/data/Language.js#
 
 #include org/restlet/data/Preference.js#
 
@@ -89,6 +93,8 @@
 #include org/restlet/engine/headers/DateWriter.js#
 
 #include org/restlet/engine/headers/DimensionReader.js#
+
+#include org/restlet/engine/headers/DimensionWriter.js#
 
 #include org/restlet/engine/headers/DispositionReader.js#
 
@@ -155,6 +161,8 @@
 #include org/restlet/representation/JsonRepresentation.js# 
 
 #include org/restlet/representation/DomRepresentation.js# 
+
+#include org/restlet/representation/StringRepresentation.js# 
 
 #include org/restlet/representation/XmlRepresentation.js#
 

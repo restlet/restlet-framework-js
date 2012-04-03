@@ -36,7 +36,7 @@ var Client = new Class(Connector, {
             sb.append("'").append(request.getProtocol().getName()).append("'.");
             sb.append(" Please add the JAR of a matching connector to your classpath.");
             response.setStatus(Status.CONNECTOR_ERROR_INTERNAL, sb.toString());*/
-        	console.log("No available client connector supports the required protocol: ");
+        	//console.log("No available client connector supports the required protocol: ");
         }
     }
 });

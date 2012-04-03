@@ -23,7 +23,7 @@ var CookieSettingWriter = new Class(HeaderWriter, {
         // Append the version
         if (version > 0) {
         	this.append("; Version=");
-        	this.appendValue(Integer.toString(version), version);
+        	this.appendValue(version.toString(), version);
         }
 
         // Append the path
@@ -54,7 +54,7 @@ var CookieSettingWriter = new Class(HeaderWriter, {
                         .get(0)), version);
             } else {
             	this.append("; Max-Age=");
-            	this.appendValue(Integer.toString(cookieSetting.getMaxAge()),
+            	this.appendValue(cookieSetting.getMaxAge().toString(),
                         version);
             }
         } else if ((maxAge == -1) && (version > 0)) {

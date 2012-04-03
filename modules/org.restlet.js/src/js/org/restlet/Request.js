@@ -147,7 +147,7 @@ var Request = new Class(Message, {
         this.hostRef = hostRef;
     },
 
-    setHostRef: function(hostUri) {
+    setHostRef: function(host) {
     	if (typeof host == "string") {
     		this._setHostRef(new Reference(host));
     	} else {
@@ -209,10 +209,10 @@ var Request = new Class(Message, {
     	if (typeof resource == "string") {
     		if (this.getResourceRef() != null) {
     			// Allow usage of URIs relative to the current base reference
-    			setResourceRef(new Reference(getResourceRef().getBaseRef(),
+    			this._setResourceRef(new Reference(this.getResourceRef().getBaseRef(),
     								resource));
     		} else {
-    			setResourceRef(new Reference(resource));
+    			this._setResourceRef(new Reference(resource));
     		}
     	} else {
     		this._setResourceRef(resource);

@@ -12,6 +12,9 @@ var Variant = new Class({
 		this.characterSet = characterSet;
 	},
 	getEncodings: function() {
+		if (this.encodings==null) {
+			this.encodings = [];
+		}
 		return this.encodings;
 	},
 	setEncodings: function(encodings) {
@@ -24,6 +27,9 @@ var Variant = new Class({
 		this.locationRef = locationRef;
 	},
     getLanguages: function() {
+		if (this.languages==null) {
+			this.languages = [];
+		}
 		return this.languages;
 	},
 	setLanguages: function(languages) {

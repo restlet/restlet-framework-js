@@ -16,7 +16,7 @@ MediaTypeUtils.extend({
         for (var i = 0; i < length; i++) {
             c = token.charAt(i);
             if (c <= 32 || c >= 127 || MediaTypeUtils._TSPECIALS.indexOf(c) != -1)
-                throw new ERROR("Illegal token: " + token);
+                throw new Error("Illegal token: " + token);
         }
 
         return token;
@@ -180,7 +180,7 @@ MediaType.extend({
         for (var i = 0; i < length; i++) {
             c = token.charAt(i);
             if (c <= 32 || c >= 127 || MediaType._TSPECIALS.indexOf(c) != -1)
-                throw new ERROR("Illegal token: " + token);
+                throw new Error("Illegal token: " + token);
         }
 
         return token;

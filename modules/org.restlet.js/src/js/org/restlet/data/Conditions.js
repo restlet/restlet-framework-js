@@ -73,7 +73,7 @@ var Conditions = new Class({
         var modificationDate = null;
         if (arguments.length==2) {
             method = arguments[0];
-            entityExists = (arguments[1] != null);
+            var representationInfo = arguments[1];
             tag = (representationInfo == null) ? null : representationInfo.getTag();
             modificationDate = (representationInfo == null) ? null
                     		: representationInfo.getModificationDate();

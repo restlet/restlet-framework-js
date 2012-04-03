@@ -270,7 +270,7 @@ var Reference = new Class({
 
     getExtensionsAsArray: function() {
         var result = null;
-        var extensions = getExtensions();
+        var extensions = this.getExtensions();
 
         if (extensions != null) {
         	//TODO: check if split function correctly works
@@ -379,7 +379,7 @@ var Reference = new Class({
 
     _getHostIdentifier: function() {
         var result = new StringBuilder();
-        result.append(getScheme()).append("://").append(getAuthority());
+        result.append(this.getScheme()).append("://").append(this.getAuthority());
         return result.toString();
     },
 
@@ -435,7 +435,7 @@ var Reference = new Class({
 
     _getLastSegment: function() {
         var result = null;
-        var path = getPath();
+        var path = this.getPath();
 
         if (path != null) {
             if (path.endsWith("/")) {
@@ -459,7 +459,7 @@ var Reference = new Class({
     	if (excludeMatrix==null) {
     		excludeMatrix = false;
     	}
-        varresult = this._getLastSegment();
+        var result = this._getLastSegment();
 
         if (excludeMatrix && (result != null)) {
             var matrixIndex = result.indexOf(';');
@@ -508,13 +508,13 @@ var Reference = new Class({
 
         if (this.isHierarchical()) {
             var parentRef = null;
-            var path = getPath();
+            var path = this.getPath();
             if (!path.equals("/") && !path.equals("")) {
                 if (path.endsWith("/")) {
                     path = path.substring(0, path.length() - 1);
                 }
 
-                parentRef = getHostIdentifier()
+                parentRef = this.getHostIdentifier()
                         + path.substring(0, path.lastIndexOf('/') + 1);
             } else {
                 parentRef = this.internalRef;
@@ -764,8 +764,8 @@ var Reference = new Class({
 
             // Build the result reference
             result = new Reference();
-            var query = getQuery();
-            var fragment = getFragment();
+            var query = this.getQuery();
+            var fragment = this.getFragment();
             var modified = false;
 
             if ((query != null) && (!query.equals(base.getQuery()))) {
@@ -1078,7 +1078,7 @@ var Reference = new Class({
 
         if ((childRef != null) && (childRef.isHierarchical())) {
             result = childRef.toString(false, false).startsWith(
-                    toString(false, false));
+                    				this.toString(false, false));
         }
 
         return result;
@@ -1241,11 +1241,11 @@ var Reference = new Class({
         }
     },
 
-    setBaseRef: function(baseRef) {
-    	if (typeof baseRef == "string") {
-    		this.baseRef = new Reference(baseUri);
+    setBaseRef: function(base) {
+    	if (typeof base == "string") {
+    		this.baseRef = new Reference(base);
     	} else {
-    		this.baseRef = baseRef;
+    		this.baseRef = base;
     	}
     },
 
@@ -1714,7 +1714,7 @@ var Reference = new Class({
                 if (this.hasFragment()) {
                     // Fragment found
                     return this.internalRef.substring(0, this.queryIndex) + "#"
-                            + getFragment();
+                            + this.getFragment();
                 }
 
                 // No fragment found

@@ -6,7 +6,7 @@ HeaderUtils.extend({
         	HeaderUtils.addHeader(HeaderConstants.HEADER_CONTENT_LENGTH, "0", headers);
         } else if (entity.getAvailableSize() != Representation.UNKNOWN_SIZE) {
         	HeaderUtils.addHeader(HeaderConstants.HEADER_CONTENT_LENGTH,
-                    Long.toString(entity.getAvailableSize()), headers);
+                    entity.getAvailableSize().toString(), headers);
         }
 
         if (entity != null) {
@@ -212,7 +212,6 @@ HeaderUtils.extend({
             try {
                 headers.push(new Parameter(headerName, headerValue));
             } catch (err) {
-            	console.log(err);
                 /*Context.getCurrentLogger().log(Level.WARNING,
                         "Unable to format the " + headerName + " header", t);*/
             }
@@ -316,7 +315,7 @@ HeaderUtils.extend({
 
         if (request.getMaxForwards() > -1) {
         	HeaderUtils.addHeader(HeaderConstants.HEADER_MAX_FORWARDS,
-                    Integer.toString(request.getMaxForwards()), headers);
+                    request.getMaxForwards().toString(), headers);
         }
 
         if (!request.getRanges().isEmpty()) {
@@ -450,12 +449,12 @@ HeaderUtils.extend({
         // ----------------------------------
 
         // Add the Authentication-Info header
-        if (response.getAuthenticationInfo() != null) {
+        /*if (response.getAuthenticationInfo() != null) {
         	HeaderUtils.addHeader(HeaderConstants.HEADER_AUTHENTICATION_INFO,
                     org.restlet.engine.security.AuthenticatorUtils
                             .formatAuthenticationInfo(response
                                     .getAuthenticationInfo()), headers);
-        }
+        }*/
 
         // Cookies settings should be written in a single header, but Web
         // browsers does not seem to support it.
@@ -740,7 +739,7 @@ HeaderUtils.extend({
     	if (character==-1) {
     		return false;
     	}
-        return isText(character) && (character != '(') && (character != ')');
+        return HeaderUtils.isText(character) && (character != '(') && (character != ')');
     },
     isConnectionClose: function(headers) {
         var result = false;

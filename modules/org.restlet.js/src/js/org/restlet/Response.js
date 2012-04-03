@@ -21,11 +21,11 @@ var Response = new Class(Message, {
     },
 
     commit: function() {
-        getRequest().commit(this);
+        this.getRequest().commit(this);
     },
 
     getAge: function() {
-        return age;
+        return this.age;
     },
 
     getAllowedMethods: function() {
@@ -91,11 +91,11 @@ var Response = new Class(Message, {
     },
 
     isAutoCommitting: function() {
-        return autoCommitting;
+        return this.autoCommitting;
     },
 
     isCommitted: function() {
-        return committed;
+        return this.committed;
     },
 
     isConfidential: function() {
@@ -116,7 +116,7 @@ var Response = new Class(Message, {
     },
 
     redirectSeeOther: function(target) {
-    	this.setLocationRef(targetRef);
+    	this.setLocationRef(target);
     	this.setStatus(Status.REDIRECTION_SEE_OTHER);
     },
 
@@ -173,7 +173,7 @@ var Response = new Class(Message, {
     			}
     		}
 
-    		this._setLocationRef(new Reference(baseRef, locationUri).getTargetRef());
+    		this._setLocationRef(new Reference(baseRef, location).getTargetRef());
     	} else {
     		this._setLocationRef(location);
     	}

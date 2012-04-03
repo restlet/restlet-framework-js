@@ -22,7 +22,7 @@ var Resource = new Class({
         return this.getResponse() == null ? null : this.getResponse().getAllowedMethods();
     },
 
-    getApplication: function() {
+    /*getApplication: function() {
         var result = this.application;
 
         if (result == null) {
@@ -36,7 +36,7 @@ var Resource = new Class({
         }
 
         return result;
-    },
+    },*/
 
     getChallengeRequests: function() {
         return this.getResponse() == null ? null : this.getResponse()
