@@ -58,8 +58,9 @@
 	
 	<target name="build.browser" depends="init">
 		<!-- Including files in the file -->
-		<replaceInclude srcFile="${src.dist.dir}/restlet-browser.js"
-				destFile="${target.browser.dir}/build/restlet-browser.js">
+		<replaceInclude srcFile="${src.dist.dir}/browser/restlet-browser.js"
+				destFile="${target.browser.dir}/build/restlet-browser.js"
+				contextualize="false">
 			<fileset dir="${src.js.dir}"/>
 			<fileset dir="${utils.src.js.dir}"/>
 		</replaceInclude>
@@ -90,7 +91,7 @@
 		</jsmin-->
 		<!-- Compile -->
 		<jscomp compilationLevel="simple"  
-				debug="false" output="${target.browser.dir}/restlet-browser-min1.js"> <!-- warning="verbose" -->
+				debug="false" output="${target.browser.dir}/restlet-browser-min.js"> <!-- warning="verbose" -->
 			<!--externs dir="${src.dist.dir}">
 				<file name="extern.js"/>
 			</externs-->
@@ -109,8 +110,9 @@
 
 	<target name="build.browser.light" depends="init">
 		<!-- Including files in the file -->
-		<replaceInclude srcFile="${src.dist.dir}/restlet-browser.js"
-				destFile="${target.browser.dir}/build/restlet-browser-light.js">
+		<replaceInclude srcFile="${src.dist.dir}/browser/restlet-browser.js"
+				destFile="${target.browser.dir}/build/restlet-browser-light.js"
+				contextualize="false">
 			<fileset dir="${src.js.dir}"/>
 			<fileset dir="${utils.src.js.dir}"/>
 		</replaceInclude>
@@ -158,4 +160,28 @@
 		<copy file="${target.browser.dir}/restlet-browser-light.js" todir="${tests.browser.dir}"/>
 	</target>
 
+	<target name="build.nodejs" depends="init">
+		<!-- Including files in the file -->
+		<replaceInclude srcFile="${src.dist.dir}/nodejs/restlet-data.js"
+				destFile="${target.nodejs.dir}/build/restlet-data.js"
+				contextualize="false">
+			<fileset dir="${src.js.dir}"/>
+			<fileset dir="${utils.src.js.dir}"/>
+		</replaceInclude>
+		<!-- Cleaning and moving the file -->
+		<copy todir="${target.nodejs.dir}" overwrite="true" includeEmptyDirs="false">
+			<fileset dir="${target.nodejs.dir}/build" excludes="forge/**,target/**">
+				<custom classname="selector.EditionFileSelector" classpathref="forge-path">
+					<param name="edition" value="browser"/>
+				</custom>
+	        	<include name="**/*.js" />
+			</fileset>
+			<filterchain>
+				<filterreader classname="filter.EditionFilterReader" classpathref="forge-path">
+					<param name="edition" value="browser" />
+				</filterreader>
+			</filterchain>
+	    </copy>
+		<delete dir="${target.nodejs.dir}/build"/>
+	</target>
 </project>
