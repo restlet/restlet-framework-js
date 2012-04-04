@@ -7,6 +7,10 @@
 	        classname="org.restlet.build.js.ReplaceIncludeTask"
 			classpathref="restletjs-path"/>
 
+	<taskdef name="classContextualize"
+	        classname="org.restlet.build.js.ClassContextualizeReplaceTask"
+			classpathref="restletjs-path"/>
+
 	<target name="tests1">
 		<replaceInclude srcFile="${basedir}/test.js"
 				destFile="${basedir}/target-test.js"
@@ -20,6 +24,11 @@
 			<fileset dir="${basedir}/dir2"/>
 			<fileset dir="${basedir}/dir3"/>
 		</replaceInclude>
+	</target>
+	
+	<target name="tests3">
+		<classContextualize srcFile="${basedir}/testcontext.js"
+				destFile="${basedir}/target-testcontext.js" restletSrcPath="${basedir}/../../modules/org.restlet.js/src/js"/>
 	</target>
 	
 </project>

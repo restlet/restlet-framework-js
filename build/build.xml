@@ -18,7 +18,10 @@
 	</target>
 		
 	<target name="compile.tasks" depends="init">
-		<javac srcdir="${src.dir}" destdir="${target.classes.dir}" classpathref="classpath"/>
+		<javac srcdir="${src.dir}" destdir="${target.classes.dir}" excludes="org/restlet/build/js/test/**" classpathref="classpath"/>
+		<copy todir="${target.classes.dir}">
+		    <fileset dir="${src.dir}" includes="**/*.properties"/>
+		  </copy>
 	</target>
 
 	<target name="build.tasks" depends="compile.tasks">

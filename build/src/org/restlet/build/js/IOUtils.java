@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.InputStream;
 import java.io.Reader;
 import java.io.Writer;
 
@@ -29,6 +30,26 @@ public abstract class IOUtils {
 		}
 	}
 	
+	public static void closeInputStream(InputStream inputStream) {
+		try {
+			if (inputStream!=null) {
+				inputStream.close();
+			}
+		} catch(Exception ex) {
+			ex.printStackTrace();
+		}
+	}
+
+	public static void closeOutputStream(InputStream outputStream) {
+		try {
+			if (outputStream!=null) {
+				outputStream.close();
+			}
+		} catch(Exception ex) {
+			ex.printStackTrace();
+		}
+	}
+
 	public static String getFileContent(String fileName) {
 		return getFileContent(new File(fileName));
 	}
