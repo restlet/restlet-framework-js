@@ -1,4 +1,4 @@
-var ChallengeScheme = new Class({
+var ChallengeScheme = new [class Class]({
 	initialize: function(name, technicalName, description) {
 		this.name = name;
 		this.description = description;

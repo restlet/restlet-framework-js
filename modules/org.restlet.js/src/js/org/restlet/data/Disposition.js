@@ -1,4 +1,4 @@
-var Disposition = new Class({
+var Disposition = new [class Class]({
     initialize: function(type, parameters) {
         this.type = type;
         this.parameters = parameters;
@@ -15,7 +15,7 @@ var Disposition = new Class({
 
     getParameters: function() {
         if (this.parameters == null) {
-            this.parameters = new Series();
+            this.parameters = new [class Series]();
         }
 
         return this.parameters;

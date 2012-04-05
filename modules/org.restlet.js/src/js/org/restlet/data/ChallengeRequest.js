@@ -1,4 +1,4 @@
-var ChallengeRequest = new Class(ChallengeMessage, {
+var ChallengeRequest = new [class Class](ChallengeMessage, {
 	initialize: function(scheme, realm) {
 		this.callSuper(scheme, realm);
 	    this.domainRefs = null;

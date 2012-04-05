@@ -1,4 +1,4 @@
-var CacheDirective = new Class(Parameter, {
+var CacheDirective = new [class Class]([class Parameter], {
     initialize: function(name, value, digit) {
         this.name = name;
         this.value = value;
@@ -15,36 +15,36 @@ var CacheDirective = new Class(Parameter, {
 
 CacheDirective.extend({ 
 	maxAge: function(maxAge) {
-		return new CacheDirective(HeaderConstants.CACHE_MAX_AGE,
+		return new CacheDirective([class HeaderConstants].CACHE_MAX_AGE,
 						maxAge.toString(), true);
 	},
 
 	maxStale: function(maxStale) {
 		if (maxStale==null) {
-			return new CacheDirective(HeaderConstants.CACHE_MAX_STALE);
+			return new CacheDirective([class HeaderConstants].CACHE_MAX_STALE);
 		} else {
-		    return new CacheDirective(HeaderConstants.CACHE_MAX_STALE,
+		    return new CacheDirective([class HeaderConstants].CACHE_MAX_STALE,
 		            		maxStale.toString(), true);
 		}
 	},
 
 	minFresh: function(minFresh) {
-		return new CacheDirective(HeaderConstants.CACHE_MIN_FRESH,
+		return new CacheDirective([class HeaderConstants].CACHE_MIN_FRESH,
 						minFresh.toString(), true);
 	},
 
 	mustRevalidate: function() {
-		return new CacheDirective(HeaderConstants.CACHE_MUST_REVALIDATE);
+		return new CacheDirective([class HeaderConstants].CACHE_MUST_REVALIDATE);
 	},
 
 	noCache: function(fieldNames) {
 		if (fieldNames==null) {
-			return new CacheDirective(HeaderConstants.CACHE_NO_CACHE);
+			return new CacheDirective([class HeaderConstants].CACHE_NO_CACHE);
 		} else if (typeof fieldNames == "string") {
-		    return new CacheDirective(HeaderConstants.CACHE_NO_CACHE, "\""
+		    return new CacheDirective([class HeaderConstants].CACHE_NO_CACHE, "\""
 		            + fieldNames + "\"");
 		} else {
-		    var sb = new StringBuilder();
+		    var sb = new [class StringBuilder]();
 
 		    if (fieldNames != null) {
 		        for (var i = 0; i < fieldNames.length; i++) {
@@ -56,30 +56,30 @@ CacheDirective.extend({
 		        }
 		    }
 
-		    return new CacheDirective(HeaderConstants.CACHE_NO_CACHE, sb.toString());
+		    return new CacheDirective([class HeaderConstants].CACHE_NO_CACHE, sb.toString());
 		}
 	},
 
 	noStore: function() {
-		return new CacheDirective(HeaderConstants.CACHE_NO_STORE);
+		return new CacheDirective([class HeaderConstants].CACHE_NO_STORE);
 	},
 
 	noTransform: function() {
-		return new CacheDirective(HeaderConstants.CACHE_NO_TRANSFORM);
+		return new CacheDirective([class HeaderConstants].CACHE_NO_TRANSFORM);
 	},
 
 	onlyIfCached: function() {
-		return new CacheDirective(HeaderConstants.CACHE_ONLY_IF_CACHED);
+		return new CacheDirective([class HeaderConstants].CACHE_ONLY_IF_CACHED);
 	},
 
 	privateInfo: function(fieldNames) {
 		if (fieldNames==null) {
-			return new CacheDirective(HeaderConstants.CACHE_PRIVATE);
+			return new CacheDirective([class HeaderConstants].CACHE_PRIVATE);
 		} else if (typeof fieldNames == "string") {
 			var fieldName = fieldNames;
-			return new CacheDirective(HeaderConstants.CACHE_PRIVATE, "\"" + fieldName + "\"");
+			return new CacheDirective([class HeaderConstants].CACHE_PRIVATE, "\"" + fieldName + "\"");
 		} else {
-			var sb = new StringBuilder();
+			var sb = new [class StringBuilder]();
 
 			if (fieldNames != null) {
 				for (var i = 0; i < fieldNames.length; i++) {
@@ -91,20 +91,20 @@ CacheDirective.extend({
 				}
 			}
 
-			return new CacheDirective(HeaderConstants.CACHE_PRIVATE, sb.toString());
+			return new CacheDirective([class HeaderConstants].CACHE_PRIVATE, sb.toString());
 		}
 	},
 
 	proxyMustRevalidate: function() {
-		return new CacheDirective(HeaderConstants.CACHE_PROXY_MUST_REVALIDATE);
+		return new CacheDirective([class HeaderConstants].CACHE_PROXY_MUST_REVALIDATE);
 	},
 
 	publicInfo: function() {
-		return new CacheDirective(HeaderConstants.CACHE_PUBLIC);
+		return new CacheDirective([class HeaderConstants].CACHE_PUBLIC);
 	},
 
 	sharedMaxAge: function(sharedMaxAge) {
-		return new CacheDirective(HeaderConstants.CACHE_SHARED_MAX_AGE,
+		return new CacheDirective([class HeaderConstants].CACHE_SHARED_MAX_AGE,
 						sharedMaxAge.toString(), true);
 	}
 });

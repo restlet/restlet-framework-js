@@ -1,4 +1,4 @@
-var CharacterSet = new Class(Metadata, {
+var CharacterSet = new [class Class](Metadata, {
 	initialize: function(name, description) {
 		this.name = name;
 		this.description = description;

@@ -1,4 +1,4 @@
-var Conditions = new Class({
+var Conditions = new [class Class]({
 	initialize: function() {
 		this.match = [];
 		this.noneMatch = [];

@@ -1,4 +1,4 @@
-var ChallengeMessage = new Class({
+var ChallengeMessage = new [class Class]({
 	initialize: function(scheme, realm, parameters,
     					digestAlgorithm, opaque, serverNonce) {
         this.parameters = parameters;
@@ -20,7 +20,7 @@ var ChallengeMessage = new Class({
     //Series<Parameter>
     getParameters: function() {
         if (this.parameters == null) {
-            this.parameters = new Series();
+            this.parameters = new [class Series]();
         }
 
         return this.parameters;

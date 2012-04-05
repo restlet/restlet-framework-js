@@ -1,4 +1,4 @@
-var Context = new Class({
+var Context = new [class Class]({
 	initialize: function() {
 		this.clientDispatcher = null;
 	},

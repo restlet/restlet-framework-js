@@ -1,4 +1,4 @@
-var ClientInfo = new Class({
+var ClientInfo = new [class Class]({
 	initialize: function() {
         this.address = null;
         this.agent = null;

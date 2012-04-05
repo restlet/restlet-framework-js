@@ -1,4 +1,4 @@
-var Restlet = new Class({
+var Restlet = new [class Class]({
 	setContext: function(context) {
 		this.context = context;
 	},
@@ -24,14 +24,14 @@ var Restlet = new Class({
             } catch (err) {
                 // Occurred while starting the Restlet
                 //getContext().getLogger().log(Level.WARNING, UNABLE_TO_START, e);
-                response.setStatus(Status.SERVER_ERROR_INTERNAL);
+                response.setStatus([class Status].SERVER_ERROR_INTERNAL);
             }
 
             if (!this.isStarted()) {
                 // No exception raised but the Restlet somehow couldn't be
                 // started
                 //getContext().getLogger().log(Level.WARNING, UNABLE_TO_START);
-                response.setStatus(Status.SERVER_ERROR_INTERNAL);
+                response.setStatus([class Status].SERVER_ERROR_INTERNAL);
             }
         }
     }

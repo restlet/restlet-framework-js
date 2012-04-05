@@ -1,4 +1,4 @@
-var Message = new Class({
+var Message = new [class Class]({
 	initialize: function(entity) {
     	this.attributes = null;
     	this.cacheDirectives = null;
@@ -85,7 +85,7 @@ var Message = new Class({
 		} else if (arguments.length==2) {
 			var value = arguments[0];
 			var mediaType = arguments[1];
-			this.entity = new StringRepresentation(value, mediaType);
+			this.entity = new [class StringRepresentation](value, mediaType);
 		}
 	},
 

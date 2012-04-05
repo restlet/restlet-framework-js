@@ -1,4 +1,4 @@
-var Response = new Class(Message, {
+var Response = new [class Class]([class Message], {
 	initialize: function(request) {
 		this.callSuper();
         this.age = 0;
@@ -81,7 +81,7 @@ var Response = new Class(Message, {
 
     getServerInfo: function() {
     	if (this.serverInfo==null) {
-    		this.serverInfo = new ServerInfo();
+    		this.serverInfo = new [class ServerInfo]();
     	}
         return this.serverInfo;
     },
@@ -112,17 +112,17 @@ var Response = new Class(Message, {
 
     redirectPermanent: function(target) {
         this.setLocationRef(target);
-        this.setStatus(Status.REDIRECTION_PERMANENT);
+        this.setStatus([class Status].REDIRECTION_PERMANENT);
     },
 
     redirectSeeOther: function(target) {
     	this.setLocationRef(target);
-    	this.setStatus(Status.REDIRECTION_SEE_OTHER);
+    	this.setStatus([class Status].REDIRECTION_SEE_OTHER);
     },
 
     redirectTemporary: function(target) {
     	this.setLocationRef(target);
-    	this.setStatus(Status.REDIRECTION_TEMPORARY);
+    	this.setStatus([class Status].REDIRECTION_TEMPORARY);
     },
 
     setAge: function(age) {
@@ -173,7 +173,7 @@ var Response = new Class(Message, {
     			}
     		}
 
-    		this._setLocationRef(new Reference(baseRef, location).getTargetRef());
+    		this._setLocationRef(new [class Reference](baseRef, location).getTargetRef());
     	} else {
     		this._setLocationRef(location);
     	}
@@ -200,20 +200,20 @@ var Response = new Class(Message, {
     },
 
     setStatus: function(status, description) {
-    	if (arguments.length==2 && arguments[0] instanceof Status && typeof arguments[1] == "string") {
+    	if (arguments.length==2 && arguments[0] instanceof [class Status] && typeof arguments[1] == "string") {
     		var status = arguments[0];
     		var description = arguments[1];
-            this._setStatus(new Status(status, description));
-    	} else if (arguments.length==2 && arguments[0] instanceof Status && arguments[1] instanceof Error) {
+            this._setStatus(new [class Status](status, description));
+    	} else if (arguments.length==2 && arguments[0] instanceof [class Status] && arguments[1] instanceof Error) {
     		var status = arguments[0];
     		var error = arguments[1];
-    		this._setStatus(new Status(status, error));
-    	} else if (arguments.length==3 && arguments[0] instanceof Status
+    		this._setStatus(new [class Status](status, error));
+    	} else if (arguments.length==3 && arguments[0] instanceof [class Status]
     			&& arguments[1] instanceof Error && typeof arguments[2] == "string") {
     		var status = arguments[0];
     		var error = arguments[1];
     		var message = arguments[2];
-    		this._setStatus(new Status(status, error, message));
+    		this._setStatus(new [class Status](status, error, message));
     	}
     },
 

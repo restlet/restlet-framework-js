@@ -1,17 +1,17 @@
-var Request = new Class(Message, {
+var Request = new [class Class]([class Message], {
 	//initialize: function(method, resourceRef, url) {
 	initialize: function(method, resourceRef, entity) {
 		this.callSuper(entity);
 		this.method = method;
-		this.clientInfo = new ClientInfo();
+		this.clientInfo = new [class ClientInfo]();
 		if (typeof resourceRef == "string") {
-			this.resourceRef = new Reference(resourceRef);
-		} else if (resourceRef instanceof Reference) {
+			this.resourceRef = new [class Reference](resourceRef);
+		} else if (resourceRef instanceof [class Reference]) {
 			this.resourceRef = resourceRef;
 		}
 		this.ranges = [];
-		this.conditions = new Conditions();
-		this.cookies = new Series();
+		this.conditions = new [class Conditions]();
+		this.cookies = new [class Series]();
 	},
 	
     abort: function() {
@@ -27,21 +27,21 @@ var Request = new Class(Message, {
 
     getClientInfo: function() {
         if (this.clientInfo==null) {
-        	this.clientInfo = new ClientInfo();
+        	this.clientInfo = new [class ClientInfo]();
         }
         return this.clientInfo;
     },
 
     getConditions: function() {
         if (this.conditions==null) {
-        	this.conditions = new Conditions();
+        	this.conditions = new [class Conditions]();
         }
         return this.conditions;
     },
 
     getCookies: function() {
         if (this.cookies==null) {
-        	this.cookies = new Series();
+        	this.cookies = new [class Series]();
         }
         return this.cookies;
     },
@@ -107,8 +107,8 @@ var Request = new Class(Message, {
     },
 
     isEntityAvailable: function() {
-        var result = (Method.GET.equals(this.getMethod())
-                || Method.HEAD.equals(this.getMethod()) || Method.DELETE
+        var result = ([class Method].GET.equals(this.getMethod())
+                || [class Method].HEAD.equals(this.getMethod()) || [class Method].DELETE
                 .equals(this.getMethod()));
         if (result) {
             return false;
@@ -195,7 +195,7 @@ var Request = new Class(Message, {
 
     setReferrerRef: function(referrer) {
     	if (typeof referrer == "string") {
-    		this._setReferrerRef(new Reference(referrer));
+    		this._setReferrerRef(new [class Reference](referrer));
     	} else {
     		this._setReferrerRef(referrer);
     	}
@@ -209,10 +209,10 @@ var Request = new Class(Message, {
     	if (typeof resource == "string") {
     		if (this.getResourceRef() != null) {
     			// Allow usage of URIs relative to the current base reference
-    			this._setResourceRef(new Reference(this.getResourceRef().getBaseRef(),
+    			this._setResourceRef(new [class Reference](this.getResourceRef().getBaseRef(),
     								resource));
     		} else {
-    			this._setResourceRef(new Reference(resource));
+    			this._setResourceRef(new [class Reference](resource));
     		}
     	} else {
     		this._setResourceRef(resource);

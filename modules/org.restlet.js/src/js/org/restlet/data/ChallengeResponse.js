@@ -1,4 +1,4 @@
-var ChallengeResponse = new Class(ChallengeMessage, {
+var ChallengeResponse = new [class Class](ChallengeMessage, {
 	initialize: function(scheme, identifier, secret) {
 		this.scheme = scheme;
 		this.identifier = identifier;

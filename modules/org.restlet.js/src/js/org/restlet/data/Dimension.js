@@ -1,4 +1,4 @@
-var Dimension = new Class({});
+var Dimension = new [class Class]({});
 
 Dimension.extend({
 	AUTHORIZATION: "authorization",

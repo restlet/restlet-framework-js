@@ -1,4 +1,4 @@
-var Cookie = new Class({
+var Cookie = new [class Class]({
     initialize: function() {
     	if (arguments.length==2 && typeof arguments[0]=="string") {
     		this.version = 0;
