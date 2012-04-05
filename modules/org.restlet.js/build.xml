@@ -162,26 +162,90 @@
 
 	<target name="build.nodejs" depends="init">
 		<!-- Including files in the file -->
-		<replaceInclude srcFile="${src.dist.dir}/nodejs/restlet-data.js"
-				destFile="${target.nodejs.dir}/build/restlet-data.js"
+		<!-- commons -->
+		<replaceInclude srcFile="${src.dist.dir}/nodejs/commons.js"
+				destFile="${target.nodejs.dir}/build/commons.js"
+				restletSrcPath="${src.js.dir}"
+				contextualize="true" requirePattern="var {modulename} = require(&quot;./restlet-{modulename}.js&quot;);">
+			<fileset dir="${src.js.dir}"/>
+			<fileset dir="${utils.src.js.dir}"/>
+		</replaceInclude>
+		<!-- index -->
+		<replaceInclude srcFile="${src.dist.dir}/nodejs/index.js"
+				destFile="${target.nodejs.dir}/build/index.js"
+				restletSrcPath="${src.js.dir}"
 				contextualize="false">
 			<fileset dir="${src.js.dir}"/>
 			<fileset dir="${utils.src.js.dir}"/>
 		</replaceInclude>
+		<!-- core -->
+		<replaceInclude srcFile="${src.dist.dir}/nodejs/restlet-core.js"
+				destFile="${target.nodejs.dir}/build/restlet-core.js"
+				restletSrcPath="${src.js.dir}"
+				contextualize="true" requirePattern="var {modulename} = require(&quot;./restlet-{modulename}.js&quot;);">
+			<fileset dir="${src.js.dir}"/>
+			<fileset dir="${utils.src.js.dir}"/>
+		</replaceInclude>
+		<!-- data -->
+		<replaceInclude srcFile="${src.dist.dir}/nodejs/restlet-data.js"
+				destFile="${target.nodejs.dir}/build/restlet-data.js"
+				restletSrcPath="${src.js.dir}"
+				contextualize="true" requirePattern="var {modulename} = require(&quot;./restlet-{modulename}.js&quot;);">
+			<fileset dir="${src.js.dir}"/>
+			<fileset dir="${utils.src.js.dir}"/>
+		</replaceInclude>
+		<!-- engine -->
+		<replaceInclude srcFile="${src.dist.dir}/nodejs/restlet-engine.js"
+				destFile="${target.nodejs.dir}/build/restlet-engine.js"
+				restletSrcPath="${src.js.dir}"
+				contextualize="true" requirePattern="var {modulename} = require(&quot;./restlet-{modulename}.js&quot;);">
+			<fileset dir="${src.js.dir}"/>
+			<fileset dir="${utils.src.js.dir}"/>
+		</replaceInclude>
+		<!-- representation -->
+		<replaceInclude srcFile="${src.dist.dir}/nodejs/restlet-representation.js"
+				destFile="${target.nodejs.dir}/build/restlet-representation.js"
+				restletSrcPath="${src.js.dir}"
+				contextualize="true" requirePattern="var {modulename} = require(&quot;./restlet-{modulename}.js&quot;);">
+			<fileset dir="${src.js.dir}"/>
+			<fileset dir="${utils.src.js.dir}"/>
+		</replaceInclude>
+		<!-- resource -->
+		<replaceInclude srcFile="${src.dist.dir}/nodejs/restlet-resource.js"
+				destFile="${target.nodejs.dir}/build/restlet-resource.js"
+				restletSrcPath="${src.js.dir}"
+				contextualize="true" requirePattern="var {modulename} = require(&quot;./restlet-{modulename}.js&quot;);">
+			<fileset dir="${src.js.dir}"/>
+			<fileset dir="${utils.src.js.dir}"/>
+		</replaceInclude>
+		<!-- util -->
+		<replaceInclude srcFile="${src.dist.dir}/nodejs/restlet-util.js"
+				destFile="${target.nodejs.dir}/build/restlet-util.js"
+				restletSrcPath="${src.js.dir}"
+				contextualize="true" requirePattern="var {modulename} = require(&quot;./restlet-{modulename}.js&quot;);">
+			<fileset dir="${src.js.dir}"/>
+			<fileset dir="${utils.src.js.dir}"/>
+		</replaceInclude>
 		<!-- Cleaning and moving the file -->
-		<copy todir="${target.nodejs.dir}" overwrite="true" includeEmptyDirs="false">
+		<copy todir="${target.nodejs.dir}/lib" overwrite="true" includeEmptyDirs="false">
 			<fileset dir="${target.nodejs.dir}/build" excludes="forge/**,target/**">
 				<custom classname="selector.EditionFileSelector" classpathref="forge-path">
-					<param name="edition" value="browser"/>
+					<param name="edition" value="nodejs"/>
 				</custom>
 	        	<include name="**/*.js" />
 			</fileset>
 			<filterchain>
 				<filterreader classname="filter.EditionFilterReader" classpathref="forge-path">
-					<param name="edition" value="browser" />
+					<param name="edition" value="nodejs" />
 				</filterreader>
 			</filterchain>
 	    </copy>
 		<delete dir="${target.nodejs.dir}/build"/>
+		
+		<copy todir="${target.nodejs.dir}" file="package.json"/>
+		<copy todir="${target.nodejs.dir}" file="status.json"/>
+		<copy todir="${target.nodejs.dir}" file="${target.nodejs.dir}/lib/index.js"/>
+		<delete file="${target.nodejs.dir}/lib/index.js"/>
+		<copy todir="${target.nodejs.dir}" file=".npmignore"/>
 	</target>
 </project>
