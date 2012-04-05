@@ -1,4 +1,4 @@
-var Metadata = new Class({
+var Metadata = new [class Class]({
 	initialize: function(name, description) {
 		if (description==null) {
 			description = "Encoding applied to a representation";

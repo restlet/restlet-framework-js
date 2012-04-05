@@ -1,4 +1,4 @@
-var Language = new Class(Metadata, {
+var Language = new [class Class](Metadata, {
     initialize: function(name, description) {
         if (description==null) {
         	description = "Language or range of languages";

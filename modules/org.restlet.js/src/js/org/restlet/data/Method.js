@@ -1,4 +1,4 @@
-var Method = new Class({
+var Method = new [class Class]({
 	initialize: function(name, description, uri, safe, idempotent) {
 		this.name = name;
 		this.description = description;

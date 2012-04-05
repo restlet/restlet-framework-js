@@ -1,4 +1,4 @@
-var BrowserHttpClientCall = new Class(ClientCall, {
+var BrowserHttpClientCall = new [class Class]([class ClientCall], {
 	initialize: function() {
 		this.callSuper();
 		this.xhr = this.createXhrObject();
@@ -6,7 +6,7 @@ var BrowserHttpClientCall = new Class(ClientCall, {
 	getAcceptHeader: function() {
 		for (var i=0; i<this.requestHeaders.length; i++) {
 			var requestHeader = this.requestHeaders[i];
-			if (requestHeader.getName()==HeaderConstants.HEADER_ACCEPT) {
+			if (requestHeader.getName()==[class HeaderConstants].HEADER_ACCEPT) {
 				return requestHeader.getValue();
 			}
 		}
@@ -41,7 +41,7 @@ var BrowserHttpClientCall = new Class(ClientCall, {
 	},
 	sendRequestWithXhr: function(request, callback) {
 		var currentThis = this;
-		var response = new Response(request);
+		var response = new [class Response](request);
 		var url = request.getResourceRef().toString(true, true);
 		var method = request.getMethod().getName();
 		this.method = request.getMethod();
@@ -66,7 +66,7 @@ var BrowserHttpClientCall = new Class(ClientCall, {
 			representation = HeaderUtils.extractEntityHeaders(
 								currentThis.getResponseHeaders(xhr), representation);
 			representation.write(xhr);
-			var status = new Status(xhr.status, xhr.statusText);
+			var status = new [class Status](xhr.status, xhr.statusText);
 			response.setStatus(status);
 			response.setEntity(representation);
 			if (debugHandler!=null && debugHandler.afterReceivedResponse!=null) {
@@ -91,7 +91,7 @@ var BrowserHttpClientCall = new Class(ClientCall, {
 	    head.appendChild(script);
 
 	    var currentThis = this;
-		var response = new Response(request);
+		var response = new [class Response](request);
 		var method = request.getMethod().getName();
 		this.method = request.getMethod();
 		var clientInfo = request.getClientInfo();
@@ -102,9 +102,9 @@ var BrowserHttpClientCall = new Class(ClientCall, {
 			debugHandler.beforeSendingRequest(url, method, requestHeaders, data);
 		}
 		window[callbackName] = function(data) {
-			var status = new Status(200, "OK");
+			var status = new [class Status](200, "OK");
 			response.setStatus(status);
-			var representation = new JsonRepresentation();
+			var representation = new [class JsonRepresentation]();
 			representation.setObject(data);
 			response.setEntity(representation);
 			callback(response);
@@ -120,7 +120,7 @@ var BrowserHttpClientCall = new Class(ClientCall, {
 			var headerEntry = headerEntries[cpt];
 			var index = headerEntry.indexOf(":");
 			if (headerEntry!="" && index!=-1) {
-				var header = new Parameter(
+				var header = new [class Parameter](
 						headerEntry.substring(0, index),
 						headerEntry.substring(index+1));
 				headers.push(header);

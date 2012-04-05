@@ -1,4 +1,4 @@
-var Parameter = new Class({
+var Parameter = new [class Class]({
 	initialize: function(name, value) {
 		this.name = name;
 		this.value = value;

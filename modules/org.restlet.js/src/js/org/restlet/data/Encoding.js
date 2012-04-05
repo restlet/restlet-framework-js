@@ -1,4 +1,4 @@
-var Encoding = new Class(Metadata, {
+var Encoding = new [class Class](Metadata, {
 	initialize: function(name, description) {
 		this.callSuper(name, description);
 		/*if (description==null) {

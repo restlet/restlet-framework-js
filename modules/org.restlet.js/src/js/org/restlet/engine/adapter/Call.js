@@ -1,4 +1,4 @@
-var Call = new Class({
+var Call = new [class Class]({
 	initialize: function() {
 		this.hostDomain = null;
         this.hostPort = -1;

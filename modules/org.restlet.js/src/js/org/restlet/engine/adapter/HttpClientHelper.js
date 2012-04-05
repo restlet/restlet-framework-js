@@ -1,8 +1,8 @@
-var HttpClientHelper = new Class({
+var HttpClientHelper = new [class Class]({
     //public abstract ClientCall create(Request request);
 	getAdapter: function() {
         if (this.adapter == null) {
-            this.adapter = new ClientAdapter(/*this.getContext()*/);
+            this.adapter = new [class ClientAdapter](/*this.getContext()*/);
         }
 
         return this.adapter;
@@ -14,9 +14,9 @@ var HttpClientHelper = new Class({
         } catch (err) {
             /*getLogger().log(Level.INFO,
                     "Error while handling an HTTP client call", e);*/
-        	var response = new Response(request);
-            response.setStatus(Status.CONNECTOR_ERROR_INTERNAL, err);
-            response.setEntity(new Representation());
+        	var response = new [class Response](request);
+            response.setStatus([class Status].CONNECTOR_ERROR_INTERNAL, err);
+            response.setEntity(new [class Representation]());
             callback(response);
         }
     }

@@ -1,4 +1,4 @@
-var Tag = new Class({
+var Tag = new [class Class]({
 	initialize: function(opaqueTag, weak) {
 		this.name = opaqueTag;
 		if (weak==null) {
@@ -38,7 +38,7 @@ var Tag = new Class({
             return "*";
         }
 
-        var sb = new StringBuilder();
+        var sb = new [class StringBuilder]();
         if (this.isWeak()) {
             sb.append("W/");
         }

@@ -1,4 +1,4 @@
-var Status = new Class({
+var Status = new [class Class]({
     initialize: function(code, reasonPhrase, description, uri) {
     	this.code = code;
     	if (typeof reasonPhrase=="undefined" || reasonPhrase==null) {

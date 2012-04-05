@@ -1,4 +1,4 @@
-var Protocol = new Class({
+var Protocol = new [class Class]({
 	initialize: function(schemeName,name,technicalName,description,
 						defaultPort,confidential,version) {
 		this.schemeName = schemeName;

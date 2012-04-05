@@ -1,4 +1,4 @@
-var Preference = new Class({
+var Preference = new [class Class]({
 	initialize: function(metadata, quality, parameters) {
         this.metadata = metadata;
         if (quality==null) {
@@ -16,7 +16,7 @@ var Preference = new Class({
 
     getParameters: function() {
         if (this.parameters == null) {
-        	this.parameters = new Series();
+        	this.parameters = new [class Series]();
         }
         return this.parameters;
     },

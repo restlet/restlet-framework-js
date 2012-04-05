@@ -1,8 +1,8 @@
-var BrowserHttpClientHelper = new Class(HttpClientHelper, {
+var BrowserHttpClientHelper = new [class Class]([class HttpClientHelper], {
 	initialize: function(client) {
 		this.client = client;
 	},
 	create: function(request) {
-		return new BrowserHttpClientCall();
+		return new [class BrowserHttpClientCall]();
 	}
 });

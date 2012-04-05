@@ -1,4 +1,4 @@
-var ServerInfo =new Class({
+var ServerInfo =new [class Class]({
     initialize: function() {
         this.address = null;
         this.agent = null;

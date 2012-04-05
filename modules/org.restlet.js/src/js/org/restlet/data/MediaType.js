@@ -1,4 +1,4 @@
-var MediaTypeUtils = new Class({});
+var MediaTypeUtils = new [class Class]({});
 MediaTypeUtils.extend({
     _TSPECIALS: "()<>@,;:/[]?=\\\"",
 
@@ -35,7 +35,7 @@ MediaTypeUtils.extend({
 
         // Check presence of parameters
         if ((colonIndex = name.indexOf(';')) != -1) {
-            params = new StringBuilder(name.substring(colonIndex));
+            params = new [class StringBuilder](name.substring(colonIndex));
             name = name.substring(0, colonIndex);
         }
 
@@ -52,7 +52,7 @@ MediaTypeUtils.extend({
         // Merge parameters taken from the name and the method argument.
         if (parameters != null && !parameters.isEmpty()) {
             if (params == null) {
-                params = new StringBuilder();
+                params = new [class StringBuilder]();
             }
             var hw = new HeaderWriter();
             hw.appendObject = function(value) {
@@ -72,7 +72,7 @@ MediaTypeUtils.extend({
     }
 });
 
-var MediaType = new Class(Metadata, {
+var MediaType = new [class Class](Metadata, {
 	initialize: function(name, parameters, description) {
 		if (description==null) {
 			description = "Media type or range of media types";
@@ -199,7 +199,7 @@ MediaType.extend({
 
         // Check presence of parameters
         if ((colonIndex = name.indexOf(';')) != -1) {
-            params = new StringBuilder(name.substring(colonIndex));
+            params = new [class StringBuilder](name.substring(colonIndex));
             name = name.substring(0, colonIndex);
         }
 
@@ -216,7 +216,7 @@ MediaType.extend({
         // Merge parameters taken from the name and the method argument.
         if (parameters != null && !parameters.isEmpty()) {
             if (params == null) {
-                params = new StringBuilder();
+                params = new [class StringBuilder]();
             }
             var hw = new HeaderWriter();
             hw.appendObject = function(value) {

@@ -1,11 +1,11 @@
-var NodeJsHttpClientCall = new Class(ClientCall, {
+var NodeJsHttpClientCall = new [class Class]([class ClientCall], {
 	initialize: function() {
 		this.callSuper();
 	},
 	sendRequest: function(request, callback) {
 		console.log("> NodeJsHttpClientCall.sendRequest")
 		var currentThis = this;
-		var response = new Response(request);
+		var response = new [class Response](request);
 		//var url = request.getReference().getUrl();
 		var port = request.getReference().getPort();
 		var host = request.getReference().getHost();
@@ -60,7 +60,7 @@ console.log('HEADERS: ' + JSON.stringify(clientResponse.headers));
 				currentThis.responseHeaders.push(new Parameter(
 						headerName, clientResponse.headers[headerName]));
 			}
-			var representation = new Representation();
+			var representation = new [class Representation]();
 			response.setEntity(representation);
 			clientResponse.on('data', function (chunk) {
 				console.log("on data");

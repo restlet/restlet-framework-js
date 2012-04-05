@@ -1,4 +1,4 @@
-var Form = new Class(Series, {
+var Form = new [class Class]([class Series], {
 	initialize: function() {
 		this.callSuper();
 	},
@@ -20,7 +20,7 @@ var Form = new Class(Series, {
 		if (separator==null) {
 			separator = "&";
 		}
-		var sb = new StringBuilder();
+		var sb = new [class StringBuilder]();
 
 		for (var i = 0; i < this.size(); i++) {
 			if (i > 0) {

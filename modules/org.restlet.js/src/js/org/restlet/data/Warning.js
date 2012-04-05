@@ -1,4 +1,4 @@
-var Warning = new Class({
+var Warning = new [class Class]({
     getAgent: function() {
         return this.agent;
     },

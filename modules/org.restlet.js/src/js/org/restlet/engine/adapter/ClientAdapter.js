@@ -1,4 +1,4 @@
-var ClientAdapter = new Class({
+var ClientAdapter = new [class Class]({
 	initialize: function(context) {
 	},
     readResponseHeaders: function(httpCall, response) {
@@ -8,9 +8,9 @@ var ClientAdapter = new Class({
             // Put the response headers in the call's attributes map
             response.getAttributes()[HeaderConstants.ATTRIBUTE_HEADERS] = responseHeaders;
 
-            HeaderUtils.copyResponseTransportHeaders(responseHeaders, response);
+           [class HeaderUtils].copyResponseTransportHeaders(responseHeaders, response);
         } catch (err) {
-            response.setStatus(Status.CONNECTOR_ERROR_INTERNAL, err);
+            response.setStatus([class Status].CONNECTOR_ERROR_INTERNAL, err);
         }
     },
     toSpecific: function(client, request) {
@@ -19,16 +19,16 @@ var ClientAdapter = new Class({
 
         // Add the headers
         if (result != null) {
-            HeaderUtils.addGeneralHeaders(request, result.getRequestHeaders());
+        	[class HeaderUtils].addGeneralHeaders(request, result.getRequestHeaders());
 
             if (request.getEntity() != null) {
-                HeaderUtils.addEntityHeaders(request.getEntity(),
+            	[class HeaderUtils].addEntityHeaders(request.getEntity(),
                         result.getRequestHeaders());
             }
 
             // NOTE: This must stay at the end because the AWS challenge
             // scheme requires access to all HTTP headers
-            HeaderUtils.addRequestHeaders(request, result.getRequestHeaders());
+            [class HeaderUtils].addRequestHeaders(request, result.getRequestHeaders());
         }
 
         return result;
@@ -51,16 +51,16 @@ var ClientAdapter = new Class({
         if (response.getEntity() != null) {
             if (response.getEntity().getSize() == 0) {
                 response.getEntity().release();
-            } else if (response.getRequest().getMethod()==Method.HEAD) {
+            } else if (response.getRequest().getMethod()==[class Method].HEAD) {
                 response.getEntity().release();
-            } else if (response.getStatus()==Status.SUCCESS_NO_CONTENT) {
+            } else if (response.getStatus()==[class Status].SUCCESS_NO_CONTENT) {
                 response.getEntity().release();
             } else if (response.getStatus()
-                    ==Status.SUCCESS_RESET_CONTENT) {
+                    ==[class Status].SUCCESS_RESET_CONTENT) {
                 response.getEntity().release();
                 response.setEntity(null);
             } else if (response.getStatus()==
-                    Status.REDIRECTION_NOT_MODIFIED) {
+            	[class Status].REDIRECTION_NOT_MODIFIED) {
                 response.getEntity().release();
             } else if (response.getStatus().isInformational()) {
                 response.getEntity().release();
@@ -75,7 +75,7 @@ var ClientAdapter = new Class({
             httpCall.sendRequest(request, function(response) {
                 try {
                 	currentThis.updateResponse(response,
-                            new Status(httpCall.getStatusCode(), null,
+                            new [class Status](httpCall.getStatusCode(), null,
                                     httpCall.getReasonPhrase(), null),
                             httpCall);
                     callback(response);
@@ -84,7 +84,7 @@ var ClientAdapter = new Class({
                     if ((response.getStatus() == null)
                             || !response.getStatus().isError()) {
                         response.setStatus(
-                                Status.CONNECTOR_ERROR_INTERNAL, err);
+                        		[class Status].CONNECTOR_ERROR_INTERNAL, err);
                         callback(response);
                     }
                 }

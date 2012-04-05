@@ -1,4 +1,4 @@
-var Range = new Class({
+var Range = new [class Class]({
 	initialize: function(index, size) {
 		if (index==null) {
 			this.index = Range.INDEX_FIRST;

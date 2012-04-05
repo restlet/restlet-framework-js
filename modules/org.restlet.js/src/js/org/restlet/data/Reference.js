@@ -1,4 +1,4 @@
-var Reference = new Class({
+var Reference = new [class Class]({
 	initialize: function(urlString) {
         // [ifndef nodejs]
 		this.internalRef = urlString;
@@ -175,7 +175,7 @@ var Reference = new Class({
             }
 
             if (!valid) {
-                var sb = new StringBuilder();
+                var sb = new [class StringBuilder]();
 
                 for (var i = 0; (i < uriRef.length); i++) {
                     if (Reference.isValid(uriRef.charCodeAt(i))) {
@@ -378,7 +378,7 @@ var Reference = new Class({
     },
 
     _getHostIdentifier: function() {
-        var result = new StringBuilder();
+        var result = new [class StringBuilder]();
         result.append(this.getScheme()).append("://").append(this.getAuthority());
         return result.toString();
     },
@@ -675,7 +675,7 @@ var Reference = new Class({
                                 // path
                                 // We need to add enough ".." in the relative
                                 // path
-                                var sb = new StringBuilder();
+                                var sb = new [class StringBuilder]();
 
                                 // Count segments
                                 var segments = 0;
@@ -698,7 +698,7 @@ var Reference = new Class({
                             // the last local path segment
                             // But that is longer. Situation similar to a
                             // junction
-                            var sb = new StringBuilder();
+                            var sb = new [class StringBuilder]();
 
                             // Count segments
                             var segments = 0;
@@ -744,7 +744,7 @@ var Reference = new Class({
                     // We found a junction point, we need to add enough ".." in
                     // the relative path and append the rest of the local path
                     // the local path is a direct subpath of the base path
-                    var sb = new StringBuilder();
+                    var sb = new [class StringBuilder]();
 
                     // Count segments
                     var segments = 0;
@@ -1663,7 +1663,7 @@ var Reference = new Class({
     },
 
     setSegments: function(segments) {
-        var sb = new StringBuilder();
+        var sb = new [class StringBuilder]();
 
         for (var i=0; i<segments.length; i++) {
         	var segment = segments[i];
@@ -1886,7 +1886,7 @@ Reference.extend({
     },
 
     _toString2: function(relativePart, query, fragment) {
-        var sb = new StringBuilder();
+        var sb = new [class StringBuilder]();
 
         // Append the path
         if (relativePart != null) {
@@ -1908,7 +1908,7 @@ Reference.extend({
     },
 
     _toString3: function(scheme, host, path, query, fragment) {
-        var sb = new StringBuilder();
+        var sb = new [class StringBuilder]();
 
         if (scheme != null) {
             // Append the scheme and host name

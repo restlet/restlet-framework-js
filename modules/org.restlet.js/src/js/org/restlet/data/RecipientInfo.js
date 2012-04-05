@@ -1,4 +1,4 @@
-var RecipientInfo = new Class({
+var RecipientInfo = new [class Class]({
 	initialize: function(protocol, name, agent) {
         this.protocol = protocol;
         this.name = name;
