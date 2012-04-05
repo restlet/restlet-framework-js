@@ -14,7 +14,7 @@ public abstract class ContextualizationUtils {
 		File targetFile = doGetClassWithPackage(restletSrcPath, className);
 		if (targetFile!=null) {
 			try {
-				System.out.println("file = "+targetFile.getCanonicalPath());
+				//System.out.println("file = "+targetFile.getCanonicalPath());
 				String targetFilePathName = targetFile.getCanonicalPath();
 				String restletSrcPathName = restletSrcPath.getCanonicalPath();
 				String classWithPackage = targetFilePathName.replace(restletSrcPathName, "");
@@ -46,6 +46,10 @@ public abstract class ContextualizationUtils {
 			}
 		}
 		return null;
+	}
+
+	public static String getPackageFromFileName(String fileName) {
+		return getPackage(fileName.replaceAll(File.separator, "."));
 	}
 
 	public static String getPackage(String classNameWithPackage) {

@@ -2,12 +2,15 @@ package org.restlet.build.js;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.StringTokenizer;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.FileSet;
+import org.restlet.build.js.ClassContextualizer.ContextualizedContent;
 
 public class ReplaceIncludeTask extends Task {
 	private File restletSrcPath;
@@ -15,6 +18,7 @@ public class ReplaceIncludeTask extends Task {
 	private File destFile;
 	private String baseDir;
 	private boolean contextualize = true;
+	private String requirePattern;
 	private List<FileSet> filesets = new ArrayList<FileSet>();
 	private ClassContextualizer contextualizer;
 
@@ -48,6 +52,8 @@ public class ReplaceIncludeTask extends Task {
 	private void doExecuteForSingleBaseDirectory() {
 		String content = IOUtils.getFileContent(srcFile);
 		StringBuilder newContent = new StringBuilder();
+		Map<String,String> moduleNames = new HashMap<String, String>();
+		
 		StringTokenizer st = new StringTokenizer(content, "\n", true);
 		while (st.hasMoreTokens()) {
 			String line = st.nextToken();
@@ -55,7 +61,14 @@ public class ReplaceIncludeTask extends Task {
 			if (line.trim().startsWith("#include ")) {
 				String fileToInclude = line.trim().replace("#include ", "").replace("#", "");
 				String contentToInclude = IOUtils.getFileContent(baseDir+File.separator+fileToInclude);
-				contentToInclude = contextualizer.handleFile(fileToInclude, contentToInclude);
+				ContextualizedContent cContent = contextualizer.handleFile(fileToInclude, contentToInclude);
+				contentToInclude = cContent.getContent();
+				List<String> usedModuleNames = cContent.getUsedModuleNames();
+				for (String moduleName : usedModuleNames) {
+					if (moduleNames.get(moduleName)==null) {
+						moduleNames.put(moduleName, "");
+					}
+				}
 				if (contentToInclude!=null) {
 					newContent.append(contentToInclude);
 				} else {
@@ -66,7 +79,18 @@ public class ReplaceIncludeTask extends Task {
 			}
 		}
 
-		IOUtils.setFileContent(destFile, newContent.toString());
+		StringBuilder requireContent = new StringBuilder();
+		if (requirePattern!=null) {
+			for (String moduleName : moduleNames.keySet()) {
+				requireContent.append(requirePattern.replaceAll("\\{modulename\\}", moduleName));
+				requireContent.append("\n");
+			}
+			if (!requireContent.toString().equals("")) {
+				requireContent.append("\n");
+			}
+		}
+		
+		IOUtils.setFileContent(destFile, requireContent.toString()+newContent.toString());
 	}
 	
 	private String getFileContentFromFilesets(String fileToInclude) {
@@ -85,6 +109,8 @@ public class ReplaceIncludeTask extends Task {
 	private void doExecuteForMultipleBaseDirectory() {
 		String content = IOUtils.getFileContent(srcFile);
 		StringBuilder newContent = new StringBuilder();
+		Map<String,String> moduleNames = new HashMap<String, String>();
+		
 		StringTokenizer st = new StringTokenizer(content, "\n", true);
 		while (st.hasMoreTokens()) {
 			String line = st.nextToken();
@@ -92,7 +118,14 @@ public class ReplaceIncludeTask extends Task {
 			if (line.trim().startsWith("#include ")) {
 				String fileToInclude = line.trim().replace("#include ", "").replace("#", "");
 				String contentToInclude = getFileContentFromFilesets(fileToInclude);
-				contentToInclude = contextualizer.handleFile(fileToInclude, contentToInclude);
+				ContextualizedContent cContent = contextualizer.handleFile(fileToInclude, contentToInclude);
+				contentToInclude = cContent.getContent();
+				List<String> usedModuleNames = cContent.getUsedModuleNames();
+				for (String moduleName : usedModuleNames) {
+					if (moduleNames.get(moduleName)==null) {
+						moduleNames.put(moduleName, "");
+					}
+				}
 				if (contentToInclude!=null) {
 					newContent.append(contentToInclude);
 				} else {
@@ -103,7 +136,18 @@ public class ReplaceIncludeTask extends Task {
 			}
 		}
 
-		IOUtils.setFileContent(destFile, newContent.toString());
+		StringBuilder requireContent = new StringBuilder();
+		if (requirePattern!=null) {
+			for (String moduleName : moduleNames.keySet()) {
+				requireContent.append(requirePattern.replaceAll("\\{modulename\\}", moduleName));
+				requireContent.append("\n");
+			}
+			if (!requireContent.toString().equals("")) {
+				requireContent.append("\n");
+			}
+		}
+		
+		IOUtils.setFileContent(destFile, requireContent.toString()+newContent.toString());
 	}
 
 	public File getSrcFile() {
@@ -158,6 +202,14 @@ public class ReplaceIncludeTask extends Task {
 		if (this.contextualizer!=null) {
 			this.contextualizer.setContextualize(contextualize);
 		}
+	}
+
+	public String getRequirePattern() {
+		return requirePattern;
+	}
+
+	public void setRequirePattern(String requirePattern) {
+		this.requirePattern = requirePattern;
 	}
 
 }

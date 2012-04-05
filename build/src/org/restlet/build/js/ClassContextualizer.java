@@ -40,7 +40,7 @@ public class ClassContextualizer {
 		}
 	}
 	
-	public String handleFile(String fileToInclude, String contentToInclude) {
+	public ContextualizedContent handleFile(String fileToInclude, String contentToInclude) {
 		StringBuilder newContent = new StringBuilder();
 		int index = -1;
 		while ((index=contentToInclude.indexOf("[class "))!=-1) {
@@ -64,7 +64,7 @@ public class ClassContextualizer {
 			newContent.append(contentToInclude);
 		}
 		
-		return newContent.toString();
+		return new ContextualizedContent(newContent.toString(), getUsedModuleNames());
 	}
 
 	private String getModuleForPackage(String classPackage) {
@@ -80,23 +80,51 @@ public class ClassContextualizer {
 	}
 	
 	private String contextualizeClassName(String className, String fileToInclude) {
-		String classNameWithPackage = ContextualizationUtils.getClassWithPackage(restletSrcPath, className);
-		String classPackage = ContextualizationUtils.getPackage(classNameWithPackage);
-		String currentPackage = ContextualizationUtils.getPackage(fileToInclude);
-		if (classPackage.equals(currentPackage)) {
-			return className;
-		} else {
-			String moduleName = classModuleNameMap.get(className);
-			if (moduleName==null) {
-				moduleName = getModuleForPackage(classPackage);
+		if (isCommonsClass(className)) {
+			if (classModuleNameMap.get("commons")!=null) {
+				classModuleNameMap.put(className, "commons");
 			}
-			
-			if (moduleName!=null && !moduleName.trim().equals("")) {
-				return moduleName+"."+className;
-			} else {
+			return "commons."+className;
+		} else {
+			String classNameWithPackage = ContextualizationUtils.getClassWithPackage(restletSrcPath, className);
+			String classPackage = ContextualizationUtils.getPackage(classNameWithPackage);
+			String currentPackage = ContextualizationUtils.getPackageFromFileName(fileToInclude);
+			if (classPackage.equals(currentPackage)) {
 				return className;
+			} else {
+				String moduleName = getModuleNameForClass(className);
+				if (moduleName==null) {
+					moduleName = getModuleForPackage(classPackage);
+					classModuleNameMap.put(className, moduleName);
+				}
+				
+				if (moduleName!=null && !moduleName.trim().equals("")) {
+					return moduleName+"."+className;
+				} else {
+					return className;
+				}
 			}
 		}
+	}
+	
+	private boolean isCommonsClass(String className) {
+		return ("Class".equals(className) || "StringBuilder".equals(className)
+				 || "DateFormat".equals(className));
+	}
+
+	private String getModuleNameForClass(String className) {
+		return classModuleNameMap.get(className);
+	}
+
+	private List<String> getUsedModuleNames() {
+		List<String> usedModulesNames = new ArrayList<String>();
+		for (String className : classModuleNameMap.keySet()) {
+			String moduleName = classModuleNameMap.get(className);
+			if (!usedModulesNames.contains(moduleName)) {
+				usedModulesNames.add(moduleName);
+			}
+		}
+		return usedModulesNames;
 	}
 
 	public File getRestletSrcPath() {
@@ -120,4 +148,29 @@ public class ClassContextualizer {
 		this.contextualize = contextualize;
 	}
 
+	public static class ContextualizedContent {
+		private String content;
+		private List<String> usedModuleNames;
+		
+		public ContextualizedContent(String content, List<String> usedModuleNames) {
+			this.content = content;
+			this.usedModuleNames = usedModuleNames;
+		}
+
+		public String getContent() {
+			return content;
+		}
+
+		public void setContent(String content) {
+			this.content = content;
+		}
+
+		public List<String> getUsedModuleNames() {
+			return usedModuleNames;
+		}
+
+		public void setUsedModuleNames(List<String> usedModuleNames) {
+			this.usedModuleNames = usedModuleNames;
+		}
+	}
 }
