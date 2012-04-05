@@ -1,10 +1,10 @@
-var DispositionWriter = new Class(HeaderWriter, {
+var DispositionWriter = new [class Class]([class HeaderWriter], {
 	initialize: function() {
 		this.callSuper();
 	},
 
     appendObject: function(disposition) {
-        if (Disposition.TYPE_NONE.equals(disposition.getType())
+        if ([class Disposition].TYPE_NONE.equals(disposition.getType())
                 || disposition.getType() == null) {
             return this;
         }

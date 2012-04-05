@@ -1,4 +1,4 @@
-var DateWriter = new Class({});
+var DateWriter = new [class Class]({});
 
 DateWriter.extend({
     /*write: function(date) {
@@ -6,8 +6,8 @@ DateWriter.extend({
     },*/
     write: function(date, cookie) {
         if (cookie) {
-            return DateUtils.format(date, DateUtils.FORMAT_RFC_1036[0]);
+            return DateUtils.format(date, [class DateUtils].FORMAT_RFC_1036[0]);
         }
-        return DateUtils.format(date);
+        return [class DateUtils].format(date);
     }
 });

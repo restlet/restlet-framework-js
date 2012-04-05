@@ -1,4 +1,4 @@
-var LanguageWriter = new Class(MetadataWriter, {
+var LanguageWriter = new [class Class](MetadataWriter, {
     initialize: function(header) {
         this.callSuper(header);
     }

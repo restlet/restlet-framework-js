@@ -1,4 +1,4 @@
-var CookieWriter = new Class(HeaderWriter, {
+var CookieWriter = new [class Class]([class HeaderWriter], {
 	initialize: function() {
 		this.callSuper();
 	},

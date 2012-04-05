@@ -1,4 +1,4 @@
-var DispositionReader = new Class(HeaderReader, {
+var DispositionReader = new [class Class]([class HeaderReader], {
     initialize: function(header) {
         this.callSuper(header);
     },

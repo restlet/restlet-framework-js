@@ -1,28 +1,28 @@
-var HeaderUtils = new Class({});
+var HeaderUtils = new [class Class]({});
 
 HeaderUtils.extend({
 	addEntityHeaders: function(entity, headers) {
         if (entity == null || !entity.isAvailable()) {
-        	HeaderUtils.addHeader(HeaderConstants.HEADER_CONTENT_LENGTH, "0", headers);
-        } else if (entity.getAvailableSize() != Representation.UNKNOWN_SIZE) {
-        	HeaderUtils.addHeader(HeaderConstants.HEADER_CONTENT_LENGTH,
+        	HeaderUtils.addHeader([class HeaderConstants].HEADER_CONTENT_LENGTH, "0", headers);
+        } else if (entity.getAvailableSize() != [class Representation].UNKNOWN_SIZE) {
+        	HeaderUtils.addHeader([class HeaderConstants].HEADER_CONTENT_LENGTH,
                     entity.getAvailableSize().toString(), headers);
         }
 
         if (entity != null) {
-        	HeaderUtils.addHeader(HeaderConstants.HEADER_CONTENT_ENCODING,
-                    EncodingWriter.write(entity.getEncodings()), headers);
-        	HeaderUtils.addHeader(HeaderConstants.HEADER_CONTENT_LANGUAGE,
-                    LanguageWriter.write(entity.getLanguages()), headers);
+        	[class HeaderUtils].addHeader([class HeaderConstants].HEADER_CONTENT_ENCODING,
+        			[class EncodingWriter].write(entity.getEncodings()), headers);
+        	[class HeaderUtils].addHeader([class HeaderConstants].HEADER_CONTENT_LANGUAGE,
+        			[class LanguageWriter].write(entity.getLanguages()), headers);
 
             if (entity.getLocationRef() != null) {
-            	HeaderUtils.addHeader(HeaderConstants.HEADER_CONTENT_LOCATION, entity
+            	[class HeaderUtils].addHeader([class HeaderConstants].HEADER_CONTENT_LOCATION, entity
                         .getLocationRef().getTargetRef().toString(), headers);
             }
 
             if (entity.getRange() != null) {
-            	HeaderUtils.addHeader(HeaderConstants.HEADER_CONTENT_RANGE,
-                        RangeWriter.write(entity.getRange(), entity.getSize()),
+            	[class HeaderUtils].addHeader([class HeaderConstants].HEADER_CONTENT_RANGE,
+            			[class RangeWriter].write(entity.getRange(), entity.getSize()),
                         headers);
             }
 
@@ -37,30 +37,30 @@ HeaderUtils.extend({
                             + entity.getCharacterSet().getName();
                 }
 
-                HeaderUtils.addHeader(HeaderConstants.HEADER_CONTENT_TYPE, contentType,
+                [class HeaderUtils].addHeader([class HeaderConstants].HEADER_CONTENT_TYPE, contentType,
                         headers);
             }
 
             if (entity.getExpirationDate() != null) {
-            	HeaderUtils.addHeader(HeaderConstants.HEADER_EXPIRES,
-                        DateWriter.write(entity.getExpirationDate()), headers);
+            	[class HeaderUtils].addHeader([class HeaderConstants].HEADER_EXPIRES,
+            			[class DateWriter].write(entity.getExpirationDate()), headers);
             }
 
             if (entity.getModificationDate() != null) {
-            	HeaderUtils.addHeader(HeaderConstants.HEADER_LAST_MODIFIED,
-                        DateWriter.write(entity.getModificationDate()), headers);
+            	[class HeaderUtils].addHeader([class HeaderConstants].HEADER_LAST_MODIFIED,
+            			[class DateWriter].write(entity.getModificationDate()), headers);
             }
 
             if (entity.getTag() != null) {
-            	HeaderUtils.addHeader(HeaderConstants.HEADER_ETAG,
-                        TagWriter.write(entity.getTag()), headers);
+            	[class HeaderUtils].addHeader([class HeaderConstants].HEADER_ETAG,
+            			[class TagWriter].write(entity.getTag()), headers);
             }
 
             if (entity.getDisposition() != null
                     && !Disposition.TYPE_NONE.equals(entity.getDisposition()
                             .getType())) {
-            	HeaderUtils.addHeader(HeaderConstants.HEADER_CONTENT_DISPOSITION,
-                        DispositionWriter.writeObject(entity.getDisposition()),
+            	[class HeaderUtils].addHeader([class HeaderConstants].HEADER_CONTENT_DISPOSITION,
+            			[class DispositionWriter].writeObject(entity.getDisposition()),
                         headers);
             }
         }
@@ -71,99 +71,99 @@ HeaderUtils.extend({
             for (var cpt=0;cpt<elements.length;cpt++) {
             	var param = elements[cpt];
                 if (param.getName().equalsIgnoreCase(
-                        HeaderConstants.HEADER_ACCEPT)
+                        [class HeaderConstants].HEADER_ACCEPT)
                         || param.getName().equalsIgnoreCase(
-                                HeaderConstants.HEADER_ACCEPT_CHARSET)
+                                [class HeaderConstants].HEADER_ACCEPT_CHARSET)
                         || param.getName().equalsIgnoreCase(
-                                HeaderConstants.HEADER_ACCEPT_ENCODING)
+                                [class HeaderConstants].HEADER_ACCEPT_ENCODING)
                         || param.getName().equalsIgnoreCase(
-                                HeaderConstants.HEADER_ACCEPT_LANGUAGE)
+                                [class HeaderConstants].HEADER_ACCEPT_LANGUAGE)
                         || param.getName().equalsIgnoreCase(
-                                HeaderConstants.HEADER_ACCEPT_RANGES)
+                                [class HeaderConstants].HEADER_ACCEPT_RANGES)
                         || param.getName().equalsIgnoreCase(
-                                HeaderConstants.HEADER_AGE)
+                                [class HeaderConstants].HEADER_AGE)
                         || param.getName().equalsIgnoreCase(
-                                HeaderConstants.HEADER_ALLOW)
+                                [class HeaderConstants].HEADER_ALLOW)
                         || param.getName().equalsIgnoreCase(
-                                HeaderConstants.HEADER_AUTHENTICATION_INFO)
+                                [class HeaderConstants].HEADER_AUTHENTICATION_INFO)
                         || param.getName().equalsIgnoreCase(
-                                HeaderConstants.HEADER_AUTHORIZATION)
+                                [class HeaderConstants].HEADER_AUTHORIZATION)
                         || param.getName().equalsIgnoreCase(
-                                HeaderConstants.HEADER_CACHE_CONTROL)
+                                [class HeaderConstants].HEADER_CACHE_CONTROL)
                         || param.getName().equalsIgnoreCase(
-                                HeaderConstants.HEADER_CONNECTION)
+                                [class HeaderConstants].HEADER_CONNECTION)
                         || param.getName().equalsIgnoreCase(
-                                HeaderConstants.HEADER_CONTENT_DISPOSITION)
+                                [class HeaderConstants].HEADER_CONTENT_DISPOSITION)
                         || param.getName().equalsIgnoreCase(
-                                HeaderConstants.HEADER_CONTENT_ENCODING)
+                                [class HeaderConstants].HEADER_CONTENT_ENCODING)
                         || param.getName().equalsIgnoreCase(
-                                HeaderConstants.HEADER_CONTENT_LANGUAGE)
+                                [class HeaderConstants].HEADER_CONTENT_LANGUAGE)
                         || param.getName().equalsIgnoreCase(
-                                HeaderConstants.HEADER_CONTENT_LENGTH)
+                                [class HeaderConstants].HEADER_CONTENT_LENGTH)
                         || param.getName().equalsIgnoreCase(
-                                HeaderConstants.HEADER_CONTENT_LOCATION)
+                                [class HeaderConstants].HEADER_CONTENT_LOCATION)
                         || param.getName().equalsIgnoreCase(
-                                HeaderConstants.HEADER_CONTENT_MD5)
+                                [class HeaderConstants].HEADER_CONTENT_MD5)
                         || param.getName().equalsIgnoreCase(
-                                HeaderConstants.HEADER_CONTENT_RANGE)
+                                [class HeaderConstants].HEADER_CONTENT_RANGE)
                         || param.getName().equalsIgnoreCase(
-                                HeaderConstants.HEADER_CONTENT_TYPE)
+                                [class HeaderConstants].HEADER_CONTENT_TYPE)
                         || param.getName().equalsIgnoreCase(
-                                HeaderConstants.HEADER_COOKIE)
+                                [class HeaderConstants].HEADER_COOKIE)
                         || param.getName().equalsIgnoreCase(
-                                HeaderConstants.HEADER_DATE)
+                                [class HeaderConstants].HEADER_DATE)
                         || param.getName().equalsIgnoreCase(
-                                HeaderConstants.HEADER_ETAG)
+                                [class HeaderConstants].HEADER_ETAG)
                         || param.getName().equalsIgnoreCase(
-                                HeaderConstants.HEADER_EXPECT)
+                                [class HeaderConstants].HEADER_EXPECT)
                         || param.getName().equalsIgnoreCase(
-                                HeaderConstants.HEADER_EXPIRES)
+                                [class HeaderConstants].HEADER_EXPIRES)
                         || param.getName().equalsIgnoreCase(
-                                HeaderConstants.HEADER_FROM)
+                                [class HeaderConstants].HEADER_FROM)
                         || param.getName().equalsIgnoreCase(
-                                HeaderConstants.HEADER_HOST)
+                                [class HeaderConstants].HEADER_HOST)
                         || param.getName().equalsIgnoreCase(
-                                HeaderConstants.HEADER_IF_MATCH)
+                                [class HeaderConstants].HEADER_IF_MATCH)
                         || param.getName().equalsIgnoreCase(
-                                HeaderConstants.HEADER_IF_MODIFIED_SINCE)
+                                [class HeaderConstants].HEADER_IF_MODIFIED_SINCE)
                         || param.getName().equalsIgnoreCase(
-                                HeaderConstants.HEADER_IF_NONE_MATCH)
+                                [class HeaderConstants].HEADER_IF_NONE_MATCH)
                         || param.getName().equalsIgnoreCase(
-                                HeaderConstants.HEADER_IF_RANGE)
+                                [class HeaderConstants].HEADER_IF_RANGE)
                         || param.getName().equalsIgnoreCase(
-                                HeaderConstants.HEADER_IF_UNMODIFIED_SINCE)
+                                [class HeaderConstants].HEADER_IF_UNMODIFIED_SINCE)
                         || param.getName().equalsIgnoreCase(
-                                HeaderConstants.HEADER_LAST_MODIFIED)
+                                [class HeaderConstants].HEADER_LAST_MODIFIED)
                         || param.getName().equalsIgnoreCase(
-                                HeaderConstants.HEADER_LOCATION)
+                                [class HeaderConstants].HEADER_LOCATION)
                         || param.getName().equalsIgnoreCase(
-                                HeaderConstants.HEADER_MAX_FORWARDS)
+                                [class HeaderConstants].HEADER_MAX_FORWARDS)
                         || param.getName().equalsIgnoreCase(
-                                HeaderConstants.HEADER_PROXY_AUTHENTICATE)
+                                [class HeaderConstants].HEADER_PROXY_AUTHENTICATE)
                         || param.getName().equalsIgnoreCase(
-                                HeaderConstants.HEADER_PROXY_AUTHORIZATION)
+                                [class HeaderConstants].HEADER_PROXY_AUTHORIZATION)
                         || param.getName().equalsIgnoreCase(
-                                HeaderConstants.HEADER_RANGE)
+                                [class HeaderConstants].HEADER_RANGE)
                         || param.getName().equalsIgnoreCase(
-                                HeaderConstants.HEADER_REFERRER)
+                                [class HeaderConstants].HEADER_REFERRER)
                         || param.getName().equalsIgnoreCase(
-                                HeaderConstants.HEADER_RETRY_AFTER)
+                                [class HeaderConstants].HEADER_RETRY_AFTER)
                         || param.getName().equalsIgnoreCase(
-                                HeaderConstants.HEADER_SERVER)
+                                [class HeaderConstants].HEADER_SERVER)
                         || param.getName().equalsIgnoreCase(
-                                HeaderConstants.HEADER_SET_COOKIE)
+                                [class HeaderConstants].HEADER_SET_COOKIE)
                         || param.getName().equalsIgnoreCase(
-                                HeaderConstants.HEADER_SET_COOKIE2)
+                                [class HeaderConstants].HEADER_SET_COOKIE2)
                         || param.getName().equalsIgnoreCase(
-                                HeaderConstants.HEADER_USER_AGENT)
+                                [class HeaderConstants].HEADER_USER_AGENT)
                         || param.getName().equalsIgnoreCase(
-                                HeaderConstants.HEADER_VARY)
+                                [class HeaderConstants].HEADER_VARY)
                         || param.getName().equalsIgnoreCase(
-                                HeaderConstants.HEADER_VIA)
+                                [class HeaderConstants].HEADER_VIA)
                         || param.getName().equalsIgnoreCase(
-                                HeaderConstants.HEADER_WARNING)
+                                [class HeaderConstants].HEADER_WARNING)
                         || param.getName().equalsIgnoreCase(
-                                HeaderConstants.HEADER_WWW_AUTHENTICATE)) {
+                                [class HeaderConstants].HEADER_WWW_AUTHENTICATE)) {
                     // Standard headers that can't be overridden
                     /*Context.getCurrentLogger()
                             .warning(
@@ -171,15 +171,15 @@ HeaderUtils.extend({
                                             + param.getName()
                                             + "\" is not allowed. Please use the equivalent property in the Restlet API.");*/
                 } else if (param.getName().equalsIgnoreCase(
-                        HeaderConstants.HEADER_PRAGMA)
+                        [class HeaderConstants].HEADER_PRAGMA)
                         || param.getName().equalsIgnoreCase(
-                                HeaderConstants.HEADER_TRAILER)
+                                [class HeaderConstants].HEADER_TRAILER)
                         || param.getName().equalsIgnoreCase(
-                                HeaderConstants.HEADER_TRANSFER_ENCODING)
+                                [class HeaderConstants].HEADER_TRANSFER_ENCODING)
                         || param.getName().equalsIgnoreCase(
-                                HeaderConstants.HEADER_TRANSFER_EXTENSION)
+                                [class HeaderConstants].HEADER_TRANSFER_EXTENSION)
                         || param.getName().equalsIgnoreCase(
-                                HeaderConstants.HEADER_UPGRADE)) {
+                                [class HeaderConstants].HEADER_UPGRADE)) {
                     // Standard headers that shouldn't be overridden
                     /*Context.getCurrentLogger()
                             .info("Addition of the standard header \""
@@ -193,24 +193,24 @@ HeaderUtils.extend({
         }
 	},
 	addGeneralHeaders: function(message, headers) {
-		HeaderUtils.addHeader(HeaderConstants.HEADER_CACHE_CONTROL,
-                CacheDirectiveWriter.write(message.getCacheDirectives()),
+		[class HeaderUtils].addHeader([class HeaderConstants].HEADER_CACHE_CONTROL,
+				[class CacheDirectiveWriter].write(message.getCacheDirectives()),
                 headers);
         if (message.getDate() == null) {
             message.setDate(new Date());
         }
-        HeaderUtils.addHeader(HeaderConstants.HEADER_DATE,
-                DateWriter.write(message.getDate()), headers);
-        HeaderUtils.addHeader(HeaderConstants.HEADER_VIA,
-                RecipientInfoWriter.write(message.getRecipientsInfo()), headers);
-        HeaderUtils.addHeader(HeaderConstants.HEADER_WARNING,
-                WarningWriter.write(message.getWarnings()), headers);
+        [class HeaderUtils].addHeader([class HeaderConstants].HEADER_DATE,
+        		[class DateWriter].write(message.getDate()), headers);
+        [class HeaderUtils].addHeader([class HeaderConstants].HEADER_VIA,
+        		[class RecipientInfoWriter].write(message.getRecipientsInfo()), headers);
+        [class HeaderUtils].addHeader([class HeaderConstants].HEADER_WARNING,
+        		[class WarningWriter].write(message.getWarnings()), headers);
 	},
 	addHeader: function(headerName, headerValue, headers) {
         if ((headerName != null) && (headerValue != null)
                 && (headerValue.length > 0)) {
             try {
-                headers.push(new Parameter(headerName, headerValue));
+                headers.push(new [class Parameter](headerName, headerValue));
             } catch (err) {
                 /*Context.getCurrentLogger().log(Level.WARNING,
                         "Unable to format the " + headerName + " header", t);*/
@@ -220,12 +220,12 @@ HeaderUtils.extend({
 	addNotModifiedEntityHeaders: function(entity, headers) {
         if (entity != null) {
             if (entity.getTag() != null) {
-                HeaderUtils.addHeader(HeaderConstants.HEADER_ETAG,
-                        TagWriter.write(entity.getTag()), headers);
+                [class HeaderUtils].addHeader([class HeaderConstants].HEADER_ETAG,
+                		[class TagWriter].write(entity.getTag()), headers);
             }
 
             if (entity.getLocationRef() != null) {
-                HeaderUtils.addHeader(HeaderConstants.HEADER_CONTENT_LOCATION,
+                [class HeaderUtils].addHeader([class HeaderConstants].HEADER_CONTENT_LOCATION,
                         entity.getLocationRef().getTargetRef().toString(),
                         headers);
             }
@@ -235,34 +235,34 @@ HeaderUtils.extend({
         var clientInfo = request.getClientInfo();
 
         if (!clientInfo.getAcceptedMediaTypes().isEmpty()) {
-        	HeaderUtils.addHeader(HeaderConstants.HEADER_ACCEPT,
-                    PreferenceWriter.write(clientInfo.getAcceptedMediaTypes()),
+        	[class HeaderUtils].addHeader([class HeaderConstants].HEADER_ACCEPT,
+        			[class PreferenceWriter].write(clientInfo.getAcceptedMediaTypes()),
                     headers);
         } else {
-        	HeaderUtils.addHeader(HeaderConstants.HEADER_ACCEPT, MediaType.ALL.getName(),
+        	[class HeaderUtils].addHeader([class HeaderConstants].HEADER_ACCEPT, MediaType.ALL.getName(),
                     headers);
         }
 
         if (!clientInfo.getAcceptedCharacterSets().isEmpty()) {
-        	HeaderUtils.addHeader(HeaderConstants.HEADER_ACCEPT_CHARSET,
-                    PreferenceWriter.write(clientInfo
+        	[class HeaderUtils].addHeader([class HeaderConstants].HEADER_ACCEPT_CHARSET,
+        			[class PreferenceWriter].write(clientInfo
                             .getAcceptedCharacterSets()), headers);
         }
 
         if (!clientInfo.getAcceptedEncodings().isEmpty()) {
-        	HeaderUtils.addHeader(HeaderConstants.HEADER_ACCEPT_ENCODING,
-                    PreferenceWriter.write(clientInfo.getAcceptedEncodings()),
+        	[class HeaderUtils].addHeader([class HeaderConstants].HEADER_ACCEPT_ENCODING,
+        			[class PreferenceWriter].write(clientInfo.getAcceptedEncodings()),
                     headers);
         }
 
         if (!clientInfo.getAcceptedLanguages().isEmpty()) {
-        	HeaderUtils.addHeader(HeaderConstants.HEADER_ACCEPT_LANGUAGE,
-                    PreferenceWriter.write(clientInfo.getAcceptedLanguages()),
+        	[class HeaderUtils].addHeader([class HeaderConstants].HEADER_ACCEPT_LANGUAGE,
+        			[class PreferenceWriter].write(clientInfo.getAcceptedLanguages()),
                     headers);
         }
 
         if (clientInfo.getFrom() != null) {
-        	HeaderUtils.addHeader(HeaderConstants.HEADER_FROM, request.getClientInfo()
+        	[class HeaderUtils].addHeader([class HeaderConstants].HEADER_FROM, request.getClientInfo()
                     .getFrom(), headers);
         }
 
@@ -281,18 +281,18 @@ HeaderUtils.extend({
                 host = host + ':' + hostRefPortValue;
             }
 
-            HeaderUtils.addHeader(HeaderConstants.HEADER_HOST, host, headers);
+            [class HeaderUtils].addHeader([class HeaderConstants].HEADER_HOST, host, headers);
         }
 
         var conditions = request.getConditions();
-        HeaderUtils.addHeader(HeaderConstants.HEADER_IF_MATCH,
-                TagWriter.write(conditions.getMatch()), headers);
-        HeaderUtils.addHeader(HeaderConstants.HEADER_IF_NONE_MATCH,
-                TagWriter.write(conditions.getNoneMatch()), headers);
+        [class HeaderUtils].addHeader([class HeaderConstants].HEADER_IF_MATCH,
+        		[class TagWriter].write(conditions.getMatch()), headers);
+        [class HeaderUtils].addHeader([class HeaderConstants].HEADER_IF_NONE_MATCH,
+        		[class TagWriter].write(conditions.getNoneMatch()), headers);
 
         if (conditions.getModifiedSince() != null) {
-        	HeaderUtils.addHeader(HeaderConstants.HEADER_IF_MODIFIED_SINCE,
-                    DateWriter.write(conditions.getModifiedSince()), headers);
+        	[class HeaderUtils].addHeader([class HeaderConstants].HEADER_IF_MODIFIED_SINCE,
+        			[class DateWriter].write(conditions.getModifiedSince()), headers);
         }
 
         if (conditions.getRangeTag() != null
@@ -301,38 +301,38 @@ HeaderUtils.extend({
             //        .log(Level.WARNING,
             //                "Unable to format the HTTP If-Range header due to the presence of both entity tag and modification date.");
         } else if (conditions.getRangeTag() != null) {
-        	HeaderUtils.addHeader(HeaderConstants.HEADER_IF_RANGE,
-                    TagWriter.write(conditions.getRangeTag()), headers);
+        	[class HeaderUtils].addHeader([class HeaderConstants].HEADER_IF_RANGE,
+        			[class TagWriter].write(conditions.getRangeTag()), headers);
         } else if (conditions.getRangeDate() != null) {
-        	HeaderUtils.addHeader(HeaderConstants.HEADER_IF_RANGE,
-                    DateWriter.write(conditions.getRangeDate()), headers);
+        	[class HeaderUtils].addHeader([class HeaderConstants].HEADER_IF_RANGE,
+        			[class DateWriter].write(conditions.getRangeDate()), headers);
         }
 
         if (conditions.getUnmodifiedSince() != null) {
-        	HeaderUtils.addHeader(HeaderConstants.HEADER_IF_UNMODIFIED_SINCE,
-                    DateWriter.write(conditions.getUnmodifiedSince()), headers);
+        	[class HeaderUtils].addHeader([class HeaderConstants].HEADER_IF_UNMODIFIED_SINCE,
+        			[class DateWriter].write(conditions.getUnmodifiedSince()), headers);
         }
 
         if (request.getMaxForwards() > -1) {
-        	HeaderUtils.addHeader(HeaderConstants.HEADER_MAX_FORWARDS,
+        	[class HeaderUtils].addHeader([class HeaderConstants].HEADER_MAX_FORWARDS,
                     request.getMaxForwards().toString(), headers);
         }
 
         if (!request.getRanges().isEmpty()) {
-        	HeaderUtils.addHeader(HeaderConstants.HEADER_RANGE,
-                    RangeWriter.write(request.getRanges()), headers);
+        	[class HeaderUtils].addHeader([class HeaderConstants].HEADER_RANGE,
+        			[class RangeWriter].write(request.getRanges()), headers);
         }
 
         if (request.getReferrerRef() != null) {
-        	HeaderUtils.addHeader(HeaderConstants.HEADER_REFERRER, request.getReferrerRef()
+        	[class HeaderUtils].addHeader([class HeaderConstants].HEADER_REFERRER, request.getReferrerRef()
                     .toString(), headers);
         }
 
         if (request.getClientInfo().getAgent() != null) {
-        	HeaderUtils.addHeader(HeaderConstants.HEADER_USER_AGENT, request
+        	[class HeaderUtils].addHeader([class HeaderConstants].HEADER_USER_AGENT, request
                     .getClientInfo().getAgent(), headers);
         } else {
-        	HeaderUtils.addHeader(HeaderConstants.HEADER_USER_AGENT, Engine.VERSION_HEADER,
+        	[class HeaderUtils].addHeader([class HeaderConstants].HEADER_USER_AGENT, Engine.VERSION_HEADER,
                     headers);
         }
 
@@ -341,16 +341,16 @@ HeaderUtils.extend({
         // ----------------------------------
 
         if (request.getCookies().size() > 0) {
-        	HeaderUtils.addHeader(HeaderConstants.HEADER_COOKIE,
-                    CookieWriter.writeCollection(request.getCookies()), headers);
+        	[class HeaderUtils].addHeader([class HeaderConstants].HEADER_COOKIE,
+        			[class CookieWriter].writeCollection(request.getCookies()), headers);
         }
 
         // -------------------------------------
         // 4) Add user-defined extension headers
         // -------------------------------------
         var additionalHeaders = request
-                .getAttributes()[HeaderConstants.ATTRIBUTE_HEADERS];
-        HeaderUtils.addExtensionHeaders(headers, additionalHeaders);
+                .getAttributes()[[class HeaderConstants].ATTRIBUTE_HEADERS];
+        [class HeaderUtils].addExtensionHeaders(headers, additionalHeaders);
 
         // ---------------------------------------
         // 5) Add authorization headers at the end
@@ -361,8 +361,8 @@ HeaderUtils.extend({
         /*ChallengeResponse challengeResponse = request.getChallengeResponse();
         if (challengeResponse != null) {
             this.addHeader(
-                    HeaderConstants.HEADER_AUTHORIZATION,
-                    AuthenticatorUtils
+                    [class HeaderConstants].HEADER_AUTHORIZATION,
+                    [class AuthenticatorUtils]
                             .formatResponse(challengeResponse, request, headers),
                     headers);
         }
@@ -370,31 +370,31 @@ HeaderUtils.extend({
         ChallengeResponse proxyChallengeResponse = request
                 .getProxyChallengeResponse();
         if (proxyChallengeResponse != null) {
-            addHeader(HeaderConstants.HEADER_PROXY_AUTHORIZATION,
-                    AuthenticatorUtils
+            addHeader([class HeaderConstants].HEADER_PROXY_AUTHORIZATION,
+                    [class AuthenticatorUtils]
                             .formatResponse(proxyChallengeResponse, request,
                                     headers), headers);
         }*/
 	},
 	addResponseHeaders: function(response, headers) {
         if (response.getServerInfo().isAcceptingRanges()) {
-        	HeaderUtils.addHeader(HeaderConstants.HEADER_ACCEPT_RANGES, "bytes", headers);
+        	[class HeaderUtils].addHeader([class HeaderConstants].HEADER_ACCEPT_RANGES, "bytes", headers);
         }
 
         if (response.getAge() > 0) {
-        	HeaderUtils.addHeader(HeaderConstants.HEADER_AGE,
+        	[class HeaderUtils].addHeader([class HeaderConstants].HEADER_AGE,
                     	response.getAge().toString(), headers);
         }
 
         if (response.getStatus().equals(Status.CLIENT_ERROR_METHOD_NOT_ALLOWED)
                 || Method.OPTIONS.equals(response.getRequest().getMethod())) {
-        	HeaderUtils.addHeader(HeaderConstants.HEADER_ALLOW,
-                    MethodWriter.write(response.getAllowedMethods()), headers);
+        	[class HeaderUtils].addHeader([class HeaderConstants].HEADER_ALLOW,
+        			[class MethodWriter].write(response.getAllowedMethods()), headers);
         }
 
         if (response.getLocationRef() != null) {
             // The location header must contain an absolute URI.
-        	HeaderUtils.addHeader(HeaderConstants.HEADER_LOCATION, response
+        	[class HeaderUtils].addHeader([class HeaderConstants].HEADER_LOCATION, response
                     .getLocationRef().getTargetRef().toString(), headers);
         }
 
@@ -402,7 +402,7 @@ HeaderUtils.extend({
         /*if (response.getProxyChallengeRequests() != null) {
             for (ChallengeRequest challengeRequest : response
                     .getProxyChallengeRequests()) {
-                addHeader(HeaderConstants.HEADER_PROXY_AUTHENTICATE,
+                addHeader([class HeaderConstants].HEADER_PROXY_AUTHENTICATE,
                         org.restlet.engine.security.AuthenticatorUtils
                                 .formatRequest(challengeRequest, response,
                                         headers), headers);
@@ -410,16 +410,16 @@ HeaderUtils.extend({
         }*/
 
         if (response.getRetryAfter() != null) {
-        	HeaderUtils.addHeader(HeaderConstants.HEADER_RETRY_AFTER,
-                    DateWriter.write(response.getRetryAfter()), headers);
+        	[class HeaderUtils].addHeader([class HeaderConstants].HEADER_RETRY_AFTER,
+        			[class DateWriter].write(response.getRetryAfter()), headers);
         }
 
         if ((response.getServerInfo() != null)
                 && (response.getServerInfo().getAgent() != null)) {
-        	HeaderUtils.addHeader(HeaderConstants.HEADER_SERVER, response.getServerInfo()
+        	[class HeaderUtils].addHeader([class HeaderConstants].HEADER_SERVER, response.getServerInfo()
                     .getAgent(), headers);
         } else {
-        	HeaderUtils.addHeader(HeaderConstants.HEADER_SERVER, Engine.VERSION_HEADER,
+        	[class HeaderUtils].addHeader([class HeaderConstants].HEADER_SERVER, Engine.VERSION_HEADER,
                     headers);
         }
 
@@ -428,8 +428,8 @@ HeaderUtils.extend({
         if (!((response.getRequest().getClientInfo().getAgent() != null) && response
                 .getRequest().getClientInfo().getAgent().contains("MSIE"))) {
             // Add the Vary header if content negotiation was used
-        	HeaderUtils.addHeader(HeaderConstants.HEADER_VARY,
-                    DimensionWriter.write(response.getDimensions()), headers);
+        	[class HeaderUtils].addHeader([class HeaderConstants].HEADER_VARY,
+        			[class DimensionWriter].write(response.getDimensions()), headers);
         }
 
         // Set the security data
@@ -437,7 +437,7 @@ HeaderUtils.extend({
         /*if (response.getChallengeRequests() != null) {
             for (ChallengeRequest challengeRequest : response
                     .getChallengeRequests()) {
-                addHeader(HeaderConstants.HEADER_WWW_AUTHENTICATE,
+                addHeader([class HeaderConstants].HEADER_WWW_AUTHENTICATE,
                         org.restlet.engine.security.AuthenticatorUtils
                                 .formatRequest(challengeRequest, response,
                                         headers), headers);
@@ -450,7 +450,7 @@ HeaderUtils.extend({
 
         // Add the Authentication-Info header
         /*if (response.getAuthenticationInfo() != null) {
-        	HeaderUtils.addHeader(HeaderConstants.HEADER_AUTHENTICATION_INFO,
+        	[class HeaderUtils].addHeader([class HeaderConstants].HEADER_AUTHENTICATION_INFO,
                     org.restlet.engine.security.AuthenticatorUtils
                             .formatAuthenticationInfo(response
                                     .getAuthenticationInfo()), headers);
@@ -460,7 +460,7 @@ HeaderUtils.extend({
         // browsers does not seem to support it.
         //TODO:
         /*for (CookieSetting cookieSetting : response.getCookieSettings()) {
-        	HeaderUtils.addHeader(HeaderConstants.HEADER_SET_COOKIE,
+        	[class HeaderUtils].addHeader([class HeaderConstants].HEADER_SET_COOKIE,
                     CookieSettingWriter.write(cookieSetting), headers);
         }*/
 
@@ -469,8 +469,8 @@ HeaderUtils.extend({
         // -------------------------------------
 
         var additionalHeaders = response
-                .getAttributes()[HeaderConstants.ATTRIBUTE_HEADERS];
-        HeaderUtils.addExtensionHeaders(headers, additionalHeaders);
+                .getAttributes()[[class HeaderConstants].ATTRIBUTE_HEADERS];
+        [class HeaderUtils].addExtensionHeaders(headers, additionalHeaders);
 	},
 	extractEntityHeaders: function(headers, representation) {
 	    var result = (representation == null) ? new EmptyRepresentation()
@@ -481,8 +481,8 @@ HeaderUtils.extend({
 	        for (var cpt = 0; cpt<headers.length; cpt++) {
 	        	var header = headers[cpt];
 	            if (header.getName().equalsIgnoreCase(
-	                    HeaderConstants.HEADER_CONTENT_TYPE)) {
-	                var contentType = new ContentType(header.getValue());
+	                    [class HeaderConstants].HEADER_CONTENT_TYPE)) {
+	                var contentType = new [class ContentType](header.getValue());
 	                result.setMediaType(contentType.getMediaType());
 	
 	                if ((result.getCharacterSet() == null)
@@ -492,38 +492,38 @@ HeaderUtils.extend({
 	
 	                entityHeaderFound = true;
 	            } else if (header.getName().equalsIgnoreCase(
-	                    HeaderConstants.HEADER_CONTENT_LENGTH)) {
+	                    [class HeaderConstants].HEADER_CONTENT_LENGTH)) {
 	                entityHeaderFound = true;
 	            } else if (header.getName().equalsIgnoreCase(
-	                    HeaderConstants.HEADER_EXPIRES)) {
-	                result.setExpirationDate(HeaderReader.readDate(
+	                    [class HeaderConstants].HEADER_EXPIRES)) {
+	                result.setExpirationDate([class HeaderReader].readDate(
 	                        header.getValue(), false));
 	                entityHeaderFound = true;
 	            } else if (header.getName().equalsIgnoreCase(
-	                    HeaderConstants.HEADER_CONTENT_ENCODING)) {
-	                new EncodingReader(header.getValue()).addValues(result
+	                    [class HeaderConstants].HEADER_CONTENT_ENCODING)) {
+	                new [class EncodingReader](header.getValue()).addValues(result
 	                        .getEncodings());
 	                entityHeaderFound = true;
 	            } else if (header.getName().equalsIgnoreCase(
-	                    HeaderConstants.HEADER_CONTENT_LANGUAGE)) {
-	                new LanguageReader(header.getValue()).addValues(result
+	                    [class HeaderConstants].HEADER_CONTENT_LANGUAGE)) {
+	                new [class LanguageReader](header.getValue()).addValues(result
 	                        .getLanguages());
 	                entityHeaderFound = true;
 	            } else if (header.getName().equalsIgnoreCase(
-	                    HeaderConstants.HEADER_LAST_MODIFIED)) {
-	                result.setModificationDate(HeaderReader.readDate(
+	                    [class HeaderConstants].HEADER_LAST_MODIFIED)) {
+	                result.setModificationDate([class HeaderReader].readDate(
 	                        header.getValue(), false));
 	                entityHeaderFound = true;
 	            } else if (header.getName().equalsIgnoreCase(
-	                    HeaderConstants.HEADER_ETAG)) {
-	                result.setTag(Tag.parse(header.getValue()));
+	                    [class HeaderConstants].HEADER_ETAG)) {
+	                result.setTag([class Tag].parse(header.getValue()));
 	                entityHeaderFound = true;
 	            } else if (header.getName().equalsIgnoreCase(
-	                    HeaderConstants.HEADER_CONTENT_LOCATION)) {
+	                    [class HeaderConstants].HEADER_CONTENT_LOCATION)) {
 	                result.setLocationRef(header.getValue());
 	                entityHeaderFound = true;
 	            } else if (header.getName().equalsIgnoreCase(
-	                    HeaderConstants.HEADER_CONTENT_DISPOSITION)) {
+	                    [class HeaderConstants].HEADER_CONTENT_DISPOSITION)) {
 	                /*try {
 	                    result.setDisposition(new DispositionReader(header
 	                            .getValue()).readValue());
@@ -535,12 +535,12 @@ HeaderUtils.extend({
 	                                    + header.getValue(), ioe);
 	                }*/
 	            } else if (header.getName().equalsIgnoreCase(
-	                    HeaderConstants.HEADER_CONTENT_RANGE)) {
+	                    [class HeaderConstants].HEADER_CONTENT_RANGE)) {
 	                /*org.restlet.engine.header.RangeReader.update(
 	                        header.getValue(), result);*/
 	                entityHeaderFound = true;
 	            } else if (header.getName().equalsIgnoreCase(
-	                    HeaderConstants.HEADER_CONTENT_MD5)) {
+	                    [class HeaderConstants].HEADER_CONTENT_MD5)) {
 	                /*result.setDigest(new org.restlet.data.Digest(
 	                        org.restlet.data.Digest.ALGORITHM_MD5,
 	                        org.restlet.engine.util.Base64.decode(header
@@ -563,10 +563,10 @@ HeaderUtils.extend({
             for (var cpt=0; cpt<headers.length; cpt++) {
             	var header = headers[cpt]; 
                 if (header.getName().equalsIgnoreCase(
-                        HeaderConstants.HEADER_LOCATION)) {
+                        [class HeaderConstants].HEADER_LOCATION)) {
                     response.setLocationRef(header.getValue());
                 } else if (header.getName().equalsIgnoreCase(
-                        HeaderConstants.HEADER_AGE)) {
+                        [class HeaderConstants].HEADER_AGE)) {
                     try {
                         response.setAge(parseInt(header.getValue()));
                     } catch (err) {
@@ -576,8 +576,8 @@ HeaderUtils.extend({
                                         + header.getValue(), nfe);*/
                     }
                 } else if (header.getName().equalsIgnoreCase(
-                        HeaderConstants.HEADER_DATE)) {
-                    var date = DateUtils.parse(header.getValue());
+                        [class HeaderConstants].HEADER_DATE)) {
+                    var date = [class DateUtils].parse(header.getValue());
 
                     if (date == null) {
                         date = new Date();
@@ -585,7 +585,7 @@ HeaderUtils.extend({
 
                     response.setDate(date);
                 /*} else if (header.getName().equalsIgnoreCase(
-                        HeaderConstants.HEADER_RETRY_AFTER)) {
+                        [class HeaderConstants].HEADER_RETRY_AFTER)) {
                     // [ifndef gwt]
                     Date retryAfter = DateUtils.parse(header.getValue());
 
@@ -610,9 +610,9 @@ HeaderUtils.extend({
                     response.setRetryAfter(retryAfter);
                     // [enddef]
                 } else if ((header.getName()
-                        .equalsIgnoreCase(HeaderConstants.HEADER_SET_COOKIE))
+                        .equalsIgnoreCase([class HeaderConstants].HEADER_SET_COOKIE))
                         || (header.getName()
-                                .equalsIgnoreCase(HeaderConstants.HEADER_SET_COOKIE2))) {
+                                .equalsIgnoreCase([class HeaderConstants].HEADER_SET_COOKIE2))) {
                     try {
                         CookieSettingReader cr = new CookieSettingReader(
                                 header.getValue());
@@ -624,49 +624,49 @@ HeaderUtils.extend({
                                         + header.getValue(), e);
                     }
                 } else if (header.getName().equalsIgnoreCase(
-                        HeaderConstants.HEADER_WWW_AUTHENTICATE)) {
+                        [class HeaderConstants].HEADER_WWW_AUTHENTICATE)) {
                     // [ifndef gwt]
                     List<ChallengeRequest> crs = org.restlet.engine.security.AuthenticatorUtils
                             .parseRequest(response, header.getValue(), headers);
                     response.getChallengeRequests().addAll(crs);
                     // [enddef]
                 } else if (header.getName().equalsIgnoreCase(
-                        HeaderConstants.HEADER_PROXY_AUTHENTICATE)) {
+                        [class HeaderConstants].HEADER_PROXY_AUTHENTICATE)) {
                     // [ifndef gwt]
                     List<ChallengeRequest> crs = org.restlet.engine.security.AuthenticatorUtils
                             .parseRequest(response, header.getValue(), headers);
                     response.getProxyChallengeRequests().addAll(crs);
                     // [enddef]
                 } else if (header.getName().equalsIgnoreCase(
-                        HeaderConstants.HEADER_AUTHENTICATION_INFO)) {
+                        [class HeaderConstants].HEADER_AUTHENTICATION_INFO)) {
                     // [ifndef gwt]
                     AuthenticationInfo authenticationInfo = org.restlet.engine.security.AuthenticatorUtils
                             .parseAuthenticationInfo(header.getValue());
                     response.setAuthenticationInfo(authenticationInfo);
                     // [enddef]*/
                 } else if (header.getName().equalsIgnoreCase(
-                        HeaderConstants.HEADER_SERVER)) {
+                        [class HeaderConstants].HEADER_SERVER)) {
                     response.getServerInfo().setAgent(header.getValue());
                 /*} else if (header.getName().equalsIgnoreCase(
-                        HeaderConstants.HEADER_ALLOW)) {
+                        [class HeaderConstants].HEADER_ALLOW)) {
                     MethodReader
                             .addValues(header, response.getAllowedMethods());*/
                 } else if (header.getName().equalsIgnoreCase(
-                        HeaderConstants.HEADER_VARY)) {
-                    DimensionReader.addValues(header, response.getDimensions());
+                        [class HeaderConstants].HEADER_VARY)) {
+                    [class DimensionReader].addValues(header, response.getDimensions());
                 /*} else if (header.getName().equalsIgnoreCase(
-                        HeaderConstants.HEADER_VIA)) {
+                        [class HeaderConstants].HEADER_VIA)) {
                     RecipientInfoReader.addValues(header,
                             response.getRecipientsInfo());
                 } else if (header.getName().equalsIgnoreCase(
-                        HeaderConstants.HEADER_WARNING)) {
+                        [class HeaderConstants].HEADER_WARNING)) {
                     WarningReader.addValues(header, response.getWarnings());
                 } else if (header.getName().equalsIgnoreCase(
-                        HeaderConstants.HEADER_CACHE_CONTROL)) {
+                        [class HeaderConstants].HEADER_CACHE_CONTROL)) {
                     CacheDirectiveReader.addValues(header,
                             response.getCacheDirectives());
                 } else if (header.getName().equalsIgnoreCase(
-                        HeaderConstants.HEADER_ACCEPT_RANGES)) {
+                        [class HeaderConstants].HEADER_ACCEPT_RANGES)) {
                     TokenReader tr = new TokenReader(header.getValue());
                     response.getServerInfo().setAcceptingRanges(
                             tr.readValues().contains("bytes"));*/
@@ -675,18 +675,18 @@ HeaderUtils.extend({
         }
 	},
 	getContentLength: function(headers) {
-        var contentLength = Representation.UNKNOWN_SIZE;
+        var contentLength = [class Representation].UNKNOWN_SIZE;
 
         if (headers != null) {
             // Extract the content length header
             for (var cpt=0; cpt<headers.length; cpt++) {
             	var header = headers[cpt]
                 if (header.getName().equalsIgnoreCase(
-                        HeaderConstants.HEADER_CONTENT_LENGTH)) {
+                        [class HeaderConstants].HEADER_CONTENT_LENGTH)) {
                     try {
                         contentLength = parseFloat(header.getValue());
                     } catch (err) {
-                        contentLength = Representation.UNKNOWN_SIZE;
+                        contentLength = [class Representation].UNKNOWN_SIZE;
                     }
                 }
             }
@@ -701,21 +701,21 @@ HeaderUtils.extend({
     	if (character==-1) {
     		return false;
     	}
-        return HeaderUtils.isUpperCase(character)
-        			|| HeaderUtils.isLowerCase(character);
+        return [class HeaderUtils].isUpperCase(character)
+        			|| [class HeaderUtils].isLowerCase(character);
     },
     isAsciiChar: function(character) {
     	if (character==-1) {
     		return false;
     	}
-    	var code = HeaderUtils.getCharacterCode(character);
+    	var code = [class HeaderUtils].getCharacterCode(character);
         return (code >= 0) && (code <= 127);
     },
     isCarriageReturn: function(character) {
     	if (character==-1) {
     		return false;
     	}
-    	var code = HeaderUtils.getCharacterCode(character);
+    	var code = [class HeaderUtils].getCharacterCode(character);
         return (code == 13);
     },
     isChunkedEncoding: function(headers) {
@@ -723,7 +723,7 @@ HeaderUtils.extend({
 
         if (headers != null) {
             var header = headers.getFirstValue(
-                    HeaderConstants.HEADER_TRANSFER_ENCODING, true);
+                    [class HeaderConstants].HEADER_TRANSFER_ENCODING, true);
             result = "chunked".equalsIgnoreCase(header);
         }
 
@@ -739,14 +739,14 @@ HeaderUtils.extend({
     	if (character==-1) {
     		return false;
     	}
-        return HeaderUtils.isText(character) && (character != '(') && (character != ')');
+        return [class HeaderUtils].isText(character) && (character != '(') && (character != ')');
     },
     isConnectionClose: function(headers) {
         var result = false;
 
         if (headers != null) {
             var header = headers.getFirstValue(
-                    HeaderConstants.HEADER_CONNECTION, true);
+                    [class HeaderConstants].HEADER_CONNECTION, true);
             result = "close".equalsIgnoreCase(header);
         }
 
@@ -756,7 +756,7 @@ HeaderUtils.extend({
     	if (character==-1) {
     		return false;
     	}
-    	var code = HeaderUtils.getCharacterCode(character);
+    	var code = [class HeaderUtils].getCharacterCode(character);
         return ((code >= 0) && (code <= 31)) || (code == 127);
     },
     isDigit: function(character) {
@@ -769,7 +769,7 @@ HeaderUtils.extend({
     	if (character==-1) {
     		return false;
     	}
-    	var code = HeaderUtils.getCharacterCode(character);
+    	var code = [class HeaderUtils].getCharacterCode(character);
         return (code == 34);
     },
     isHorizontalTab: function(character) {
@@ -782,23 +782,23 @@ HeaderUtils.extend({
     	if (character==-1) {
     		return false;
     	}
-    	var code = HeaderUtils.getCharacterCode(character);
+    	var code = [class HeaderUtils].getCharacterCode(character);
         return (code >= 0) && (code <= 255);
     },
     isLinearWhiteSpace: function(character) {
     	if (character==-1) {
     		return false;
     	}
-        return (HeaderUtils.isCarriageReturn(character)
-        		|| HeaderUtils.isSpace(character)
-                || HeaderUtils.isLineFeed(character)
-                || HeaderUtils.isHorizontalTab(character));
+        return ([class HeaderUtils].isCarriageReturn(character)
+        		|| [class HeaderUtils].isSpace(character)
+                || [class HeaderUtils].isLineFeed(character)
+                || [class HeaderUtils].isHorizontalTab(character));
     },
     isLineFeed: function(character) {
     	if (character==-1) {
     		return false;
     	}
-    	var code = HeaderUtils.getCharacterCode(character);
+    	var code = [class HeaderUtils].getCharacterCode(character);
         return (code == 10);
     },
     isLowerCase: function(character) {
@@ -817,7 +817,7 @@ HeaderUtils.extend({
     	if (character==-1) {
     		return false;
     	}
-        return HeaderUtils.isText(character) && !HeaderUtils.isDoubleQuote(character);
+        return [class HeaderUtils].isText(character) && ![class HeaderUtils].isDoubleQuote(character);
     },
     isSemiColon: function(character) {
     	if (character==-1) {
@@ -859,22 +859,22 @@ HeaderUtils.extend({
     	if (character==-1) {
     		return false;
     	}
-    	var code = HeaderUtils.getCharacterCode(character);
+    	var code = [class HeaderUtils].getCharacterCode(character);
         return (code == 32);
     },
     isText: function(character) {
     	if (character==-1) {
     		return false;
     	}
-        return HeaderUtils.isLatin1Char(character)
-        		&& !HeaderUtils.isControlChar(character);
+        return [class HeaderUtils].isLatin1Char(character)
+        		&& ![class HeaderUtils].isControlChar(character);
     },
     isToken: function(token) {
     	if (character==-1) {
     		return false;
     	}
         for (var i = 0; i < token.length; i++) {
-            if (!HeaderUtils.isTokenChar(token.charAt(i))) {
+            if (![class HeaderUtils].isTokenChar(token.charAt(i))) {
                 return false;
             }
         }
@@ -885,8 +885,8 @@ HeaderUtils.extend({
     	if (character==-1) {
     		return false;
     	}
-        return HeaderUtils.isAsciiChar(character)
-        		&& !HeaderUtils.isSeparator(character);
+        return [class HeaderUtils].isAsciiChar(character)
+        		&& ![class HeaderUtils].isSeparator(character);
     },
     isUpperCase: function(character) {
     	if (character==-1) {

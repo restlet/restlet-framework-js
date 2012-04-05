@@ -1,4 +1,4 @@
-var LanguageReader = new Class(HeaderReader, {
+var LanguageReader = new [class Class](HeaderReader, {
     initialize: function(header) {
         this.callSuper(header);
     },

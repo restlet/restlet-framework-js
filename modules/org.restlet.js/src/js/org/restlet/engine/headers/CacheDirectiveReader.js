@@ -1,10 +1,10 @@
-var CacheDirectiveReader = new Class(HeaderReader, {
+var CacheDirectiveReader = new [class Class]([class HeaderReader], {
     initialize: function(header) {
         this.callSuper(header);
     },
 
     readValue: function() {
-        return readNamedValue(CacheDirective.class);
+        return readNamedValue([class CacheDirective].class);
     }
 });
 

@@ -1,4 +1,4 @@
-var DimensionReader = new Class(HeaderReader, {
+var DimensionReader = new [class Class]([class HeaderReader], {
     initialize: function(header) {
         this.callSuper(header);
     },
@@ -8,25 +8,25 @@ var DimensionReader = new Class(HeaderReader, {
         var value = this.readRawValue();
 
         if (value != null) {
-            if (value.equalsIgnoreCase(HeaderConstants.HEADER_ACCEPT)) {
-                result = Dimension.MEDIA_TYPE;
+            if (value.equalsIgnoreCase([class HeaderConstants].HEADER_ACCEPT)) {
+                result = [class Dimension].MEDIA_TYPE;
             } else if (value
-                    .equalsIgnoreCase(HeaderConstants.HEADER_ACCEPT_CHARSET)) {
-                result = Dimension.CHARACTER_SET;
+                    .equalsIgnoreCase([class HeaderConstants].HEADER_ACCEPT_CHARSET)) {
+                result = [class Dimension].CHARACTER_SET;
             } else if (value
-                    .equalsIgnoreCase(HeaderConstants.HEADER_ACCEPT_ENCODING)) {
-                result = Dimension.ENCODING;
+                    .equalsIgnoreCase([class HeaderConstants].HEADER_ACCEPT_ENCODING)) {
+                result = [class Dimension].ENCODING;
             } else if (value
-                    .equalsIgnoreCase(HeaderConstants.HEADER_ACCEPT_LANGUAGE)) {
-                result = Dimension.LANGUAGE;
+                    .equalsIgnoreCase([class HeaderConstants].HEADER_ACCEPT_LANGUAGE)) {
+                result = [class Dimension].LANGUAGE;
             } else if (value
-                    .equalsIgnoreCase(HeaderConstants.HEADER_AUTHORIZATION)) {
-                result = Dimension.AUTHORIZATION;
+                    .equalsIgnoreCase([class HeaderConstants].HEADER_AUTHORIZATION)) {
+                result = [class Dimension].AUTHORIZATION;
             } else if (value
-                    .equalsIgnoreCase(HeaderConstants.HEADER_USER_AGENT)) {
-                result = Dimension.CLIENT_AGENT;
+                    .equalsIgnoreCase([class HeaderConstants].HEADER_USER_AGENT)) {
+                result = [class Dimension].CLIENT_AGENT;
             } else if (value.equals("*")) {
-                result = Dimension.UNSPECIFIED;
+                result = [class Dimension].UNSPECIFIED;
             }
         }
 

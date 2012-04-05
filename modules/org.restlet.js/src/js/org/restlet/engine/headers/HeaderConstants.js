@@ -1,4 +1,4 @@
-var HeaderConstants = new Class({});
+var HeaderConstants = new [class Class]({});
 
 HeaderConstants.extend({
 	EXPECT_CONTINUE: "100-continue",

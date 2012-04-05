@@ -1,4 +1,4 @@
-var HeaderReader = new Class({
+var HeaderReader = new [class Class]({
 	initialize: function(header) {
         this.header = header;
         this.index = ((header == null) || (header.length == 0)) ? -1 : 0;
@@ -6,10 +6,10 @@ var HeaderReader = new Class({
 	},
     readDate: function(date, cookie) {
         if (cookie) {
-            return DateUtils.parse(date, DateUtils.FORMAT_RFC_1036);
+            return DateUtils.parse(date, [class DateUtils].FORMAT_RFC_1036);
         }
 
-        return DateUtils.parse(date, DateUtils.FORMAT_RFC_1123);
+        return DateUtils.parse(date, [class DateUtils].FORMAT_RFC_1123);
     },
     readHeader: function(header) {
         var result = null;
@@ -23,7 +23,7 @@ var HeaderReader = new Class({
             if (HeaderUtils.isCarriageReturn(next)) {
                 next = header.charAt(index++);
 
-                if (!HeaderUtils.isLineFeed(next)) {
+                if (![class HeaderUtils].isLineFeed(next)) {
                     throw new Error(
                             "Invalid end of headers. Line feed missing after the carriage return.");
                 }
@@ -43,7 +43,7 @@ var HeaderReader = new Class({
                 result.setName(header.substring(start, index - 1).toString());
                 next = header.charAt(index++);
 
-                while (HeaderUtils.isSpace(next)) {
+                while ([class HeaderUtils].isSpace(next)) {
                     // Skip any separator space between colon and header value
                     next = header.charAt(index++);
                 }
@@ -122,14 +122,14 @@ var HeaderReader = new Class({
 
         // First character must be a parenthesis
         if (next == '(') {
-            var buffer = new StringBuilder();
+            var buffer = new [class StringBuilder]();
 
             while (result == null) {
                 next = this.read();
 
-                if (HeaderUtils.isCommentText(next)) {
+                if ([class HeaderUtils].isCommentText(next)) {
                     buffer.append(next);
-                } else if (HeaderUtils.isQuoteCharacter(next)) {
+                } else if ([class HeaderUtils].isQuoteCharacter(next)) {
                     // Start of a quoted pair (escape sequence)
                     buffer.append(this.read());
                 } else if (next == '(') {
@@ -153,10 +153,10 @@ var HeaderReader = new Class({
         return result;
     },
     readDigits: function() {
-        var sb = new StringBuilder();
+        var sb = new [class StringBuilder]();
         var next = this.read();
 
-        while (HeaderUtils.isTokenChar(next)) {
+        while ([class HeaderUtils].isTokenChar(next)) {
             sb.append(next);
             next = this.read();
         }
@@ -196,9 +196,9 @@ var HeaderReader = new Class({
         // Detect if quoted string or token available
         var nextChar = this.peek();
 
-        if (HeaderUtils.isDoubleQuote(nextChar)) {
+        if ([class HeaderUtils].isDoubleQuote(nextChar)) {
             result = this.readQuotedString();
-        } else if (HeaderUtils.isTokenChar(nextChar)) {
+        } else if ([class HeaderUtils].isTokenChar(nextChar)) {
             result = this.readToken();
         }
 
@@ -209,18 +209,18 @@ var HeaderReader = new Class({
         var next = this.read();
 
         // First character must be a double quote
-        if (HeaderUtils.isDoubleQuote(next)) {
-            var buffer = new StringBuilder();
+        if ([class HeaderUtils].isDoubleQuote(next)) {
+            var buffer = new [class StringBuilder]();
 
             while (result == null) {
                 next = this.read();
 
-                if (HeaderUtils.isQuotedText(next)) {
+                if ([class HeaderUtils].isQuotedText(next)) {
                     buffer.append(next);
-                } else if (HeaderUtils.isQuoteCharacter(next)) {
+                } else if ([class HeaderUtils].isQuoteCharacter(next)) {
                     // Start of a quoted pair (escape sequence)
                     buffer.append(this.read());
-                } else if (HeaderUtils.isDoubleQuote(next)) {
+                } else if ([class HeaderUtils].isDoubleQuote(next)) {
                     // End of quoted string
                     result = buffer.toString();
                 } else if (next == -1) {
@@ -245,9 +245,9 @@ var HeaderReader = new Class({
         var sb = null;
         var next = this.read();
 
-        while ((next != -1) && !HeaderUtils.isSpace(next) && !HeaderUtils.isComma(next)) {
+        while ((next != -1) && ![class HeaderUtils].isSpace(next) && ![class HeaderUtils].isComma(next)) {
             if (sb == null) {
-                sb = new StringBuilder();
+                sb = new [class StringBuilder]();
             }
 
             sb.append(next);
@@ -255,7 +255,7 @@ var HeaderReader = new Class({
         }
 
         // Unread the separator
-        if (HeaderUtils.isSpace(next) || HeaderUtils.isComma(next)) {
+        if ([class HeaderUtils].isSpace(next) || [class HeaderUtils].isComma(next)) {
             this.unread();
         }
 
@@ -269,9 +269,9 @@ var HeaderReader = new Class({
         var sb = null;
         var next = this.read();
 
-        while ((next != -1) && !HeaderUtils.isComma(next)) {
+        while ((next != -1) && ![class HeaderUtils].isComma(next)) {
             if (sb == null) {
-                sb = new StringBuilder();
+                sb = new [class StringBuilder]();
             }
 
             sb.append(next);
@@ -281,23 +281,23 @@ var HeaderReader = new Class({
         // Remove trailing spaces
         if (sb != null) {
             for (var i = sb.length() - 1; (i >= 0)
-                    && HeaderUtils.isLinearWhiteSpace(sb.charAt(i)); i--) {
+                    && [class HeaderUtils].isLinearWhiteSpace(sb.charAt(i)); i--) {
                 sb.deleteCharAt(i);
             }
         }
 
         // Unread the separator
-        if (HeaderUtils.isComma(next)) {
+        if ([class HeaderUtils].isComma(next)) {
         	this.unread();
         }
 
         return (sb == null) ? null : sb.toString();
     },
     readToken: function() {
-        var sb = new StringBuilder();
+        var sb = new [class StringBuilder]();
         var next = this.read();
 
-        while (HeaderUtils.isTokenChar(next)) {
+        while ([class HeaderUtils].isTokenChar(next)) {
             sb.append(next);
             next = this.read();
         }
@@ -323,7 +323,7 @@ var HeaderReader = new Class({
         // Skip leading spaces
         this.skipSpaces();
         // Check if next character is a parameter separator
-        if (HeaderUtils.isSemiColon(this.read())) {
+        if ([class HeaderUtils].isSemiColon(this.read())) {
             result = true;
             // Skip trailing spaces
             this.skipSpaces();
@@ -337,8 +337,8 @@ var HeaderReader = new Class({
         var result = false;
         var next = this.peek();
 
-        while (HeaderUtils.isLinearWhiteSpace(next) && (next != -1)) {
-            result = result || HeaderUtils.isLinearWhiteSpace(next);
+        while ([class HeaderUtils].isLinearWhiteSpace(next) && (next != -1)) {
+            result = result || [class HeaderUtils].isLinearWhiteSpace(next);
             this.read();
             next = this.peek();
         }
@@ -348,7 +348,7 @@ var HeaderReader = new Class({
     skipValueSeparator: function() {
         var result = false;
         this.skipSpaces();
-        if (HeaderUtils.isComma(this.read())) {
+        if ([class HeaderUtils].isComma(this.read())) {
             result = true;
             this.skipSpaces();
         } else {

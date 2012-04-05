@@ -1,4 +1,4 @@
-var HeaderWriterUtils = new Class({});
+var HeaderWriterUtils = new [class Class]({});
 
 HeaderWriterUtils.extend({
 	

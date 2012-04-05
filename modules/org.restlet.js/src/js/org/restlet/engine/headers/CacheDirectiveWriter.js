@@ -1,4 +1,4 @@
-var CacheDirectiveWriter = new Class(HeaderWriter, {
+var CacheDirectiveWriter = new [class Class]([class HeaderWriter], {
 	initialize: function() {
 		this.callSuper();
 	},

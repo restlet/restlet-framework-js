@@ -1,4 +1,4 @@
-var ChallengeWriter = new Class(HeaderWriter, {
+var ChallengeWriter = new [class Class]([class HeaderWriter], {
 	initialize: function() {
 		this.callSuper();
         this.firstChallengeParameter = true;

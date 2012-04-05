@@ -1,4 +1,4 @@
-var EncodingReader = new Class(HeaderReader, {
+var EncodingReader = new [class Class]([class HeaderReader], {
     initialize: function(header) {
         this.callSuper(header);
         /*this.header = header;
@@ -6,9 +6,9 @@ var EncodingReader = new Class(HeaderReader, {
         this.mark = this.index;*/
     },
     canAdd: function(value, values) {
-        return value != null && !Encoding.IDENTITY.getName().equals(value.getName());
+        return value != null && ![class Encoding].IDENTITY.getName().equals(value.getName());
     },
     readValue: function() {
-        return Encoding.valueOf(this.readToken());
+        return [class Encoding].valueOf(this.readToken());
     }
 });

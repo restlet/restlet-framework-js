@@ -1,12 +1,12 @@
-var EncodingWriter = new Class(MetadataWriter, {
+var EncodingWriter = new [class Class]([class MetadataWriter], {
     initialize: function(header) {
         this.callSuper(header);
     },
     canAdd: function(value, values) {
-        return value != null && !Encoding.IDENTITY.getName().equals(value.getName());
+        return value != null && ![class Encoding].IDENTITY.getName().equals(value.getName());
     },
     readValue: function() {
-        return Encoding.valueOf(this.readToken());
+        return [class Encoding].valueOf(this.readToken());
     }
 });
 

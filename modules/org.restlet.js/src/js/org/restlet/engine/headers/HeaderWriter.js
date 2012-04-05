@@ -1,4 +1,4 @@
-var HeaderWriter = new Class({
+var HeaderWriter = new [class Class]({
     initialize: function() {
     	this.content = [];
     },
