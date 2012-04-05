@@ -58,8 +58,6 @@
 
 #include org/restlet/data/Encoding.js#
 
-#include org/restlet/util/Series.js#
-
 #include org/restlet/data/Form.js#
 
 #include org/restlet/data/Language.js#

@@ -1,3 +1,6 @@
+var commons = require("./commons.js");
+var url = require("url");
+
 #include org/restlet/data/Protocol.js#
 
 #include org/restlet/data/ClientInfo.js#
@@ -42,7 +45,9 @@
 
 #include org/restlet/data/Warning.js#
 
-exports = {
+#include org/restlet/data/MediaType.js#
+
+module.exports = {
 	Protocol: Protocol,
 	ClientInfo: ClientInfo,
 	ServerInfo: ServerInfo,
@@ -64,5 +69,6 @@ exports = {
 	Range: Range,
 	RecipientInfo: RecipientInfo,
 	Tag: Tag,
-	Warning: Warning
-}
+	Warning: Warning,
+	MediaType: MediaType
+};
