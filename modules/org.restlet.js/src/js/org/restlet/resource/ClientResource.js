@@ -1,6 +1,6 @@
-var ClientResource = new Class(UniformResource, {
+var ClientResource = new [class Class]([class UniformResource], {
 	initialize: function(url) {
-		this.request = new Request(null, url);
+		this.request = new [class Request](null, url);
 	},
     addQueryParameter: function() {
         return this.getReference().addQueryParameter.apply(this.getReference(), arguments);
@@ -28,33 +28,33 @@ var ClientResource = new Class(UniformResource, {
 	createClientInfo: function(mediaType) {
 		var clientInfo = null;
 		if (mediaType!=null) {
-			clientInfo = new ClientInfo(mediaType);
+			clientInfo = new [class ClientInfo](mediaType);
 		} else {
-			clientInfo = new ClientInfo();
+			clientInfo = new [class ClientInfo]();
 		}
 		return clientInfo;
 	},
 	"get": function(callback, mediaType) {
 		var clientInfo = this.createClientInfo(mediaType);
-		this.handle(Method.GET, null, clientInfo, callback);
+		this.handle([class Method].GET, null, clientInfo, callback);
 	},
 	"post": function(representation, callback, mediaType) {
 		var clientInfo = this.createClientInfo(mediaType);
-		this.handle(Method.POST, representation, clientInfo, callback);
+		this.handle([class Method].POST, representation, clientInfo, callback);
 	},
 	"put": function(representation, callback, mediaType) {
 		var clientInfo = this.createClientInfo(mediaType);
-		this.handle(Method.PUT, representation, clientInfo, callback);
+		this.handle([class Method].PUT, representation, clientInfo, callback);
 	},
 	"delete": function(callback, mediaType) {
 		var clientInfo = this.createClientInfo(mediaType);
-		this.handle(Method.DELETE, null, clientInfo, callback);
+		this.handle([class Method].DELETE, null, clientInfo, callback);
 	},
 	createRequest: function() {
 		return this.request;
 	},
 	createResponse: function(request) {
-		return new Response(request);
+		return new [class Response](request);
 	},
 	getNext: function() {
 		var result = this.next;
@@ -93,7 +93,7 @@ var ClientResource = new Class(UniformResource, {
         }
 
         return result;*/
-		return new Client(new Context(),/*protocol*/[Protocol.HTTP]);
+		return new [class Client](new [class Context](),/*protocol*/[[class Protocol].HTTP]);
 	},
 	handle: function(method, entity, clientInfo, callback) {
         var request = this.createRequest(this.getRequest());

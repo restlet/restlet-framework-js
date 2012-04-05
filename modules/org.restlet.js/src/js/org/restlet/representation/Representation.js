@@ -1,4 +1,4 @@
-var Representation = new Class(RepresentationInfo, {
+var Representation = new [class Class]([class RepresentationInfo], {
 	initialize: function() {
 	},
     isAvailable: function() {

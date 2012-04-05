@@ -1,8 +1,8 @@
-var ProductWriter = new Class({});
+var ProductWriter = new [class Class]({});
 
 ProductWriter.extend({
     write: function(products) {
-        var builder = new StringBuilder();
+        var builder = new [class StringBuilder]();
 
         for (var i=0; i<products.length; i++) {
             var product = products[i];

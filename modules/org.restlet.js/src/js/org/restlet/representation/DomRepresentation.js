@@ -1,4 +1,4 @@
-var DomRepresentation = new Class(Representation, { 
+var DomRepresentation = new [class Class]([class Representation], { 
 	initialize: function(content) {
 		if (typeof this.text == "undefined") {
 			this.text = null;
@@ -9,7 +9,7 @@ var DomRepresentation = new Class(Representation, {
 		this.representation = null;
 		if (typeof content == "string") {
 			this.text = content;
-		} else if (content instanceof Representation) {
+		} else if (content instanceof [class Representation]) {
 			this.representation = content;
 		} else if (typeof content == "object") {
 	        // [ifndef nodejs]
@@ -23,7 +23,7 @@ var DomRepresentation = new Class(Representation, {
 				this.obj = content;
 			}
 		}
-		this.setMediaType(MediaType.APPLICATION_XML);
+		this.setMediaType([class MediaType].APPLICATION_XML);
 	},
 	getText: function() {
 		if (this.xml!=null) {

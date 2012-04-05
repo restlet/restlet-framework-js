@@ -1,4 +1,4 @@
-var PreferenceWriter = new Class(HeaderWriter, {
+var PreferenceWriter = new [class Class](HeaderWriter, {
 	initialize: function() {
 		this.callSuper();
 	},

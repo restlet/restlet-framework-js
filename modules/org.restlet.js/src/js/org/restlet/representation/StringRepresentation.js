@@ -1,4 +1,4 @@
-var StringRepresentation = new Class(Representation, {
+var StringRepresentation = new [class Class]([class Representation], {
 	initialize: function(text, mediaType, language, characterSet) {
         this.callSuper(mediaType);
         this.setMediaType(mediaType);
@@ -37,7 +37,7 @@ var StringRepresentation = new Class(Representation, {
 		if (this.getText() != null) {
 			this.setSize(this.getText().length);
 		} else {
-			this.setSize(Representation.UNKNOWN_SIZE);
+			this.setSize([class Representation].UNKNOWN_SIZE);
 		}
 	}
 });

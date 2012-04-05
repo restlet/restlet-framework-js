@@ -1,4 +1,4 @@
-var RepresentationInfo = new Class(Variant, {
+var RepresentationInfo = new [class Class]([class Variant], {
     getModificationDate: function() {
     	return this.modificationDate;
     },

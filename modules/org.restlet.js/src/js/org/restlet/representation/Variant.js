@@ -1,4 +1,4 @@
-var Variant = new Class({
+var Variant = new [class Class]({
 	setMediaType: function(mediaType) {
 		this.mediaType = mediaType;
 	},

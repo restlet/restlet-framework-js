@@ -1,4 +1,4 @@
-var RangeWriter = new Class(HeaderWriter, {
+var RangeWriter = new [class Class](HeaderWriter, {
 	initialize: function() {
 		this.callSuper();
 	},
@@ -48,7 +48,7 @@ RangeWriter.extend({
             return new RangeWriter().appendCollection(ranges).toString();
     	} else {
     		var range = param;
-            var b = new StringBuilder("bytes ");
+            var b = new [class StringBuilder]("bytes ");
 
             if (range.getIndex() >= Range.INDEX_FIRST) {
                 b.append(range.getIndex());

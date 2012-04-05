@@ -1,4 +1,4 @@
-var MethodWriter = new Class(HeaderWriter, {
+var MethodWriter = new [class Class](HeaderWriter, {
 	initialize: function() {
 		this.callSuper();
 	},

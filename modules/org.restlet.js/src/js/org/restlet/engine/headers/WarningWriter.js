@@ -1,4 +1,4 @@
-var WarningWriter = new Class(HeaderWriter, {
+var WarningWriter = new [class Class]([class HeaderWriter], {
     initialize: function() {
         this.callSuper();
     },

@@ -1,4 +1,4 @@
-var TagWriter = new Class(HeaderWriter, {
+var TagWriter = new [class Class](HeaderWriter, {
     initialize: function(header) {
         this.callSuper(header);
     },

@@ -1,4 +1,4 @@
-var DateUtils = new Class({});
+var DateUtils = new [class Class]({});
 
 DateUtils.extend({
     FORMAT_ASC_TIME: ["EEE MMM dd HH:mm:ss yyyy"],
@@ -49,7 +49,7 @@ DateUtils.extend({
         	format = DateUtils.FORMAT_RFC_1123[0];
         }
 
-        var formatter = new DateFormat(format);
+        var formatter = new [class DateFormat](format);
         return formatter.format(date, format);
     },
     /*parse: function(date) {
@@ -70,7 +70,7 @@ DateUtils.extend({
 
         for (var i = 0; (result == null) && (i < formatsSize); i++) {
             format = formats[i];
-            var parser = new DateFormat(format);
+            var parser = new [class DateFormat](format);
             try {
             	result = parser.parse(date);
             } catch(err) { }

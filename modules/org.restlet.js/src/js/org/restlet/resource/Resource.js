@@ -1,4 +1,4 @@
-var Resource = new Class({
+var Resource = new [class Class]({
 
     /*protected void doCatch(Throwable throwable) {
         getLogger().log(Level.INFO, "Exception or error caught in resource",

@@ -1,4 +1,4 @@
-var Series = new Class({
+var Series = new [class Class]({
 	initialize: function() {
 		this.array = [];
 	},
@@ -114,7 +114,7 @@ var Series = new Class({
 					if (result == null) {
 						result = param.getValue();
 					} else {
-						sb = new StringBuilder();
+						sb = new [class StringBuilder]();
 						sb.append(result).append(separator)
 								.append(param.getValue());
 					}

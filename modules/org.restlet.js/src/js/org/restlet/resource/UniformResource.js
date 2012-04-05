@@ -1,2 +1,2 @@
-var UniformResource = new Class(Resource, {
+var UniformResource = new [class Class]([class Resource], {
 });

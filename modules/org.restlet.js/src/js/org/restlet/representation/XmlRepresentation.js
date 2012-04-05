@@ -1,5 +1,5 @@
 // [ifndef nodejs]
-var XmlRepresentation = new Class(DomRepresentation, {
+var XmlRepresentation = new [class Class]([class DomRepresentation], {
 	initialize: function(content, objectName) {
 		if (typeof this.text == "undefined") {
 			this.text = null;
@@ -7,13 +7,13 @@ var XmlRepresentation = new Class(DomRepresentation, {
 		this.representation = null;
 		if (typeof content == "string") {
 			this.text = content;
-		} else if (content instanceof Representation) {
+		} else if (content instanceof [class Representation]) {
 			this.representation = content;
 		} else if (typeof content == "object") {
 			this.obj = content;
 		}
 		this.objectName = objectName;
-		this.setMediaType(MediaType.APPLICATION_XML);
+		this.setMediaType([class MediaType].APPLICATION_XML);
 	},
 	createDocument: function(namespaceURL, rootTagName) {
 	  if (document.implementation && document.implementation.createDocument) { 

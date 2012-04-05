@@ -1,4 +1,4 @@
-var Client = new Class(Connector, {
+var Client = new [class Class]([class Connector], {
 	initialize: function(context, protocols, helper) {
 		//TODO:
 		//this.callSuper(context, protocols, helper);
@@ -13,8 +13,8 @@ var Client = new Class(Connector, {
 			return;
 		}
 		if (this.protocols!=null && this.protocols.length>0) {
-			if (Engine.getInstance()!=null) {
-				this.helper = Engine.getInstance().createHelper(this);
+			if ([class Engine].getInstance()!=null) {
+				this.helper = [class Engine].getInstance().createHelper(this);
             } else {
                 this.helper = null;
             }

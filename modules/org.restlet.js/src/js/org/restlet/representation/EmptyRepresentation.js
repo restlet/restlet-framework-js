@@ -1,4 +1,4 @@
-var EmptyRepresentation = new Class(Representation, { 
+var EmptyRepresentation = new [class Class]([class Representation], { 
 	initialize: function(content) {
 		
 	},

@@ -1,4 +1,4 @@
-var RecipientInfoWriter = new Class(HeaderWriter, {
+var RecipientInfoWriter = new [class Class](HeaderWriter, {
 	initialize: function() {
 		this.callSuper();
 	},
