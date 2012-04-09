@@ -54,7 +54,7 @@ public abstract class ContextualizationUtils {
 
 	public static String getPackage(String classNameWithPackage) {
 		if (classNameWithPackage.endsWith(".js")) {
-			classNameWithPackage = classNameWithPackage.substring(0, classNameWithPackage.length()-4);
+			classNameWithPackage = classNameWithPackage.substring(0, classNameWithPackage.length()-3);
 		}
 		int index = -1;
 		if ((index = classNameWithPackage.lastIndexOf("."))!=-1) {
@@ -62,5 +62,28 @@ public abstract class ContextualizationUtils {
 		} else {
 			return "";
 		}
+	}
+
+	public static String getClassName(String classNameWithPackage) {
+		if (classNameWithPackage.endsWith(".js")) {
+			classNameWithPackage = classNameWithPackage.substring(0, classNameWithPackage.length()-3);
+		}
+		int index = -1;
+		if ((index = classNameWithPackage.lastIndexOf("."))!=-1) {
+			return classNameWithPackage.substring(index+1);
+		} else {
+			return "";
+		}
+	}
+
+	public static String getClassNameWithPackageFromFileName(String fileName) {
+		return getClass(fileName.replaceAll(File.separator, "."));
+	}
+
+	public static String getClass(String classNameWithPackage) {
+		if (classNameWithPackage.endsWith(".js")) {
+			classNameWithPackage = classNameWithPackage.substring(0, classNameWithPackage.length()-3);
+		}
+		return classNameWithPackage;
 	}
 }

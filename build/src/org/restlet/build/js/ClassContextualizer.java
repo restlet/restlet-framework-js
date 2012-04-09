@@ -13,7 +13,7 @@ public class ClassContextualizer {
 	private File restletSrcPath;
 	private boolean contextualize = true;
 	private Map<String,String> classModuleNameMap = new HashMap<String, String>();
-	private Map<String,List<String>> modules = new HashMap<String, List<String>>();
+	private Map<String ,Module> modules = new HashMap<String, Module>();
 
 	public ClassContextualizer() {
 		//load properties file
@@ -29,18 +29,85 @@ public class ClassContextualizer {
 		}
 		
 		for (String propertyName : properties.stringPropertyNames()) {
-			String packageNamesAsString = properties.getProperty(propertyName);
-			StringTokenizer st = new StringTokenizer(packageNamesAsString, ",");
-			List<String> packageNames = new ArrayList<String>();
-			modules.put(propertyName, packageNames);
-			while (st.hasMoreTokens()) {
-				String token = st.nextToken();
-				packageNames.add(token);
+			if (propertyName.endsWith(".excludes")) {
+				//module exclude classes
+				String excludeNamesAsString = properties.getProperty(propertyName);
+				String moduleName = propertyName.replace(".excludes", "");
+				StringTokenizer st = new StringTokenizer(excludeNamesAsString, ",");
+				List<String> excludeNames = new ArrayList<String>();
+				Module module = getModule(moduleName);
+				module.setExcludeClasses(excludeNames);
+				while (st.hasMoreTokens()) {
+					String token = st.nextToken();
+					excludeNames.add(token);
+				}
+			} else if (propertyName.endsWith(".includes")) {
+				//module include classes
+				String includeNamesAsString = properties.getProperty(propertyName);
+				String moduleName = propertyName.replace(".includes", "");
+				StringTokenizer st = new StringTokenizer(includeNamesAsString, ",");
+				List<String> includeNames = new ArrayList<String>();
+				Module module = getModule(moduleName);
+				module.setIncludeClasses(includeNames);
+				while (st.hasMoreTokens()) {
+					String token = st.nextToken();
+					includeNames.add(token);
+				}
+			} else {
+				//module packages
+				String packageNamesAsString = properties.getProperty(propertyName);
+				StringTokenizer st = new StringTokenizer(packageNamesAsString, ",");
+				List<String> packageNames = new ArrayList<String>();
+				Module module = getModule(propertyName);
+				module.setPackages(packageNames);
+				while (st.hasMoreTokens()) {
+					String token = st.nextToken();
+					packageNames.add(token);
+				}
 			}
 		}
 	}
 	
+	private Module getModule(String moduleName) {
+		Module module = (Module) modules.get(moduleName);
+		if (module==null) {
+			module = new Module(moduleName);
+			modules.put(moduleName, module);
+		}
+		return module;
+	}
+	
 	public ContextualizedContent handleFile(String fileToInclude, String contentToInclude) {
+		//contentToInclude = doHandleEdition(fileToInclude, contentToInclude);
+		return doHandleClassContextualization(fileToInclude, contentToInclude);
+	}
+	
+	private String doHandleEdition(String fileToInclude, String contentToInclude) {
+		StringBuilder newContent = new StringBuilder();
+		StringTokenizer st = new StringTokenizer(contentToInclude, "\n");
+		boolean begin = true;
+		//boolean 
+		while (st.hasMoreTokens()) {
+			String token = st.nextToken();
+			if (token.trim().startsWith("// [ifndef")) {
+				
+			} else if (token.trim().startsWith("// [ifdef")) {
+				
+			} else {
+				if (!begin) {
+					newContent.append("\n");
+					newContent.append(token);
+				}
+			}
+			
+			if (begin) {
+				begin = false;
+			}
+		}
+		return newContent.toString();
+	}
+
+	private ContextualizedContent doHandleClassContextualization(String fileToInclude, String contentToInclude) {
 		StringBuilder newContent = new StringBuilder();
 		int index = -1;
 		while ((index=contentToInclude.indexOf("[class "))!=-1) {
@@ -67,16 +134,22 @@ public class ClassContextualizer {
 		return new ContextualizedContent(newContent.toString(), getUsedModuleNames());
 	}
 
-	private String getModuleForPackage(String classPackage) {
-		for (String moduleName : modules.keySet()) {
-			List<String> packageNames = modules.get(moduleName);
-			for (String packageName : packageNames) {
-				if (packageName.equals(classPackage)) {
-					return moduleName;
-				}
-			}
+	private boolean isSameModule(String className, String classPackage, String currentClassName, String currentPackage) {
+		String moduleName = getModuleNameForClass(className);
+		if (moduleName==null) {
+			moduleName = lookupModuleForClass(className, classPackage);
+			classModuleNameMap.put(className, moduleName);
 		}
-		return null;
+
+		String currentModuleName = getModuleNameForClass(currentClassName);
+		if (currentModuleName==null) {
+			currentModuleName = lookupModuleForClass(currentClassName, currentPackage);
+			classModuleNameMap.put(currentClassName, currentModuleName);
+		}
+		
+		System.out.println("Ref : "+className+" - "+classPackage+" : "+moduleName);
+		System.out.println("Current : "+currentClassName+" - "+currentPackage+" : "+currentModuleName);
+		return moduleName.equals(currentModuleName);
 	}
 	
 	private String contextualizeClassName(String className, String fileToInclude) {
@@ -88,13 +161,15 @@ public class ClassContextualizer {
 		} else {
 			String classNameWithPackage = ContextualizationUtils.getClassWithPackage(restletSrcPath, className);
 			String classPackage = ContextualizationUtils.getPackage(classNameWithPackage);
-			String currentPackage = ContextualizationUtils.getPackageFromFileName(fileToInclude);
-			if (classPackage.equals(currentPackage)) {
+			String currentClassNameWithPackage = ContextualizationUtils.getClassNameWithPackageFromFileName(fileToInclude);
+			String currentClassName = ContextualizationUtils.getClassName(currentClassNameWithPackage);
+			String currentPackage = ContextualizationUtils.getPackage(currentClassNameWithPackage);
+			if (classPackage.equals(currentPackage) || isSameModule(className, classPackage, currentClassName, currentPackage)) {
 				return className;
 			} else {
 				String moduleName = getModuleNameForClass(className);
 				if (moduleName==null) {
-					moduleName = getModuleForPackage(classPackage);
+					moduleName = lookupModuleForClass(className, classPackage);
 					classModuleNameMap.put(className, moduleName);
 				}
 				
@@ -107,6 +182,16 @@ public class ClassContextualizer {
 		}
 	}
 	
+	private String lookupModuleForClass(String className, String classPackage) {
+		for (String moduleName : modules.keySet()) {
+			Module module = modules.get(moduleName);
+			if (module.match(className, classPackage)) {
+				return moduleName;
+			}
+		}
+		return null;
+	}
+
 	private boolean isCommonsClass(String className) {
 		return ("Class".equals(className) || "StringBuilder".equals(className)
 				 || "DateFormat".equals(className));
