@@ -1,6 +1,6 @@
 var MetadataWriter = new [class Class](HeaderWriter, {
 	initialize: function() {
-		this.callSuper();
+    	this.content = [];
 	},
 
 	appendObject: function(metadata) {

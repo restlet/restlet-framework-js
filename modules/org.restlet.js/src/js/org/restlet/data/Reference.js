@@ -2,10 +2,10 @@ var Reference = new [class Class]({
 	initialize: function(urlString) {
         // [ifndef nodejs]
 		this.internalRef = urlString;
-		var tmp = this.internalRef;
+		/*var tmp = this.internalRef;
 		var index = tmp.indexOf("://");
 		if (index!=-1) {
-			this.protocol = tmp.substring(0, index);
+			this.scheme = tmp.substring(0, index);
 			tmp = tmp.substring(index+3);
 		}
 		index = tmp.indexOf(":");
@@ -30,31 +30,13 @@ var Reference = new [class Class]({
 				tmp = tmp.substring(index);
 				this.path = tmp;
 			}			
-		}
+		}*/
 		
 		this.updateIndexes();
 		// [enddef]
 		// [ifdef nodejs] uncomment
-		//var urlDetails = url.parse(urlString);
-		//this.protocol = urlDetails.protocol;
-		//var index = -1;
-		//if ((index = this.protocol.indexOf(":"))!=-1) {
-		//	this.protocol = this.protocol.substring(0, index);
-		//}
-		//this.host = urlDetails.hostname;
-		//this.port = urlDetails.port;
-		//if (typeof port=="undefined") {
-		//	if (this.protocol=="http") {
-		//		this.port = 80;
-		//	} else if (this.protocol=="http") {
-		//		this.port = 443;
-		//	}
-		//}
-		//this.path = urlDetails.pathname;
-		//console.log("this.protocol = "+this.protocol);
-		//console.log("this.host = "+this.host);
-		//console.log("this.port = "+this.port);
-		//console.log("this.path = "+this.path);
+		//this.internalRef = urlString;
+		//this.updateIndexes();
 		// [enddef]
 	},
 	getUrl: function() {

@@ -224,22 +224,22 @@ HeaderUtils.extend({
                 		[class TagWriter].write(entity.getTag()), headers);
             }
 
-            if (entity.getLocationRef() != null) {
+            /*if (entity.getLocationRef() != null) {
                 [class HeaderUtils].addHeader([class HeaderConstants].HEADER_CONTENT_LOCATION,
                         entity.getLocationRef().getTargetRef().toString(),
                         headers);
-            }
+            }*/
         }
 	},
 	addRequestHeaders: function(request, headers) {
         var clientInfo = request.getClientInfo();
-
+        
         if (!clientInfo.getAcceptedMediaTypes().isEmpty()) {
         	[class HeaderUtils].addHeader([class HeaderConstants].HEADER_ACCEPT,
         			[class PreferenceWriter].write(clientInfo.getAcceptedMediaTypes()),
                     headers);
         } else {
-        	[class HeaderUtils].addHeader([class HeaderConstants].HEADER_ACCEPT, MediaType.ALL.getName(),
+        	[class HeaderUtils].addHeader([class HeaderConstants].HEADER_ACCEPT, [class MediaType].ALL.getName(),
                     headers);
         }
 
@@ -268,8 +268,10 @@ HeaderUtils.extend({
 
         // Manually add the host name and port when it is potentially
         // different from the one specified in the target resource reference.
-        var hostRef = (request.getResourceRef().getBaseRef() != null) ? request
+        /*var hostRef = (request.getResourceRef().getBaseRef() != null) ? request
                 .getResourceRef().getBaseRef() : request.getResourceRef();
+                
+        console.log("hostRef = "+hostRef);
 
         if (hostRef.getHostDomain() != null) {
             var host = hostRef.getHostDomain();
@@ -282,7 +284,7 @@ HeaderUtils.extend({
             }
 
             [class HeaderUtils].addHeader([class HeaderConstants].HEADER_HOST, host, headers);
-        }
+        }*/
 
         var conditions = request.getConditions();
         [class HeaderUtils].addHeader([class HeaderConstants].HEADER_IF_MATCH,
@@ -332,7 +334,7 @@ HeaderUtils.extend({
         	[class HeaderUtils].addHeader([class HeaderConstants].HEADER_USER_AGENT, request
                     .getClientInfo().getAgent(), headers);
         } else {
-        	[class HeaderUtils].addHeader([class HeaderConstants].HEADER_USER_AGENT, Engine.VERSION_HEADER,
+        	[class HeaderUtils].addHeader([class HeaderConstants].HEADER_USER_AGENT, [class Engine].VERSION_HEADER,
                     headers);
         }
 
@@ -392,11 +394,11 @@ HeaderUtils.extend({
         			[class MethodWriter].write(response.getAllowedMethods()), headers);
         }
 
-        if (response.getLocationRef() != null) {
+        /*if (response.getLocationRef() != null) {
             // The location header must contain an absolute URI.
         	[class HeaderUtils].addHeader([class HeaderConstants].HEADER_LOCATION, response
                     .getLocationRef().getTargetRef().toString(), headers);
-        }
+        }*/
 
         //TODO:
         /*if (response.getProxyChallengeRequests() != null) {
@@ -419,7 +421,7 @@ HeaderUtils.extend({
         	[class HeaderUtils].addHeader([class HeaderConstants].HEADER_SERVER, response.getServerInfo()
                     .getAgent(), headers);
         } else {
-        	[class HeaderUtils].addHeader([class HeaderConstants].HEADER_SERVER, Engine.VERSION_HEADER,
+        	[class HeaderUtils].addHeader([class HeaderConstants].HEADER_SERVER, [class Engine].VERSION_HEADER,
                     headers);
         }
 

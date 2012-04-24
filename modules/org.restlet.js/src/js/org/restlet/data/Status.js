@@ -1,17 +1,17 @@
 var Status = new [class Class]({
     initialize: function(code, reasonPhrase, description, uri) {
     	this.code = code;
-    	if (typeof reasonPhrase=="undefined" || reasonPhrase==null) {
+    	if (reasonPhrase==null || typeof reasonPhrase=="undefined") {
     		this.reasonPhrase = this.getReasonPhrase();
     	} else {
         	this.reasonPhrase = reasonPhrase;
     	}
-    	if (typeof description=="undefined" || description==null) {
+    	if (description==null || typeof description=="undefined") {
     		this.description = this.getDescription();
     	} else {
     		this.description = description;
     	}
-    	if (typeof uri=="undefined" || uri==null) {
+    	if (uri==null || typeof uri=="undefined") {
     		this.uri = this.getUri();
     	} else {
     		this.uri = uri;

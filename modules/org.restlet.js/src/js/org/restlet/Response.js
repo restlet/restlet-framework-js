@@ -12,8 +12,8 @@ var Response = new [class Class]([class Message], {
         this.proxyChallengeRequests = null;
         this.request = request;
         this.retryAfter = null;
-        this.serverInfo = new ServerInfo();
-        this.status = Status.SUCCESS_OK;
+        this.serverInfo = new [class ServerInfo]();
+        this.status = [class Status].SUCCESS_OK;
 	},
 	
     abort: function() {
