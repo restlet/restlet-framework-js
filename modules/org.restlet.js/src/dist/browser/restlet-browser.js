@@ -36,6 +36,8 @@
 
 #include org/restlet/engine/headers/HeaderConstants.js#
 
+#include org/restlet/util/Series.js#
+
 #include org/restlet/data/CacheDirective.js#
 
 #include org/restlet/data/CharacterSet.js#
