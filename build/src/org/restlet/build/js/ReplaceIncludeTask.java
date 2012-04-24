@@ -42,10 +42,14 @@ public class ReplaceIncludeTask extends Task {
 					"Source file isn't specified or doesn't exist");
 		}
 		
+		try {
 		if (hasSingleBaseDirectory()) {
 			doExecuteForSingleBaseDirectory();
 		} else {
 			doExecuteForMultipleBaseDirectory();
+		}
+		} catch(Exception ex) {
+			ex.printStackTrace();
 		}
 	}
 	
@@ -53,6 +57,8 @@ public class ReplaceIncludeTask extends Task {
 		String content = IOUtils.getFileContent(srcFile);
 		StringBuilder newContent = new StringBuilder();
 		Map<String,String> moduleNames = new HashMap<String, String>();
+		
+		String currentModuleName = getCurrentModuleName(srcFile.getName());
 		
 		StringTokenizer st = new StringTokenizer(content, "\n", true);
 		while (st.hasMoreTokens()) {
@@ -65,7 +71,7 @@ public class ReplaceIncludeTask extends Task {
 				contentToInclude = cContent.getContent();
 				List<String> usedModuleNames = cContent.getUsedModuleNames();
 				for (String moduleName : usedModuleNames) {
-					if (moduleNames.get(moduleName)==null) {
+					if (!currentModuleName.equals(moduleName) && moduleNames.get(moduleName)==null) {
 						moduleNames.put(moduleName, "");
 					}
 				}
@@ -93,6 +99,17 @@ public class ReplaceIncludeTask extends Task {
 		IOUtils.setFileContent(destFile, requireContent.toString()+newContent.toString());
 	}
 	
+	private String getCurrentModuleName(String srcFilename) {
+		String moduleName = srcFilename;
+		if (srcFilename.startsWith("restlet-")) {
+			moduleName = moduleName.substring("restlet-".length());
+		}
+		if (moduleName.endsWith(".js")) {
+			moduleName = moduleName.substring(0, moduleName.length()-3);
+		}
+		return moduleName;
+	}
+
 	private String getFileContentFromFilesets(String fileToInclude) {
 		for (FileSet fileset : filesets) {
 			File fromDir = fileset.getDir(getProject());
@@ -111,6 +128,8 @@ public class ReplaceIncludeTask extends Task {
 		StringBuilder newContent = new StringBuilder();
 		Map<String,String> moduleNames = new HashMap<String, String>();
 		
+		String currentModuleName = getCurrentModuleName(srcFile.getName());
+		
 		StringTokenizer st = new StringTokenizer(content, "\n", true);
 		while (st.hasMoreTokens()) {
 			String line = st.nextToken();
@@ -122,7 +141,7 @@ public class ReplaceIncludeTask extends Task {
 				contentToInclude = cContent.getContent();
 				List<String> usedModuleNames = cContent.getUsedModuleNames();
 				for (String moduleName : usedModuleNames) {
-					if (moduleNames.get(moduleName)==null) {
+					if (!currentModuleName.equals(moduleName) && moduleNames.get(moduleName)==null) {
 						moduleNames.put(moduleName, "");
 					}
 				}

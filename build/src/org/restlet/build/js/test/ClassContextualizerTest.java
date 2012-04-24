@@ -52,7 +52,8 @@ public class ClassContextualizerTest {
 		//contextualizer.setRequirePattern("var {modulename} = require(\"{modulename}\");");
 
 		//String fileToInclude = "org/restlet/engine/adapter/ClientAdapter.js";
-		String fileToInclude = "org/restlet/Client.js";
+		//String fileToInclude = "org/restlet/Client.js";
+		String fileToInclude = "org/restlet/engine/headers/HeaderUtils.js";
 		String contentToInclude = IOUtils.getFileContent("../modules/org.restlet.js/src/js/"+fileToInclude);
 		ContextualizedContent cContent = contextualizer.handleFile(fileToInclude, contentToInclude);
 		contentToInclude = cContent.getContent();
