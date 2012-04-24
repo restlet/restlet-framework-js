@@ -23,7 +23,7 @@ asyncTest("Get with resource client", function() {
   }, MediaType.APPLICATION_JSON);
 });
 
-/*asyncTest("Get with resource client (json)", function() {
+asyncTest("Get with resource client (json)", function() {
   var clientResource = new ClientResource("../resource/contact/1");
   clientResource.get(function(representation) {
 	  var jsonRepresentation = new JsonRepresentation(representation);
@@ -33,7 +33,7 @@ asyncTest("Get with resource client", function() {
 	  ok(obj.firstName, "firstName");
 	  start();
   }, MediaType.APPLICATION_JSON);
-});*/
+});
 
 asyncTest("Put with resource client (json)", function() {
   var clientResource = new ClientResource("/contact/1");

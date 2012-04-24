@@ -408,7 +408,44 @@ var Protocol = new Class({
         this.defaultPort = defaultPort;
         this.confidential = confidential;
         this.version = version;
-	}
+	},
+	
+    equals: function(object) {
+        return (object instanceof Protocol)
+                && this.getName().equalsIgnoreCase(this.getName());
+    },
+
+    getDefaultPort: function() {
+        return this.defaultPort;
+    },
+
+    getDescription: function() {
+        return this.description;
+    },
+
+    getName: function() {
+        return this.name;
+    },
+
+    getSchemeName: function() {
+        return this.schemeName;
+    },
+
+    getTechnicalName: function() {
+        return this.technicalName;
+    },
+
+    getVersion: function() {
+        return this.version;
+    },
+
+    isConfidential: function() {
+        return this.confidential;
+    },
+
+    toString: function() {
+        return this.getName() + ((this.getVersion() == null) ? "" : "/" + this.getVersion());
+    }
 });
 
 Protocol.extend({
@@ -599,10 +636,10 @@ var Message = new Class({
 var Reference = new Class({
 	initialize: function(urlString) {
 		this.internalRef = urlString;
-		var tmp = this.internalRef;
+		/*var tmp = this.internalRef;
 		var index = tmp.indexOf("://");
 		if (index!=-1) {
-			this.protocol = tmp.substring(0, index);
+			this.scheme = tmp.substring(0, index);
 			tmp = tmp.substring(index+3);
 		}
 		index = tmp.indexOf(":");
@@ -627,7 +664,7 @@ var Reference = new Class({
 				tmp = tmp.substring(index);
 				this.path = tmp;
 			}			
-		}
+		}*/
 		
 		this.updateIndexes();
 	},
@@ -3102,6 +3139,269 @@ HeaderConstants.extend({
 	ATTRIBUTE_HTTPS_SSL_SESSION_ID: "org.restlet.https.sslSessionId"
 });
 
+var Series = new Class({
+	initialize: function() {
+		this.array = [];
+	},
+
+	// Specific method for JS
+	getElements: function() {
+		return this.array;
+	},
+	
+	size: function() {
+		return this.array.length;
+	},
+	
+	isEmpty: function() {
+		return (this.size()==0);
+	},
+	
+	add: function() {
+		if (arguments.length==1) {
+			return this.array.push(arguments[0]);
+		} else if (arguments.length==2) {
+			var name = arguments[0];
+			var value = arguments[1];
+			return this.array.push(this.createEntry(name, value));
+		} else {
+			throw new Error("The number of arguments isn't correct.");
+		}
+	},
+
+	createEntry: function(name, value) {
+		return new Parameter(name, value);
+	},
+	
+	equals: function(value1, value2, ignoreCase) {
+		var result = (value1 == value2);
+
+		if (!result) {
+			if ((value1 != null) && (value2 != null)) {
+				if (ignoreCase) {
+					result = value1.equalsIgnoreCase(value2);
+				} else {
+					result = value1.equals(value2);
+				}
+			}
+		}
+
+		return result;
+	},
+
+	getFirst: function(name, ignoreCase) {
+		if (ignoreCase==null) {
+			ignoreCase = false;
+		}
+
+		for (var i=0; i<this.array.length; i++) {
+			var param = this.array[i];
+			if (this.equals(param.getName(), name, ignoreCase)) {
+				return param;
+			}
+		}
+
+		return null;
+	},
+
+	getFirstValue: function() {
+		var name = arguments[0];
+		var ignoreCase= false;
+		var defaultValue = null;
+		if (arguments.length==2 && typeof arguments[1] == "string") {
+			defaultValue = arguments[1];
+		} else if (arguments.length==2) {
+			ignoreCase = arguments[1]
+		}
+
+		var result = defaultValue;
+		var param = this.getFirst(name, ignoreCase);
+
+		if ((param != null) && (param.getValue() != null)) {
+			result = param.getValue();
+		}
+
+		return result;
+	},
+
+	//public String getFirstValue(String name, String defaultValue) {
+
+	getNames: function() {
+		var result = [];
+
+		for (var i=0; i<this.array.length; i++) {
+			var param = this.array[i];
+			result.push(param.getName());
+		}
+
+		return result;
+	},
+
+	getValues: function(name, separator, ignoreCase) {
+		if (separator==null) {
+			separator = ",";
+		}
+		if (ignoreCase==null) {
+			ignoreCase = true;
+		}
+		var result = null;
+		var sb = null;
+
+		for (var i=0; i<this.array.length; i++) {
+			var param = this.array[i];
+			if ((ignoreCase && param.getName().equalsIgnoreCase(name))
+					|| param.getName().equals(name)) {
+				if (sb == null) {
+					if (result == null) {
+						result = param.getValue();
+					} else {
+						sb = new StringBuilder();
+						sb.append(result).append(separator)
+								.append(param.getValue());
+					}
+				} else {
+					sb.append(separator).append(param.getValue());
+				}
+			}
+		}
+
+		if (sb != null) {
+			result = sb.toString();
+		}
+
+		return result;
+	},
+
+	getValuesArray: function() {
+		var name = arguments[0];
+		var ignoreCase= false;
+		var defaultValue = null;
+		if (arguments.length==2 && typeof arguments[1] == "string") {
+			defaultValue = arguments[1];
+		} else if (arguments.length==2) {
+			ignoreCase = arguments[1]
+		}
+
+		var result = null;
+		var params = this.subList(name, ignoreCase);
+
+		if ((params.size() == 0) && (defaultValue != null)) {
+			result = [];
+			result.push(defaultValue);
+		} else {
+			result = [];
+
+			for (var i = 0; i < params.length; i++) {
+				result.push(params.get[i].getValue());
+			}
+		}
+
+		return result;
+	},
+
+	getValuesMap: function() {
+		var result = {};
+
+		for (var i=0; i<this.array.length; i++) {
+			var param = this.array[i];
+			if (!result[param.getName()]) {
+				result[param.getName()] = param.getValue();
+			}
+		}
+
+		return result;
+	},
+
+	removeAll: function(name, ignoreCase) {
+		if (ignoreCase==null) {
+			ignoreCase = false;
+		}
+
+		var changed = false;
+		var param = null;
+
+		for (var i=0; i<this.array.length; i++) {
+			var param = this.array[i];
+			if (this.equals(param.getName(), name, ignoreCase)) {
+				this.array.splice(i, i);
+				i--;
+				changed = true;
+			}
+		}
+
+		return changed;
+	},
+
+	removeFirst: function(name, ignoreCase) {
+		if (ignoreCase==null) {
+			ignoreCase = false;
+		}
+		var changed = false;
+		var param = null;
+
+		for (var i=0; i<this.array.length && !changed; i++) {
+			param = this.array[i];
+			if (this.equals(param.getName(), name, ignoreCase)) {
+				this.array.splice(i, i);
+				i--;
+				changed = true;
+			}
+		}
+
+		return changed;
+	},
+
+	set: function(name, value, ignoreCase) {
+		if (ignoreCase==null) {
+			ignoreCase = false;
+		}
+		var result = null;
+		var param = null;
+		var found = false;
+
+		for (var i=0; i<this.array.length; i++) {
+			param = this.array[i];
+			if (this.equals(param.getName(), name, ignoreCase)) {
+				if (found) {
+					// Remove other entries with the same name
+					this.array.splice(i, i);
+					i--;
+				} else {
+					// Change the value of the first matching entry
+					found = true;
+					param.setValue(value);
+					result = param;
+				}
+			}
+		}
+
+		if (!found) {
+			this.add(name, value);
+		}
+
+		return result;
+		
+	},
+
+	subList: function(name, ignoreCase) {
+		if (ignoreCase==null) {
+			ignoreCase = false;
+		}
+
+		var result = [];
+
+		for (var i=0; i<this.array.length; i++) {
+			var param = this.array[i];
+			if (this.equals(param.getName(), name, ignoreCase)) {
+				result.add(param);
+			}
+		}
+
+		return result;
+	}
+
+});
+
 var CacheDirective = new Class(Parameter, {
     initialize: function(name, value, digit) {
         this.name = name;
@@ -3934,269 +4234,6 @@ Encoding.extend({
     }
 });
 
-var Series = new Class({
-	initialize: function() {
-		this.array = [];
-	},
-
-	// Specific method for JS
-	getElements: function() {
-		return this.array;
-	},
-	
-	size: function() {
-		return this.array.length;
-	},
-	
-	isEmpty: function() {
-		return (this.size()==0);
-	},
-	
-	add: function() {
-		if (arguments.length==1) {
-			return this.array.push(arguments[0]);
-		} else if (arguments.length==2) {
-			var name = arguments[0];
-			var value = arguments[1];
-			return this.array.push(this.createEntry(name, value));
-		} else {
-			throw new Error("The number of arguments isn't correct.");
-		}
-	},
-
-	createEntry: function(name, value) {
-		return new Parameter(name, value);
-	},
-	
-	equals: function(value1, value2, ignoreCase) {
-		var result = (value1 == value2);
-
-		if (!result) {
-			if ((value1 != null) && (value2 != null)) {
-				if (ignoreCase) {
-					result = value1.equalsIgnoreCase(value2);
-				} else {
-					result = value1.equals(value2);
-				}
-			}
-		}
-
-		return result;
-	},
-
-	getFirst: function(name, ignoreCase) {
-		if (ignoreCase==null) {
-			ignoreCase = false;
-		}
-
-		for (var i=0; i<this.array.length; i++) {
-			var param = this.array[i];
-			if (this.equals(param.getName(), name, ignoreCase)) {
-				return param;
-			}
-		}
-
-		return null;
-	},
-
-	getFirstValue: function() {
-		var name = arguments[0];
-		var ignoreCase= false;
-		var defaultValue = null;
-		if (arguments.length==2 && typeof arguments[1] == "string") {
-			defaultValue = arguments[1];
-		} else if (arguments.length==2) {
-			ignoreCase = arguments[1]
-		}
-
-		var result = defaultValue;
-		var param = this.getFirst(name, ignoreCase);
-
-		if ((param != null) && (param.getValue() != null)) {
-			result = param.getValue();
-		}
-
-		return result;
-	},
-
-	//public String getFirstValue(String name, String defaultValue) {
-
-	getNames: function() {
-		var result = [];
-
-		for (var i=0; i<this.array.length; i++) {
-			var param = this.array[i];
-			result.push(param.getName());
-		}
-
-		return result;
-	},
-
-	getValues: function(name, separator, ignoreCase) {
-		if (separator==null) {
-			separator = ",";
-		}
-		if (ignoreCase==null) {
-			ignoreCase = true;
-		}
-		var result = null;
-		var sb = null;
-
-		for (var i=0; i<this.array.length; i++) {
-			var param = this.array[i];
-			if ((ignoreCase && param.getName().equalsIgnoreCase(name))
-					|| param.getName().equals(name)) {
-				if (sb == null) {
-					if (result == null) {
-						result = param.getValue();
-					} else {
-						sb = new StringBuilder();
-						sb.append(result).append(separator)
-								.append(param.getValue());
-					}
-				} else {
-					sb.append(separator).append(param.getValue());
-				}
-			}
-		}
-
-		if (sb != null) {
-			result = sb.toString();
-		}
-
-		return result;
-	},
-
-	getValuesArray: function() {
-		var name = arguments[0];
-		var ignoreCase= false;
-		var defaultValue = null;
-		if (arguments.length==2 && typeof arguments[1] == "string") {
-			defaultValue = arguments[1];
-		} else if (arguments.length==2) {
-			ignoreCase = arguments[1]
-		}
-
-		var result = null;
-		var params = this.subList(name, ignoreCase);
-
-		if ((params.size() == 0) && (defaultValue != null)) {
-			result = [];
-			result.push(defaultValue);
-		} else {
-			result = [];
-
-			for (var i = 0; i < params.length; i++) {
-				result.push(params.get[i].getValue());
-			}
-		}
-
-		return result;
-	},
-
-	getValuesMap: function() {
-		var result = {};
-
-		for (var i=0; i<this.array.length; i++) {
-			var param = this.array[i];
-			if (!result[param.getName()]) {
-				result[param.getName()] = param.getValue();
-			}
-		}
-
-		return result;
-	},
-
-	removeAll: function(name, ignoreCase) {
-		if (ignoreCase==null) {
-			ignoreCase = false;
-		}
-
-		var changed = false;
-		var param = null;
-
-		for (var i=0; i<this.array.length; i++) {
-			var param = this.array[i];
-			if (this.equals(param.getName(), name, ignoreCase)) {
-				this.array.splice(i, i);
-				i--;
-				changed = true;
-			}
-		}
-
-		return changed;
-	},
-
-	removeFirst: function(name, ignoreCase) {
-		if (ignoreCase==null) {
-			ignoreCase = false;
-		}
-		var changed = false;
-		var param = null;
-
-		for (var i=0; i<this.array.length && !changed; i++) {
-			param = this.array[i];
-			if (this.equals(param.getName(), name, ignoreCase)) {
-				this.array.splice(i, i);
-				i--;
-				changed = true;
-			}
-		}
-
-		return changed;
-	},
-
-	set: function(name, value, ignoreCase) {
-		if (ignoreCase==null) {
-			ignoreCase = false;
-		}
-		var result = null;
-		var param = null;
-		var found = false;
-
-		for (var i=0; i<this.array.length; i++) {
-			param = this.array[i];
-			if (this.equals(param.getName(), name, ignoreCase)) {
-				if (found) {
-					// Remove other entries with the same name
-					this.array.splice(i, i);
-					i--;
-				} else {
-					// Change the value of the first matching entry
-					found = true;
-					param.setValue(value);
-					result = param;
-				}
-			}
-		}
-
-		if (!found) {
-			this.add(name, value);
-		}
-
-		return result;
-		
-	},
-
-	subList: function(name, ignoreCase) {
-		if (ignoreCase==null) {
-			ignoreCase = false;
-		}
-
-		var result = [];
-
-		for (var i=0; i<this.array.length; i++) {
-			var param = this.array[i];
-			if (this.equals(param.getName(), name, ignoreCase)) {
-				result.add(param);
-			}
-		}
-
-		return result;
-	}
-
-});
-
 var Form = new Class(Series, {
 	initialize: function() {
 		this.callSuper();
@@ -4661,9 +4698,9 @@ HeaderUtils.extend({
 
         if (entity != null) {
         	HeaderUtils.addHeader(HeaderConstants.HEADER_CONTENT_ENCODING,
-                    EncodingWriter.write(entity.getEncodings()), headers);
+        			EncodingWriter.write(entity.getEncodings()), headers);
         	HeaderUtils.addHeader(HeaderConstants.HEADER_CONTENT_LANGUAGE,
-                    LanguageWriter.write(entity.getLanguages()), headers);
+        			LanguageWriter.write(entity.getLanguages()), headers);
 
             if (entity.getLocationRef() != null) {
             	HeaderUtils.addHeader(HeaderConstants.HEADER_CONTENT_LOCATION, entity
@@ -4672,7 +4709,7 @@ HeaderUtils.extend({
 
             if (entity.getRange() != null) {
             	HeaderUtils.addHeader(HeaderConstants.HEADER_CONTENT_RANGE,
-                        RangeWriter.write(entity.getRange(), entity.getSize()),
+            			RangeWriter.write(entity.getRange(), entity.getSize()),
                         headers);
             }
 
@@ -4693,24 +4730,24 @@ HeaderUtils.extend({
 
             if (entity.getExpirationDate() != null) {
             	HeaderUtils.addHeader(HeaderConstants.HEADER_EXPIRES,
-                        DateWriter.write(entity.getExpirationDate()), headers);
+            			DateWriter.write(entity.getExpirationDate()), headers);
             }
 
             if (entity.getModificationDate() != null) {
             	HeaderUtils.addHeader(HeaderConstants.HEADER_LAST_MODIFIED,
-                        DateWriter.write(entity.getModificationDate()), headers);
+            			DateWriter.write(entity.getModificationDate()), headers);
             }
 
             if (entity.getTag() != null) {
             	HeaderUtils.addHeader(HeaderConstants.HEADER_ETAG,
-                        TagWriter.write(entity.getTag()), headers);
+            			TagWriter.write(entity.getTag()), headers);
             }
 
             if (entity.getDisposition() != null
                     && !Disposition.TYPE_NONE.equals(entity.getDisposition()
                             .getType())) {
             	HeaderUtils.addHeader(HeaderConstants.HEADER_CONTENT_DISPOSITION,
-                        DispositionWriter.writeObject(entity.getDisposition()),
+            			DispositionWriter.writeObject(entity.getDisposition()),
                         headers);
             }
         }
@@ -4844,17 +4881,17 @@ HeaderUtils.extend({
 	},
 	addGeneralHeaders: function(message, headers) {
 		HeaderUtils.addHeader(HeaderConstants.HEADER_CACHE_CONTROL,
-                CacheDirectiveWriter.write(message.getCacheDirectives()),
+				CacheDirectiveWriter.write(message.getCacheDirectives()),
                 headers);
         if (message.getDate() == null) {
             message.setDate(new Date());
         }
         HeaderUtils.addHeader(HeaderConstants.HEADER_DATE,
-                DateWriter.write(message.getDate()), headers);
+        		DateWriter.write(message.getDate()), headers);
         HeaderUtils.addHeader(HeaderConstants.HEADER_VIA,
-                RecipientInfoWriter.write(message.getRecipientsInfo()), headers);
+        		RecipientInfoWriter.write(message.getRecipientsInfo()), headers);
         HeaderUtils.addHeader(HeaderConstants.HEADER_WARNING,
-                WarningWriter.write(message.getWarnings()), headers);
+        		WarningWriter.write(message.getWarnings()), headers);
 	},
 	addHeader: function(headerName, headerValue, headers) {
         if ((headerName != null) && (headerValue != null)
@@ -4871,22 +4908,22 @@ HeaderUtils.extend({
         if (entity != null) {
             if (entity.getTag() != null) {
                 HeaderUtils.addHeader(HeaderConstants.HEADER_ETAG,
-                        TagWriter.write(entity.getTag()), headers);
+                		TagWriter.write(entity.getTag()), headers);
             }
 
-            if (entity.getLocationRef() != null) {
+            /*if (entity.getLocationRef() != null) {
                 HeaderUtils.addHeader(HeaderConstants.HEADER_CONTENT_LOCATION,
                         entity.getLocationRef().getTargetRef().toString(),
                         headers);
-            }
+            }*/
         }
 	},
 	addRequestHeaders: function(request, headers) {
         var clientInfo = request.getClientInfo();
-
+        
         if (!clientInfo.getAcceptedMediaTypes().isEmpty()) {
         	HeaderUtils.addHeader(HeaderConstants.HEADER_ACCEPT,
-                    PreferenceWriter.write(clientInfo.getAcceptedMediaTypes()),
+        			PreferenceWriter.write(clientInfo.getAcceptedMediaTypes()),
                     headers);
         } else {
         	HeaderUtils.addHeader(HeaderConstants.HEADER_ACCEPT, MediaType.ALL.getName(),
@@ -4895,19 +4932,19 @@ HeaderUtils.extend({
 
         if (!clientInfo.getAcceptedCharacterSets().isEmpty()) {
         	HeaderUtils.addHeader(HeaderConstants.HEADER_ACCEPT_CHARSET,
-                    PreferenceWriter.write(clientInfo
+        			PreferenceWriter.write(clientInfo
                             .getAcceptedCharacterSets()), headers);
         }
 
         if (!clientInfo.getAcceptedEncodings().isEmpty()) {
         	HeaderUtils.addHeader(HeaderConstants.HEADER_ACCEPT_ENCODING,
-                    PreferenceWriter.write(clientInfo.getAcceptedEncodings()),
+        			PreferenceWriter.write(clientInfo.getAcceptedEncodings()),
                     headers);
         }
 
         if (!clientInfo.getAcceptedLanguages().isEmpty()) {
         	HeaderUtils.addHeader(HeaderConstants.HEADER_ACCEPT_LANGUAGE,
-                    PreferenceWriter.write(clientInfo.getAcceptedLanguages()),
+        			PreferenceWriter.write(clientInfo.getAcceptedLanguages()),
                     headers);
         }
 
@@ -4918,8 +4955,10 @@ HeaderUtils.extend({
 
         // Manually add the host name and port when it is potentially
         // different from the one specified in the target resource reference.
-        var hostRef = (request.getResourceRef().getBaseRef() != null) ? request
+        /*var hostRef = (request.getResourceRef().getBaseRef() != null) ? request
                 .getResourceRef().getBaseRef() : request.getResourceRef();
+                
+        console.log("hostRef = "+hostRef);
 
         if (hostRef.getHostDomain() != null) {
             var host = hostRef.getHostDomain();
@@ -4932,17 +4971,17 @@ HeaderUtils.extend({
             }
 
             HeaderUtils.addHeader(HeaderConstants.HEADER_HOST, host, headers);
-        }
+        }*/
 
         var conditions = request.getConditions();
         HeaderUtils.addHeader(HeaderConstants.HEADER_IF_MATCH,
-                TagWriter.write(conditions.getMatch()), headers);
+        		TagWriter.write(conditions.getMatch()), headers);
         HeaderUtils.addHeader(HeaderConstants.HEADER_IF_NONE_MATCH,
-                TagWriter.write(conditions.getNoneMatch()), headers);
+        		TagWriter.write(conditions.getNoneMatch()), headers);
 
         if (conditions.getModifiedSince() != null) {
         	HeaderUtils.addHeader(HeaderConstants.HEADER_IF_MODIFIED_SINCE,
-                    DateWriter.write(conditions.getModifiedSince()), headers);
+        			DateWriter.write(conditions.getModifiedSince()), headers);
         }
 
         if (conditions.getRangeTag() != null
@@ -4952,15 +4991,15 @@ HeaderUtils.extend({
             //                "Unable to format the HTTP If-Range header due to the presence of both entity tag and modification date.");
         } else if (conditions.getRangeTag() != null) {
         	HeaderUtils.addHeader(HeaderConstants.HEADER_IF_RANGE,
-                    TagWriter.write(conditions.getRangeTag()), headers);
+        			TagWriter.write(conditions.getRangeTag()), headers);
         } else if (conditions.getRangeDate() != null) {
         	HeaderUtils.addHeader(HeaderConstants.HEADER_IF_RANGE,
-                    DateWriter.write(conditions.getRangeDate()), headers);
+        			DateWriter.write(conditions.getRangeDate()), headers);
         }
 
         if (conditions.getUnmodifiedSince() != null) {
         	HeaderUtils.addHeader(HeaderConstants.HEADER_IF_UNMODIFIED_SINCE,
-                    DateWriter.write(conditions.getUnmodifiedSince()), headers);
+        			DateWriter.write(conditions.getUnmodifiedSince()), headers);
         }
 
         if (request.getMaxForwards() > -1) {
@@ -4970,7 +5009,7 @@ HeaderUtils.extend({
 
         if (!request.getRanges().isEmpty()) {
         	HeaderUtils.addHeader(HeaderConstants.HEADER_RANGE,
-                    RangeWriter.write(request.getRanges()), headers);
+        			RangeWriter.write(request.getRanges()), headers);
         }
 
         if (request.getReferrerRef() != null) {
@@ -4992,7 +5031,7 @@ HeaderUtils.extend({
 
         if (request.getCookies().size() > 0) {
         	HeaderUtils.addHeader(HeaderConstants.HEADER_COOKIE,
-                    CookieWriter.writeCollection(request.getCookies()), headers);
+        			CookieWriter.writeCollection(request.getCookies()), headers);
         }
 
         // -------------------------------------
@@ -5039,14 +5078,14 @@ HeaderUtils.extend({
         if (response.getStatus().equals(Status.CLIENT_ERROR_METHOD_NOT_ALLOWED)
                 || Method.OPTIONS.equals(response.getRequest().getMethod())) {
         	HeaderUtils.addHeader(HeaderConstants.HEADER_ALLOW,
-                    MethodWriter.write(response.getAllowedMethods()), headers);
+        			MethodWriter.write(response.getAllowedMethods()), headers);
         }
 
-        if (response.getLocationRef() != null) {
+        /*if (response.getLocationRef() != null) {
             // The location header must contain an absolute URI.
         	HeaderUtils.addHeader(HeaderConstants.HEADER_LOCATION, response
                     .getLocationRef().getTargetRef().toString(), headers);
-        }
+        }*/
 
         //TODO:
         /*if (response.getProxyChallengeRequests() != null) {
@@ -5061,7 +5100,7 @@ HeaderUtils.extend({
 
         if (response.getRetryAfter() != null) {
         	HeaderUtils.addHeader(HeaderConstants.HEADER_RETRY_AFTER,
-                    DateWriter.write(response.getRetryAfter()), headers);
+        			DateWriter.write(response.getRetryAfter()), headers);
         }
 
         if ((response.getServerInfo() != null)
@@ -5079,7 +5118,7 @@ HeaderUtils.extend({
                 .getRequest().getClientInfo().getAgent().contains("MSIE"))) {
             // Add the Vary header if content negotiation was used
         	HeaderUtils.addHeader(HeaderConstants.HEADER_VARY,
-                    DimensionWriter.write(response.getDimensions()), headers);
+        			DimensionWriter.write(response.getDimensions()), headers);
         }
 
         // Set the security data
@@ -6470,7 +6509,7 @@ DispositionWriter.extend({
 
 var MetadataWriter = new Class(HeaderWriter, {
 	initialize: function() {
-		this.callSuper();
+    	this.content = [];
 	},
 
 	appendObject: function(metadata) {
@@ -6932,17 +6971,17 @@ DateUtils.extend({
 var Status = new Class({
     initialize: function(code, reasonPhrase, description, uri) {
     	this.code = code;
-    	if (typeof reasonPhrase=="undefined" || reasonPhrase==null) {
+    	if (reasonPhrase==null || typeof reasonPhrase=="undefined") {
     		this.reasonPhrase = this.getReasonPhrase();
     	} else {
         	this.reasonPhrase = reasonPhrase;
     	}
-    	if (typeof description=="undefined" || description==null) {
+    	if (description==null || typeof description=="undefined") {
     		this.description = this.getDescription();
     	} else {
     		this.description = description;
     	}
-    	if (typeof uri=="undefined" || uri==null) {
+    	if (uri==null || typeof uri=="undefined") {
     		this.uri = this.getUri();
     	} else {
     		this.uri = uri;
@@ -7875,23 +7914,66 @@ var Connector = new Class(Restlet, {
 
 var Engine = new Class({
 	initialize: function() {
+        this.registeredClients = [];
+        this.registeredProtocols = [];
+        this.registeredServers = [];
+        this.registeredAuthenticators = [];
+        this.registeredConverters = [];
 	},
 
 	createHelper: function(restlet) {
-		//return new XhrHttpClientHelper();
-		return new BrowserHttpClientHelper();
+		return new this.registeredClients[0]();
 	},
 
+	getRegisteredClients: function() {
+		return this.registeredClients;
+	},
+	
+	setRegisteredClients: function(registeredClients) {
+		this.registeredClients = registeredClients;
+	},
+	
 	getDebugHandler: function() {
 		return this.debugHandler;
 	},
 
 	setDebugHandler: function(debugHandler) {
 		this.debugHandler = debugHandler;
+	},
+	
+	enableDebug: function() {
+		this.debugHandler = {
+			beforeSendingRequest: function(url, method, headers, data) {
+				console.log(method+" "+url);
+				for (var elt in headers) {
+					console.log(elt+": "+headers[elt]);
+				}
+				console.log("");
+				console.log(data);
+			},
+			afterReceivedResponse: function(status, statusCode, headers, data) {
+				console.log(status+" "+statusCode);
+				for (var elt in headers) {
+					console.log(elt+": "+headers[elt]);
+				}
+				console.log("");
+				console.log(data);
+			}
+		};
+	},
+
+	disableDebug: function() {
+		this.debugHandler = null;
 	}
 });
 
 Engine.extend({
+    /*MAJOR_NUMBER: "@major-number@",
+    MINOR_NUMBER: "@minor-number@",
+    RELEASE_NUMBER: "@release-type@@release-number@",*/
+    MAJOR_NUMBER: "2.1",
+    MINOR_NUMBER: "2.0",
+    RELEASE_NUMBER: "nodejs2.1",
 	getInstance: function() {
 		if (Engine.instance==null) {
 			Engine.instance = new Engine();
@@ -7899,6 +7981,9 @@ Engine.extend({
 		return Engine.instance;
 	}
 });
+
+Engine.VERSION = Engine.MAJOR_NUMBER + '.' + Engine.MINOR_NUMBER + Engine.RELEASE_NUMBER;
+Engine.VERSION_HEADER = "Restlet-Framework/" + Engine.VERSION;
 
 var Call = new Class({
 	initialize: function() {
@@ -8129,7 +8214,7 @@ var BrowserHttpClientCall = new Class(ClientCall, {
 
 			var representation = new Representation();
 			representation = HeaderUtils.extractEntityHeaders(
-								currentThis.getResponseHeaders(xhr), representation);
+								currentThis.getResponseHeaders(), representation);
 			representation.write(xhr);
 			var status = new Status(xhr.status, xhr.statusText);
 			response.setStatus(status);
@@ -8226,7 +8311,7 @@ var ClientAdapter = new Class({
             // Put the response headers in the call's attributes map
             response.getAttributes()[HeaderConstants.ATTRIBUTE_HEADERS] = responseHeaders;
 
-            HeaderUtils.copyResponseTransportHeaders(responseHeaders, response);
+           HeaderUtils.copyResponseTransportHeaders(responseHeaders, response);
         } catch (err) {
             response.setStatus(Status.CONNECTOR_ERROR_INTERNAL, err);
         }
@@ -8237,10 +8322,10 @@ var ClientAdapter = new Class({
 
         // Add the headers
         if (result != null) {
-            HeaderUtils.addGeneralHeaders(request, result.getRequestHeaders());
+        	HeaderUtils.addGeneralHeaders(request, result.getRequestHeaders());
 
             if (request.getEntity() != null) {
-                HeaderUtils.addEntityHeaders(request.getEntity(),
+            	HeaderUtils.addEntityHeaders(request.getEntity(),
                         result.getRequestHeaders());
             }
 
@@ -8259,10 +8344,10 @@ var ClientAdapter = new Class({
         response.getServerInfo().setAddress(httpCall.getServerAddress());
         response.getServerInfo().setPort(httpCall.getServerPort());
 
-        // Read the response headers
+    	// Read the response headers
         this.readResponseHeaders(httpCall, response);
 
-        // Set the entity
+    	// Set the entity
         response.setEntity(httpCall.getResponseEntity(response));
 
         // Release the representation's content for some obvious cases
@@ -8278,7 +8363,7 @@ var ClientAdapter = new Class({
                 response.getEntity().release();
                 response.setEntity(null);
             } else if (response.getStatus()==
-                    Status.REDIRECTION_NOT_MODIFIED) {
+            	Status.REDIRECTION_NOT_MODIFIED) {
                 response.getEntity().release();
             } else if (response.getStatus().isInformational()) {
                 response.getEntity().release();
@@ -8287,7 +8372,7 @@ var ClientAdapter = new Class({
         }
     },
     commit: function(httpCall, request, callback) {
-        if (httpCall != null) {
+    	if (httpCall != null) {
             // Send the request to the client
         	var currentThis = this;
             httpCall.sendRequest(request, function(response) {
@@ -8302,7 +8387,7 @@ var ClientAdapter = new Class({
                     if ((response.getStatus() == null)
                             || !response.getStatus().isError()) {
                         response.setStatus(
-                                Status.CONNECTOR_ERROR_INTERNAL, err);
+                        		Status.CONNECTOR_ERROR_INTERNAL, err);
                         callback(response);
                     }
                 }
@@ -8321,17 +8406,18 @@ var HttpClientHelper = new Class({
         return this.adapter;
 	},
     handle: function(request, callback) {
-        try {
+        //try {
             var clientCall = this.getAdapter().toSpecific(this, request);
             this.getAdapter().commit(clientCall, request, callback);
-        } catch (err) {
-            /*getLogger().log(Level.INFO,
-                    "Error while handling an HTTP client call", e);*/
+        /*} catch (err) {
+        	console.log(err.msg);
+            //getLogger().log(Level.INFO,
+            //        "Error while handling an HTTP client call", e);
         	var response = new Response(request);
             response.setStatus(Status.CONNECTOR_ERROR_INTERNAL, err);
             response.setEntity(new Representation());
             callback(response);
-        }
+        }*/
     }
 });
 
@@ -8343,6 +8429,8 @@ var BrowserHttpClientHelper = new Class(HttpClientHelper, {
 		return new BrowserHttpClientCall();
 	}
 });
+
+Engine.getInstance().getRegisteredClients().push(BrowserHttpClientHelper);
 
 var Client = new Class(Connector, {
 	initialize: function(context, protocols, helper) {
@@ -8387,86 +8475,12 @@ var Client = new Class(Connector, {
     }
 });
 
-var MediaTypeUtils = new Class({});
-MediaTypeUtils.extend({
-    _TSPECIALS: "()<>@,;:/[]?=\\\"",
-
-    normalizeToken: function(token) {
-        var length;
-        var c;
-
-        // Makes sure we're not dealing with a "*" token.
-        token = token.trim();
-        if ("".equals(token) || "*".equals(token))
-            return "*";
-
-        // Makes sure the token is RFC compliant.
-        length = token.length;
-        for (var i = 0; i < length; i++) {
-            c = token.charAt(i);
-            if (c <= 32 || c >= 127 || MediaTypeUtils._TSPECIALS.indexOf(c) != -1)
-                throw new Error("Illegal token: " + token);
-        }
-
-        return token;
-    },
-
-	normalizeType: function(name, parameters) {
-        var slashIndex;
-        var colonIndex;
-        var mainType;
-        var subType;
-        var params = null;
-
-        // Ignore null names (backward compatibility).
-        if (name == null)
-            return null;
-
-        // Check presence of parameters
-        if ((colonIndex = name.indexOf(';')) != -1) {
-            params = new StringBuilder(name.substring(colonIndex));
-            name = name.substring(0, colonIndex);
-        }
-
-        // No main / sub separator, assumes name/*.
-        if ((slashIndex = name.indexOf('/')) == -1) {
-            mainType = MediaTypeUtils.normalizeToken(name);
-            subType = "*";
-        } else {
-            // Normalizes the main and sub types.
-            mainType = MediaTypeUtils.normalizeToken(name.substring(0, slashIndex));
-            subType = MediaTypeUtils.normalizeToken(name.substring(slashIndex + 1));
-        }
-
-        // Merge parameters taken from the name and the method argument.
-        if (parameters != null && !parameters.isEmpty()) {
-            if (params == null) {
-                params = new StringBuilder();
-            }
-            var hw = new HeaderWriter();
-            hw.appendObject = function(value) {
-            	return this.appendExtension(value);
-            };
-            for (var i = 0; i < parameters.size(); i++) {
-                var p = parameters.get(i);
-                hw.appendParameterSeparator();
-                hw.appendSpace();
-                hw.appendObject(p);
-            }
-            params.append(hw.toString());
-        }
-
-        return (params == null) ? mainType + '/' + subType : mainType + '/'
-                + subType + params.toString();
-    }
-});
-
 var MediaType = new Class(Metadata, {
 	initialize: function(name, parameters, description) {
 		if (description==null) {
 			description = "Media type or range of media types";
 		}
-        this.callSuper(MediaTypeUtils.normalizeType(name, parameters), description);
+        this.callSuper(MediaType.normalizeType(name, parameters), description);
     },
 
     getMainType: function() {
@@ -8548,82 +8562,147 @@ var MediaType = new Class(Metadata, {
 });
 
 MediaType.extend({
-	APPLICATION_JSON: new MediaType("application/json"),
-	APPLICATION_JSONP: new MediaType("application/jsonp"),
-	TEXT_JSON: new MediaType("text/json"),
-	APPLICATION_XML: new MediaType("application/xml"),
-	TEXT_XML: new MediaType("text/xml"),
+    _types: null,
     _TSPECIALS: "()<>@,;:/[]?=\\\"",
-
-    normalizeToken: function(token) {
-        var length;
-        var c;
-
-        // Makes sure we're not dealing with a "*" token.
-        token = token.trim();
-        if ("".equals(token) || "*".equals(token))
-            return "*";
-
-        // Makes sure the token is RFC compliant.
-        length = token.length;
-        for (var i = 0; i < length; i++) {
-            c = token.charAt(i);
-            if (c <= 32 || c >= 127 || MediaType._TSPECIALS.indexOf(c) != -1)
-                throw new Error("Illegal token: " + token);
+    register: function(name, description) {
+        if (MediaType.getTypes()[name]==null) {
+            var type = new MediaType(name, null, description);
+            MediaType.getTypes()[name] = type;
         }
 
-        return token;
+        return MediaType.getTypes()[name];
+	},
+
+	valueOf: function(name) {
+        var result = null;
+
+        if ((name != null) && !name.equals("")) {
+            result = MediaType.getTypes()[name];
+            if (result == null) {
+                result = new MediaType(name);
+            }
+        }
+
+        return result;
     },
 
-	normalizeType: function(name, parameters) {
-        var slashIndex;
-        var colonIndex;
-        var mainType;
-        var subType;
-        var params = null;
-
-        // Ignore null names (backward compatibility).
-        if (name == null)
-            return null;
-
-        // Check presence of parameters
-        if ((colonIndex = name.indexOf(';')) != -1) {
-            params = new StringBuilder(name.substring(colonIndex));
-            name = name.substring(0, colonIndex);
+    getTypes: function() {
+        if (MediaType._types == null) {
+        	MediaType._types = {};
         }
+        return MediaType._types;
+    },
 
-        // No main / sub separator, assumes name/*.
-        if ((slashIndex = name.indexOf('/')) == -1) {
-            mainType = MediaType.normalizeToken(name);
-            subType = "*";
-        } else {
-            // Normalizes the main and sub types.
-            mainType = MediaType.normalizeToken(name.substring(0, slashIndex));
-            subType = MediaType.normalizeToken(name.substring(slashIndex + 1));
-        }
+    getMostSpecific: function(mediaTypes) {
+    	if ((mediaTypes == null) || (mediaTypes.length == 0)) {
+    		throw new Error("You must give at least one MediaType");
+    	}
 
-        // Merge parameters taken from the name and the method argument.
-        if (parameters != null && !parameters.isEmpty()) {
-            if (params == null) {
-                params = new StringBuilder();
-            }
-            var hw = new HeaderWriter();
-            hw.appendObject = function(value) {
-            	return this.appendExtension(value);
-            };
-            for (var i = 0; i < parameters.size(); i++) {
-                var p = parameters.get(i);
-                hw.appendParameterSeparator();
-                hw.appendSpace();
-                hw.appendObject(p);
-            }
-            params.append(hw.toString());
-        }
+    	if (mediaTypes.length == 1) {
+    		return mediaTypes[0];
+    	}
 
-        return (params == null) ? mainType + '/' + subType : mainType + '/'
-                + subType + params.toString();
+    	var mostSpecific = mediaTypes[0];
+
+    	for (var i = 1; i < mediaTypes.length; i++) {
+    		var mediaType = mediaTypes[i];
+
+    		if (mediaType != null) {
+    			if (mediaType.getMainType().equals("*")) {
+    				continue;
+    			}
+
+    			if (mostSpecific.getMainType().equals("*")) {
+    				mostSpecific = mediaType;
+    				continue;
+    			}
+
+    			if (mostSpecific.getSubType().contains("*")) {
+    				mostSpecific = mediaType;
+    				continue;
+    			}
+    		}
+    	}
+
+    	return mostSpecific;
     }
 });
+
+MediaType.normalizeToken = function(token) {
+    var length;
+    var c;
+
+    // Makes sure we're not dealing with a "*" token.
+    token = token.trim();
+    if ("".equals(token) || "*".equals(token))
+        return "*";
+
+    // Makes sure the token is RFC compliant.
+    length = token.length;
+    for (var i = 0; i < length; i++) {
+        c = token.charAt(i);
+        if (c <= 32 || c >= 127 || MediaType._TSPECIALS.indexOf(c) != -1)
+            throw new Error("Illegal token: " + token);
+    }
+
+    return token;
+};
+
+MediaType.normalizeType = function(name, parameters) {
+    var slashIndex;
+    var colonIndex;
+    var mainType;
+    var subType;
+    var params = null;
+
+    // Ignore null names (backward compatibility).
+    if (name == null)
+        return null;
+
+    // Check presence of parameters
+    if ((colonIndex = name.indexOf(';')) != -1) {
+        params = new StringBuilder(name.substring(colonIndex));
+        name = name.substring(0, colonIndex);
+    }
+
+    // No main / sub separator, assumes name/*.
+    if ((slashIndex = name.indexOf('/')) == -1) {
+        mainType = MediaType.normalizeToken(name);
+        subType = "*";
+    } else {
+        // Normalizes the main and sub types.
+        mainType = MediaType.normalizeToken(name.substring(0, slashIndex));
+        subType = MediaType.normalizeToken(name.substring(slashIndex + 1));
+    }
+
+    // Merge parameters taken from the name and the method argument.
+    if (parameters != null && !parameters.isEmpty()) {
+        if (params == null) {
+            params = new StringBuilder();
+        }
+        var hw = new HeaderWriter();
+        hw.appendObject = function(value) {
+        	return this.appendExtension(value);
+        };
+        for (var i = 0; i < parameters.size(); i++) {
+            var p = parameters.get(i);
+            hw.appendParameterSeparator();
+            hw.appendSpace();
+            hw.appendObject(p);
+        }
+        params.append(hw.toString());
+    }
+
+    return (params == null) ? mainType + '/' + subType : mainType + '/'
+            + subType + params.toString();
+};
+
+MediaType.ALL = MediaType.register("*/*", "All media");
+MediaType.APPLICATION_JSON = MediaType.register("application/json", "");
+MediaType.APPLICATION_JSONP = MediaType.register("application/jsonp", "");
+MediaType.TEXT_JSON = MediaType.register("text/json", "");
+MediaType.APPLICATION_XML = MediaType.register("application/xml", "");
+MediaType.TEXT_XML = MediaType.register("text/xml", "");
 
 var Variant = new Class({
 	setMediaType: function(mediaType) {
@@ -8688,6 +8767,9 @@ var Representation = new Class(RepresentationInfo, {
     setAvailable: function(available) {
     	this.available = available;
     },
+    getAvailableSize: function() {
+    	return this.getSize();
+    },
     getDisposition: function() {
     	return this.disposition;
     },
@@ -8733,15 +8815,26 @@ var Representation = new Class(RepresentationInfo, {
 	write: function(content) {
 		if (typeof content=="string") {
 			this.text = content;
+			this.setSize(this.text.length);
+			this.setAvailable(true);
 		} else if (content instanceof Document) {
 			this.xml = content;
+			this.setAvailable(true);
 		} else {
 			this.text = content.responseText;
+			this.setSize(this.text.length);
+			this.setAvailable(true);
 			this.xml = content.responseXML;
 		}
 	},
 	release: function() {
         this.setAvailable(false);
+    },
+    isAvailable: function() {
+        return this.available && (this.getSize() != 0);
+    },
+    isEmpty: function() {
+        return this.getSize() == 0;
     }
 });
 
@@ -8768,33 +8861,33 @@ var JsonRepresentation = new Class(Representation, {
 		this.representation = null;
 		if (typeof content == "string") {
 			this.text = content;
+			this.setSize(this.text.length);
+			this.setAvailable(true);
+			this.obj = window.jsonParse(this.text);
+			this.text = window.JSON.stringify(this.obj);
 		} else if (content instanceof Representation) {
 			this.representation = content;
+			this.obj = window.jsonParse(this.representation.getText());
+			this.setAvailable(true);
 		} else if (typeof content == "object") {
 			this.obj = content;
+			this.text = window.JSON.stringify(this.obj);
+			this.setSize(this.text.length);
+			this.setAvailable(true);
 		}
 		this.setMediaType(MediaType.APPLICATION_JSON);
 	},
 	getText: function() {
-		if (this.obj!=null) {
-			return window.JSON.stringify(this.obj);
-		} else {
-			return "";
-		}
+		return this.text;
 	},
+    getAvailableSize: function() {
+        return this.getText().length;
+    },
 	setObject: function(obj) {
 		this.obj = obj
 	},
 	getObject: function() {
-		if (this.text!=null) {
-			return window.jsonParse(this.text);
-		} else if (this.representation!=null) {
-			return window.jsonParse(this.representation.getText());
-		} else if (this.obj!=null) {
-			return this.obj; 
-		} else {
-			return null;
-		}
+		return this.obj; 
 	}
 });
 
