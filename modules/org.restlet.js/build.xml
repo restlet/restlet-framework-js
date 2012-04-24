@@ -10,6 +10,7 @@
 	<property name="utils.src.js.dir" value="${utils.src.dir}/js"/>
 
 	<property name="tests.browser.dir" value="${basedir}/../../tests/org.restlet.js.tests/src/browser/static/restlet/" />
+	<property name="tests.nodejs.dir" value="${basedir}/../../tests/org.restlet.js.tests/src/nodejs/" />
 	
 	<path id="forge-path">
 		<fileset dir="${basedir}/lib/java/forge" includes="**/*.jar" />
@@ -248,4 +249,11 @@
 		<delete file="${target.nodejs.dir}/lib/index.js"/>
 		<copy todir="${target.nodejs.dir}" file=".npmignore"/>
 	</target>
+
+	<target name="install.nodejs.for.tests" depends="build.nodejs">
+		<copy todir="${tests.nodejs.dir}/node_modules/restlet/">
+			<fileset dir="${target.nodejs.dir}/"/>
+		</copy>
+	</target>
+
 </project>

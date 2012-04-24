@@ -4,9 +4,10 @@
   "version": "0.1.0",
   "author": "Thierry Templier <thierry.templier@noelios.com>",
   "contributors": [ 
-    { "name": "Thierry Templier", "email": "thierry.templier@noelios.com" }
+    { "name": "Thierry Templier", "email": "thierry.templier@restlet.com" }
   ],
   "dependencies": {
+    "libxmljs": "0.5.4"
   },
   "devDependencies": {
   },
