@@ -41,10 +41,10 @@ var ClientAdapter = new [class Class]({
         response.getServerInfo().setAddress(httpCall.getServerAddress());
         response.getServerInfo().setPort(httpCall.getServerPort());
 
-        // Read the response headers
+    	// Read the response headers
         this.readResponseHeaders(httpCall, response);
 
-        // Set the entity
+    	// Set the entity
         response.setEntity(httpCall.getResponseEntity(response));
 
         // Release the representation's content for some obvious cases
@@ -69,7 +69,7 @@ var ClientAdapter = new [class Class]({
         }
     },
     commit: function(httpCall, request, callback) {
-        if (httpCall != null) {
+    	if (httpCall != null) {
             // Send the request to the client
         	var currentThis = this;
             httpCall.sendRequest(request, function(response) {

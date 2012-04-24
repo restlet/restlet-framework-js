@@ -55,7 +55,7 @@ var BrowserHttpClientCall = new [class Class]([class ClientCall], {
 		if (request.getEntity()!=null) {
 			data = request.getEntity().getText();
 		}
-		var debugHandler = Engine.getInstance().getDebugHandler();
+		var debugHandler = [class Engine].getInstance().getDebugHandler();
 		if (debugHandler!=null && debugHandler.beforeSendingRequest!=null) {
 			debugHandler.beforeSendingRequest(url, method, requestHeaders, data);
 		}
@@ -64,7 +64,7 @@ var BrowserHttpClientCall = new [class Class]([class ClientCall], {
 
 			var representation = new Representation();
 			representation = HeaderUtils.extractEntityHeaders(
-								currentThis.getResponseHeaders(xhr), representation);
+								currentThis.getResponseHeaders(), representation);
 			representation.write(xhr);
 			var status = new [class Status](xhr.status, xhr.statusText);
 			response.setStatus(status);

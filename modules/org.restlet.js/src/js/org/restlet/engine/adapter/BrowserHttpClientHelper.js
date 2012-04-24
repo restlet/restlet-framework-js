@@ -6,3 +6,5 @@ var BrowserHttpClientHelper = new [class Class]([class HttpClientHelper], {
 		return new [class BrowserHttpClientCall]();
 	}
 });
+
+Engine.getInstance().getRegisteredClients().push(BrowserHttpClientHelper);

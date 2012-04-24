@@ -2,75 +2,83 @@ var NodeJsHttpClientCall = new [class Class]([class ClientCall], {
 	initialize: function() {
 		this.callSuper();
 	},
+	extractResponseHeaders: function(clientResponse) {
+		var headers = [];
+		for (var headerName in clientResponse.headers) {
+			var header = new [class Parameter](
+							headerName,
+							clientResponse.headers[headerName]);
+			headers.push(header);
+		}
+		this.setResponseHeaders(headers);
+	},
 	sendRequest: function(request, callback) {
-		console.log("> NodeJsHttpClientCall.sendRequest")
-		var currentThis = this;
-		var response = new [class Response](request);
-		//var url = request.getReference().getUrl();
-		var port = request.getReference().getPort();
-		var host = request.getReference().getHost();
-		var path = request.getReference().getPath();
+		var url = request.getResourceRef().toString(true, true);
 		var method = request.getMethod().getName();
-		console.log("method = "+method);
 		this.method = request.getMethod();
 		var clientInfo = request.getClientInfo();
-		console.log("clientInfo = "+clientInfo);
-		var acceptedMediaTypes = clientInfo.getAcceptedMediaTypes();
-		var acceptHeader = "";
-		for (var i=0;i<acceptedMediaTypes.length;i++) {
-			if (i>0) {
-				acceptHeader += ",";
-			}
-			acceptHeader += acceptedMediaTypes[i].getType();
+		var requestHeaders = {};
+		for (var i=0; i<this.requestHeaders.length; i++) {
+			var requestHeader = this.requestHeaders[i];
+			requestHeaders[requestHeader.getName()] = requestHeader.getValue();
 		}
-		var headers = {};
-		/*if (acceptHeader!="") {
-			headers["accept"] = acceptHeader;
-		}
-			headers["accept"] = "application/json";
-headers["host"] = "localhost:8080";
-console.log("http://"+host+":"+port+path);*/
-		var requestHeaders = this.getRequestHeaders();
-		console.log("requestHeaders.length = "+requestHeaders.length);
-		for (var cpt=0; cpt<requestHeaders.length; cpt++) {
-			var header = requestHeaders[cpt];
-			headers[header.getName()] = header.getValue();
-		}
-		
 		var data = "";
 		if (request.getEntity()!=null) {
 			data = request.getEntity().getText();
 		}
+		var debugHandler = [class Engine].getInstance().getDebugHandler();
+		if (debugHandler!=null && debugHandler.beforeSendingRequest!=null) {
+			debugHandler.beforeSendingRequest(url, method, requestHeaders, data);
+		}
 
-		var client = http.createClient(port, host);
-		var clientRequest = client.request(method, path, headers);
-		clientRequest.end();
+		var currentThis = this;
+		var response = new [class Response](request);
+		var port = request.getResourceRef().getHostPort();
+		var host = request.getResourceRef().getHostDomain();
+		var path = request.getResourceRef().getPath();
 
-		clientRequest.on('response', function (clientResponse) {
-			console.log("on response");
-console.log('STATUS: ' + clientResponse.statusCode);
-			currentThis.statusCode = clientResponse.statusCode;
-			currentThis.reasonPhrase = null;
-			console.log("currentThis.status = "+currentThis.status);
-			currentThis.serverAddress = host;
-			currentThis.serverPort = port;
-console.log('HEADERS: ' + JSON.stringify(clientResponse.headers));
-			currentThis.responseHeaders = [];
-			for (var headerName in clientResponse.headers) {
-				currentThis.responseHeaders.push(new Parameter(
-						headerName, clientResponse.headers[headerName]));
-			}
-			var representation = new [class Representation]();
-			response.setEntity(representation);
+		var requestOptions = {
+			host: host,
+			port: port,
+			path: path,
+			method: method,
+			headers: requestHeaders
+		};
+		var clientRequest = http.request(requestOptions);
+		
+		clientRequest.on("response", function (clientResponse) {
+			currentThis.extractResponseHeaders(clientResponse);
+
+			var repr = new [class Representation]();
+			repr = HeaderUtils.extractEntityHeaders(
+								currentThis.getResponseHeaders(), repr);
 			clientResponse.on('data', function (chunk) {
-				console.log("on data");
-				console.log("chunk = "+chunk);
-				representation.write({responseText: chunk, responseXML: null});
+				repr.write({responseText: chunk, responseXML: null});
 			});
 			clientResponse.on('end', function (chunk) {
-				console.log("on end");
+				if (debugHandler!=null && debugHandler.afterReceivedResponse!=null) {
+					var responseHeaders = {};
+					for (var i=0; i<currentThis.responseHeaders.length; i++) {
+						var header = currentThis.responseHeaders[i];
+						responseHeaders[header.getName()] = header.getValue();
+					}
+					debugHandler.afterReceivedResponse(clientResponse.statusCode, "", responseHeaders, repr.getText());
+				}
 				callback(response);
 			});
+			//TODO: fix me!
+			/*var status = new [class Status](clientResponse.statusCode, null);
+			response.setStatus(status);*/
+			response.setEntity(repr);
 		});
+
+		//TODO: problem with the write method on Restlet server side 
+		if (data!=null && data!="") {
+			//TODO: support chunking
+			//TODO: support encoding
+			clientRequest.write(data);
+		}// else {
+		clientRequest.end();
+		//}
 	}
 });
