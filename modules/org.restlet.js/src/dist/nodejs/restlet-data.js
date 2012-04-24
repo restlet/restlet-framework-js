@@ -11,6 +11,8 @@ var url = require("url");
 
 #include org/restlet/data/Method.js#
 
+#include org/restlet/data/Status.js#
+
 #include org/restlet/data/CacheDirective.js#
 
 #include org/restlet/data/CharacterSet.js#
@@ -53,6 +55,7 @@ module.exports = {
 	ServerInfo: ServerInfo,
 	Reference: Reference,
 	Method: Method,
+	Status: Status,
 	CacheDirective: CacheDirective,
 	CharacterSet: CharacterSet,
 	Cookie: Cookie,

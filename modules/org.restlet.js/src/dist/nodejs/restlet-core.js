@@ -14,6 +14,8 @@ var commons = require("./commons.js");
 
 #include org/restlet/Client.js#
 
+#include org/restlet/engine/Engine.js#
+
 module.exports = {
 	Context: Context,
 	Message: Message,
@@ -21,5 +23,6 @@ module.exports = {
 	Response: Response,
 	Restlet: Restlet,
 	Connector: Connector,
-	Client: Client
+	Client: Client,
+	Engine: Engine
 };

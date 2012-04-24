@@ -1,8 +1,6 @@
 var commons = require("./commons.js");
 var http = require("http");
 
-#include org/restlet/engine/headers/HeaderConstants.js#
-
 #include org/restlet/engine/headers/ContentType.js#
 
 #include org/restlet/engine/headers/HeaderReaderUtils.js#
@@ -57,8 +55,6 @@ var http = require("http");
 
 #include org/restlet/engine/util/DateUtils.js#
 
-#include org/restlet/engine/Engine.js#
-
 #include org/restlet/engine/adapter/Call.js#
 
 #include org/restlet/engine/adapter/ClientCall.js#
@@ -71,8 +67,11 @@ var http = require("http");
 
 #include org/restlet/engine/adapter/NodeJsHttpClientHelper.js#
 
+var core = module.parent.exports["core"];
+var engine = core.Engine.getInstance();
+engine.getRegisteredClients().push(NodeJsHttpClientHelper);
+
 module.exports = {
-	HeaderConstants: HeaderConstants,
 	ContentType: ContentType,
 	HeaderReaderUtils: HeaderReaderUtils,
 	HeaderWriterUtils: HeaderWriterUtils,
@@ -100,7 +99,6 @@ module.exports = {
 	TagWriter: TagWriter,
 	WarningWriter: WarningWriter,
 	DateUtils: DateUtils,
-	Engine: Engine,
 	Call: Call,
 	ClientCall: ClientCall,
 	NodeJsHttpClientCall: NodeJsHttpClientCall,
