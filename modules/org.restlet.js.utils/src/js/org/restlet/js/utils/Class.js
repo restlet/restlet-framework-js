@@ -34,27 +34,42 @@ var Class = function() {
 		copyElements(content, clazz.prototype, clazz.prototype.__parent);
 		clazz.prototype["callSuperCstr"] = function() {
 			if (this.__currentCallSuperLevel==null) {
-				this.__currentCallSuperLevel = this.__parent;
-			} else {
-				this.__currentCallSuperLevel = this.__currentCallSuperLevel.__parent;
+				this.__currentCallSuperLevel = {};
 			}
-			
-			var currentLevel = this.__currentCallSuperLevel;
+			if (this.__currentCallSuperLevel["initialize"]==null) {
+				this.__currentCallSuperLevel["initialize"] = this.__parent;
+			} else {
+				this.__currentCallSuperLevel["initialize"] = this.__currentCallSuperLevel["initialize"].__parent;
+			}
+
+			while (this.__currentCallSuperLevel["initialize"]["initialize"]==this["initialize"]) {
+				this.__currentCallSuperLevel["initialize"] = this.__currentCallSuperLevel["initialize"].__parent;
+			}
+
+			var currentLevel = this.__currentCallSuperLevel["initialize"];
 			if (currentLevel["initialize"]!=null && typeof currentLevel["initialize"]=="function") {
 				var superInitialize = currentLevel["initialize"];
 				superInitialize.apply(this, arguments);
 			}
-			this.__currentCallSuperLevel = this.__currentCallSuperLevel.__child;
+			this.__currentCallSuperLevel["initialize"] = this.__currentCallSuperLevel["initialize"].__child;
 		};
 		clazz.prototype["callSuper"] = function() {
-			if (this.__currentCallSuperLevel==null) {
-				this.__currentCallSuperLevel = this.__parent;
-			} else {
-				this.__currentCallSuperLevel = this.__currentCallSuperLevel.__parent;
-			}
-			
-			var currentLevel = this.__currentCallSuperLevel;
 			var methodName = arguments[0];
+			if (this.__currentCallSuperLevel==null) {
+				this.__currentCallSuperLevel = {};
+			}
+			var initialCurrentCallSuperLevel = this.__currentCallSuperLevel[methodName];
+			if (this.__currentCallSuperLevel[methodName]==null) {
+				this.__currentCallSuperLevel[methodName] = this.__parent;
+			} else {
+				this.__currentCallSuperLevel[methodName] = this.__currentCallSuperLevel[methodName].__parent;
+			}
+
+			while (this.__currentCallSuperLevel[methodName][methodName]==this[methodName]) {
+				this.__currentCallSuperLevel[methodName] = this.__currentCallSuperLevel[methodName].__parent;
+			}
+
+			var currentLevel = this.__currentCallSuperLevel[methodName];
 			if (currentLevel[methodName]!=null && typeof currentLevel[methodName]=="function") {
 				var args = [];
 				for (var i=1;i<arguments.length;i++) {
@@ -62,7 +77,7 @@ var Class = function() {
 				}
 				currentLevel[methodName].apply(this, args);
 			}
-			this.__currentCallSuperLevel = this.__currentCallSuperLevel.__child;
+			this.__currentCallSuperLevel[methodName] = initialCurrentCallSuperLevel;
 		};
 	} else {
 		clazz.prototype = {};
