@@ -1,4 +1,6 @@
 <project name="org.restlet.js" basedir=".">
+	<property name="version" value="0.1.0" />
+
 	<property name="target.dir" value="${basedir}/target" />
 	<property name="target.browser.dir" value="${target.dir}/browser" />
 	<property name="target.nodejs.dir" value="${target.dir}/nodejs" />
@@ -105,6 +107,10 @@
 		</jscomp>
 	</target>
 	
+	<target name="browser.dist" depends="build.browser">
+		<zip destfile="${target.browser.dir}/restlet-browser-${version}.zip" basedir="${target.browser.dir}"/>
+	</target>
+
 	<target name="install.browser.for.tests" depends="build.browser">
 		<copy file="${target.browser.dir}/restlet-browser.js" todir="${tests.browser.dir}"/>
 	</target>
@@ -196,13 +202,13 @@
 			<fileset dir="${utils.src.js.dir}"/>
 		</replaceInclude>
 		<!-- engine -->
-		<replaceInclude srcFile="${src.dist.dir}/nodejs/restlet-engine.js"
+		<!-- replaceInclude srcFile="${src.dist.dir}/nodejs/restlet-engine.js"
 				destFile="${target.nodejs.dir}/build/restlet-engine.js"
 				restletSrcPath="${src.js.dir}"
 				contextualize="true" requirePattern="var {modulename} = require(&quot;./restlet-{modulename}.js&quot;);">
 			<fileset dir="${src.js.dir}"/>
 			<fileset dir="${utils.src.js.dir}"/>
-		</replaceInclude>
+		</replaceInclude -->
 		<!-- representation -->
 		<replaceInclude srcFile="${src.dist.dir}/nodejs/restlet-representation.js"
 				destFile="${target.nodejs.dir}/build/restlet-representation.js"
@@ -250,8 +256,15 @@
 		<copy todir="${target.nodejs.dir}" file=".npmignore"/>
 	</target>
 
+	<target name="nodejs.dist" depends="build.nodejs">
+		<zip destfile="${target.nodejs.dir}/restlet-nodejs-${version}.zip" basedir="${target.nodejs.dir}"/>
+	</target>
+
 	<target name="install.nodejs.for.tests" depends="build.nodejs">
-		<copy todir="${tests.nodejs.dir}/node_modules/restlet/">
+		<copy todir="${tests.nodejs.dir}/client/node_modules/restlet">
+			<fileset dir="${target.nodejs.dir}/"/>
+		</copy>
+		<copy todir="${tests.nodejs.dir}/server/node_modules/restlet">
 			<fileset dir="${target.nodejs.dir}/"/>
 		</copy>
 	</target>

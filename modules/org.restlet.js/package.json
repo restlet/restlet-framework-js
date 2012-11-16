@@ -1,19 +1,18 @@
 {
-  "name": "restlet-js",
+  "name": "restlet",
   "description": "JavaScript port of the Restlet framework",
-  "version": "0.1.0",
-  "author": "Thierry Templier <thierry.templier@noelios.com>",
+  "version": "0.2.0",
+  "author": "Thierry Templier <thierry.templier@restlet.com>",
   "contributors": [ 
     { "name": "Thierry Templier", "email": "thierry.templier@restlet.com" }
   ],
   "dependencies": {
-    "libxmljs": "0.5.4"
   },
   "devDependencies": {
   },
-  "keywords": ["restlet", "framework", "web", "rest", "restful"],
+  "keywords": ["restlet", "framework", "web", "rest", "restful", "http"],
   "repository": "git://github.com/restlet/restlet-framework-js",
   "main": "index",
   "scripts": { "prepublish" : "npm prune" },
-  "engines": { "node":">= 0.5.0 < 0.7.0" }
+  "engines": { "node":">= 0.5.0 <= 0.8.0" }
 }
