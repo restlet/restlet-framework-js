@@ -54,6 +54,12 @@ public class SimpleContactServerResource
 	public Representation storeContact(Representation representation) {
 		System.out.println("2 - default");
 		displayCookies();
+		System.out.println("2 - representation = "+representation);
+		/*try {
+			System.out.println("content = "+representation.getText());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}*/
 		Contact contact = (new JacksonRepresentation<Contact>(
 				representation, Contact.class)).getObject();
 		contactService.storeContact(contact);

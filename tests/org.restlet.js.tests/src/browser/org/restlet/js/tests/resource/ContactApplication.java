@@ -1,11 +1,13 @@
 package org.restlet.js.tests.resource;
 
 import java.io.File;
+import java.util.logging.Level;
 
 import org.restlet.Application;
 import org.restlet.Component;
 import org.restlet.Restlet;
 import org.restlet.data.Protocol;
+import org.restlet.engine.Engine;
 import org.restlet.resource.Directory;
 import org.restlet.routing.Router;
 
@@ -23,6 +25,7 @@ public class ContactApplication extends Application {
 
 	public static void main(String[] args) {
 		try {
+			Engine.getInstance().setLogLevel(Level.FINE);
 			Component component = new Component();
 			component.getServers().add(Protocol.HTTP, 8182);
 			component.getClients().add(Protocol.FILE);
