@@ -10,3 +10,4 @@ var Parameter = new [class Class]({
 		return this.value;
 	}
 });
+exports.Parameter = Parameter;

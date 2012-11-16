@@ -1,7 +1,7 @@
 var Request = new [class Class]([class Message], {
 	//initialize: function(method, resourceRef, url) {
 	initialize: function(method, resourceRef, entity) {
-		this.callSuper(entity);
+		this.callSuperCstr(entity);
 		this.method = method;
 		this.clientInfo = new [class ClientInfo]();
 		if (typeof resourceRef == "string") {
@@ -149,7 +149,7 @@ var Request = new [class Class]([class Message], {
 
     setHostRef: function(host) {
     	if (typeof host == "string") {
-    		this._setHostRef(new Reference(host));
+    		this._setHostRef(new [class Reference](host));
     	} else {
     		this._setHostRef(host);
     	}

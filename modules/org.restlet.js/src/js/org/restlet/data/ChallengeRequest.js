@@ -1,6 +1,6 @@
 var ChallengeRequest = new [class Class](ChallengeMessage, {
 	initialize: function(scheme, realm) {
-		this.callSuper(scheme, realm);
+		this.callSuperCstr(scheme, realm);
 	    this.domainRefs = null;
 	    this.qualityOptions = null;
 	    this.stale = false;

@@ -1,6 +1,6 @@
 var Response = new [class Class]([class Message], {
 	initialize: function(request) {
-		this.callSuper();
+		this.callSuperCstr();
         this.age = 0;
         this.allowedMethods = null;
         this.autoCommitting = true;

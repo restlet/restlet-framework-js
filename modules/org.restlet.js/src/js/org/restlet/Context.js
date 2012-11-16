@@ -1,11 +1,97 @@
 var Context = new [class Class]({
 	initialize: function() {
-		this.clientDispatcher = null;
-	},
-	getClientDispatcher: function() {
-		return this.clientDispatcher;
-	},
-	setClientDispatcher: function(clientDispatcher) {
-		this.clientDispatcher = clientDispatcher;
-	}
+    	var logger = null;
+    	if (arguments.length==0) {
+    		//logger = [class Engine].getLogger("org.restlet");
+    	} else if (arguments.length==1 && typeof arguments[0] == "string") {
+    		//var loggerName = arguments[0];
+    		//logger = [class Engine].getLogger(loggerName);
+    	} else {
+    		logger = arguments[0];
+    	}
+        this.attributes = {};
+        //this.logger = logger;
+        this.parameters = new Series();
+        this.clientDispatcher = null;
+
+        //this.defaultEnroler = null;
+        this.serverDispatcher = null;
+        //this.defaultVerifier = null;
+    },
+
+    createChildContext: function() {
+        return new [class ChildContext](this);
+    },
+
+    getAttributes: function() {
+        return this.attributes;
+    },
+
+    getClientDispatcher: function() {
+        return this.clientDispatcher;
+    },
+
+    /*public org.restlet.security.Enroler getDefaultEnroler() {
+        return defaultEnroler;
+    }*/
+
+    /*public org.restlet.security.Verifier getDefaultVerifier() {
+        return this.defaultVerifier;
+    }*/
+
+    /*public Logger getLogger() {
+        return this.logger;
+    }*/
+
+    getParameters: function() {
+        return this.parameters;
+    },
+
+    getServerDispatcher: function() {
+        return this.serverDispatcher;
+    },
+
+    setAttributes: function(attributes) {
+        if (attributes != getAttributes()) {
+            this.getAttributes().clear();
+
+            if (attributes != null) {
+            	this.getAttributes().putAll(attributes);
+            }
+        }
+    },
+
+    setClientDispatcher: function(clientDispatcher) {
+        this.clientDispatcher = clientDispatcher;
+    },
+
+    /*public void setDefaultEnroler(org.restlet.security.Enroler enroler) {
+        this.defaultEnroler = enroler;
+    }*/
+
+    /*public void setDefaultVerifier(org.restlet.security.Verifier verifier) {
+        this.defaultVerifier = verifier;
+    }*/
+
+    /*public void setLogger(Logger logger) {
+        this.logger = logger;
+    }
+
+    public void setLogger(String loggerName) {
+        setLogger(Engine.getLogger(loggerName));
+    }*/
+
+    setParameters: function(parameters) {
+        if (parameters != getParameters()) {
+            getParameters().clear();
+
+            if (parameters != null) {
+                getParameters().addAll(parameters);
+            }
+        }
+    },
+
+    setServerDispatcher: function(serverDispatcher) {
+        this.serverDispatcher = serverDispatcher;
+    }
 });

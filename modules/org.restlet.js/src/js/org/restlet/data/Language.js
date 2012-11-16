@@ -3,7 +3,7 @@ var Language = new [class Class](Metadata, {
         if (description==null) {
         	description = "Language or range of languages";
         }
-        this.callSuper(name, description);
+        this.callSuperCstr(name, description);
         this.subTags = null;
     },
 

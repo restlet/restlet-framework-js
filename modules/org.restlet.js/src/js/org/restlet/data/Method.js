@@ -39,5 +39,17 @@ Method.extend({
         Method.BASE_HTTP + "#sec9.6", false, true),
 	TRACE: new Method("TRACE",
         "Used to invoke a remote, application-layer loop-back of the request message",
-        Method.BASE_HTTP + "#sec9.8", true, true)
+        Method.BASE_HTTP + "#sec9.8", true, true),
+    valueOf: function(name) {
+        var upperCaseName = (new String(name)).toUpperCase();
+        var methods = [ Method.CONNECT, Method.DELETE, Method.GET, Method.HEAD,
+                        Method.OPTIONS, Method.POST, Method.PUT, Method.TRACE ];
+        for (var i=0; i<methods.length; i++) {
+        	var method = methods[i];
+        	if (method.getName()==upperCaseName) {
+        		return method;
+        	}
+        }
+		return null;
+    }
 });

@@ -1,10 +1,10 @@
 var Form = new [class Class]([class Series], {
 	initialize: function() {
-		this.callSuper();
+		this.callSuperCstr();
 	},
 
 	createEntry: function(name, value) {
-		return new Parameter(name, value);
+		return new [class Parameter](name, value);
 	},
 
 // [ifdef gwt] method uncomment
@@ -15,7 +15,7 @@ var Form = new [class Class]([class Series], {
 
 	encode: function(characterSet, separator) {
 		if (characterSet==null) {
-			characterSet = CharacterSet.UTF_8;
+			characterSet = [class CharacterSet].UTF_8;
 		}
 		if (separator==null) {
 			separator = "&";
@@ -35,7 +35,7 @@ var Form = new [class Class]([class Series], {
 
 	getMatrixString: function(characterSet) {
 		if (characterSet==null) {
-			characterSet = CharacterSet.UTF_8;
+			characterSet = [class CharacterSet].UTF_8;
 		}
 
 		try {
@@ -47,7 +47,7 @@ var Form = new [class Class]([class Series], {
 
 	getQueryString: function(characterSet) {
 		if (characterSet==null) {
-			characterSet = CharacterSet.UTF_8;
+			characterSet = [class CharacterSet].UTF_8;
 		}
 
 		try {
@@ -59,10 +59,10 @@ var Form = new [class Class]([class Series], {
 
 	getWebRepresentation: function(characterSet) {
 		if (characterSet==null) {
-			characterSet = CharacterSet.UTF_8;
+			characterSet = [class CharacterSet].UTF_8;
 		}
 
 		return new StringRepresentation(this.getQueryString(characterSet),
-				MediaType.APPLICATION_WWW_FORM, null, characterSet);
+				[class MediaType].APPLICATION_WWW_FORM, null, characterSet);
 	}
 });

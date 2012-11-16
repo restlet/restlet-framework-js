@@ -3,7 +3,7 @@ var MediaType = new [class Class](Metadata, {
 		if (description==null) {
 			description = "Media type or range of media types";
 		}
-        this.callSuper(MediaType.normalizeType(name, parameters), description);
+        this.callSuperCstr(MediaType.normalizeType(name, parameters), description);
     },
 
     getMainType: function() {

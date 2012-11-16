@@ -1,6 +1,6 @@
 var Encoding = new [class Class](Metadata, {
 	initialize: function(name, description) {
-		this.callSuper(name, description);
+		this.callSuperCstr(name, description);
 		/*if (description==null) {
 			description = "Encoding applied to a representation";
 		}
