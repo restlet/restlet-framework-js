@@ -13,10 +13,18 @@ Array.prototype.getFirstValue = function(key, ignoreCase) {
 	return null;
 };
 
+Array.prototype.add = function(element) {
+	this.push(element);
+};
+
 Array.prototype.isEmpty = function() {
 	return (this.length==0);
 };
 
 Array.prototype.size = function() {
 	return this.length;
+};
+
+Array.prototype.clear = function() {
+	this.splice(0, this.length-1);
 };
