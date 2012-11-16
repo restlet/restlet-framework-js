@@ -79,7 +79,12 @@ public class ClassContextualizer {
 	
 	public ContextualizedContent handleFile(String fileToInclude, String contentToInclude) {
 		//contentToInclude = doHandleEdition(fileToInclude, contentToInclude);
-		return doHandleClassContextualization(fileToInclude, contentToInclude);
+		if (contentToInclude!=null && !contentToInclude.equals("")) {
+			return doHandleClassContextualization(fileToInclude, contentToInclude);
+		} else {
+			System.err.println("Unable to include file "+fileToInclude);
+			return null;
+		}
 	}
 	
 	private String doHandleEdition(String fileToInclude, String contentToInclude) {
@@ -123,7 +128,10 @@ public class ClassContextualizer {
 					String classHints = afterContent.substring(0, index+1);
 					String className = ContextualizationUtils.extractClassNameFromTag(classHints);
 					if (contextualize) {
-						className = contextualizeClassName(className, fileToInclude, comment);
+						String contextualizeClassName = contextualizeClassName(className, fileToInclude, comment);
+						if (contextualizeClassName!=null) {
+							className = contextualizeClassName;
+						}
 					}
 					newContent.append(className);
 					line = afterContent.substring(index+1);
@@ -159,35 +167,42 @@ public class ClassContextualizer {
 	}
 	
 	private String contextualizeClassName(String className, String fileToInclude, boolean ignoreModule) {
-		if (isCommonsClass(className)) {
-			if (classModuleNameMap.get("commons")!=null) {
-				classModuleNameMap.put(className, "commons");
-			}
-			return "commons."+className;
-		} else {
-			String classNameWithPackage = ContextualizationUtils.getClassWithPackage(restletSrcPath, className);
-			String classPackage = ContextualizationUtils.getPackage(classNameWithPackage);
-			String currentClassNameWithPackage = ContextualizationUtils.getClassNameWithPackageFromFileName(fileToInclude);
-			String currentClassName = ContextualizationUtils.getClassName(currentClassNameWithPackage);
-			String currentPackage = ContextualizationUtils.getPackage(currentClassNameWithPackage);
-			if (isSameModule(className, classPackage, currentClassName, currentPackage)) {
-				return className;
+		try {
+			if (isCommonsClass(className)) {
+				if (classModuleNameMap.get("commons")!=null) {
+					classModuleNameMap.put(className, "commons");
+				}
+				return "commons."+className;
 			} else {
-				String moduleName = getModuleNameForClass(className);
-				if (moduleName==null) {
-					moduleName = lookupModuleForClass(className, classPackage);
-					if (!ignoreModule) {
-						classModuleNameMap.put(className, moduleName);
+				String classNameWithPackage = ContextualizationUtils.getClassWithPackage(restletSrcPath, className);
+				String classPackage = ContextualizationUtils.getPackage(classNameWithPackage);
+				String currentClassNameWithPackage = ContextualizationUtils.getClassNameWithPackageFromFileName(fileToInclude);
+				String currentClassName = ContextualizationUtils.getClassName(currentClassNameWithPackage);
+				String currentPackage = ContextualizationUtils.getPackage(currentClassNameWithPackage);
+				if (isSameModule(className, classPackage, currentClassName, currentPackage)) {
+					return className;
+				} else {
+					String moduleName = getModuleNameForClass(className);
+					if (moduleName==null) {
+						moduleName = lookupModuleForClass(className, classPackage);
+						if (!ignoreModule) {
+							classModuleNameMap.put(className, moduleName);
+						}
+					}
+
+					if (moduleName!=null && !moduleName.trim().equals("")) {
+						return moduleName+"."+className;
+					} else {
+						return className;
 					}
 				}
-				
-				if (moduleName!=null && !moduleName.trim().equals("")) {
-					return moduleName+"."+className;
-				} else {
-					return className;
-				}
 			}
+		} catch(Exception ex) {
+			System.err.println("Problem when contextualize class "+className+" in file "+fileToInclude);
+			ex.printStackTrace();
 		}
+
+		return null;
 	}
 	
 	private String lookupModuleForClass(String className, String classPackage) {

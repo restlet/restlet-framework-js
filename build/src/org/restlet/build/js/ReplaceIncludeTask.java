@@ -68,17 +68,19 @@ public class ReplaceIncludeTask extends Task {
 				String fileToInclude = line.trim().replace("#include ", "").replace("#", "");
 				String contentToInclude = IOUtils.getFileContent(baseDir+File.separator+fileToInclude);
 				ContextualizedContent cContent = contextualizer.handleFile(fileToInclude, contentToInclude);
-				contentToInclude = cContent.getContent();
-				List<String> usedModuleNames = cContent.getUsedModuleNames();
-				for (String moduleName : usedModuleNames) {
-					if (!currentModuleName.equals(moduleName) && moduleNames.get(moduleName)==null) {
-						moduleNames.put(moduleName, "");
+				if (cContent!=null) {
+					contentToInclude = cContent.getContent();
+					List<String> usedModuleNames = cContent.getUsedModuleNames();
+					for (String moduleName : usedModuleNames) {
+						if (!currentModuleName.equals(moduleName) && moduleNames.get(moduleName)==null) {
+							moduleNames.put(moduleName, "");
+						}
 					}
-				}
-				if (contentToInclude!=null) {
-					newContent.append(contentToInclude);
-				} else {
-					System.err.println("Unable to retrieve content for include "+fileToInclude);
+					if (contentToInclude!=null) {
+						newContent.append(contentToInclude);
+					} else {
+						System.err.println("Unable to retrieve content for include "+fileToInclude);
+					}
 				}
 			} else {
 				newContent.append(line);
