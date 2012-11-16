@@ -1,10 +1,22 @@
 var commons = require("./commons.js");
 
-#include org/restlet/engine/headers/HeaderConstants.js#
+#include org/restlet/util/Resolver.js#
 
 #include org/restlet/util/Series.js#
 
+#include org/restlet/util/ClientList.js#
+
+#include org/restlet/util/RouteList.js#
+
+#include org/restlet/util/ServerList.js#
+
+#include org/restlet/util/ServiceList.js#
+
 module.exports = {
-	HeaderConstants: HeaderConstants,
-	Series: Series
+	Resolver: Resolver,
+	Series: Series,
+	ClientList: ClientList,
+	RouteList: RouteList,
+	ServerList: ServerList,
+	ServiceList: ServiceList
 };
