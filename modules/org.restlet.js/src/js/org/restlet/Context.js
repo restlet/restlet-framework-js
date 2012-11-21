@@ -116,13 +116,17 @@ var Logger = new [class Class]({
 	},
 	
 	warning: function(message, err) {
-		this.log(Level.WARNING, message, err);
+		this.log([class Level].WARNING, message, err);
 	},
 	
 	fine: function(message, err) {
-		this.log(Level.FINE, message, err);
+		this.log([class Level].FINE, message, err);
+	},
+
+	info: function(message, err) {
+		this.log([class Level].INFO, message, err);
 	}
-})
+});
 
 var Level = new [class Class]();
 
@@ -131,4 +135,4 @@ Level.extend({
 	WARNING: "warning",
 	INFO: "info",
 	FINE: "fine"
-})
+});

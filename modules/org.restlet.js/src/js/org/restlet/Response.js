@@ -200,7 +200,10 @@ var Response = new [class Class]([class Message], {
     },
 
     setStatus: function(status, description) {
-    	if (arguments.length==2 && arguments[0] instanceof [class Status] && typeof arguments[1] == "string") {
+    	if (arguments.length==1) {
+    		var status = arguments[0];
+            this._setStatus(status);
+    	} else if (arguments.length==2 && arguments[0] instanceof [class Status] && typeof arguments[1] == "string") {
     		var status = arguments[0];
     		var description = arguments[1];
             this._setStatus(new [class Status](status, description));
@@ -219,9 +222,26 @@ var Response = new [class Class]([class Message], {
     
     /*setFirstOutboundFilter: function(firstOutboundFilter) {
     	this.firstOutboundFilter = firstOutboundFilter;
-    },
+    },*/
     
-    end: function*/
+    end: function() {
+    	if (this.commitCallback!=null) {
+    		this.commitCallback();
+    	}
+    },
+
+    endWithRepresentation: function(representation) {
+		this.setEntity(representation);
+    	this.end();
+    },
+
+    endWithObject: function(obj) {
+    	
+    },
+
+    setCommitCallback: function(fn) {
+    	this.commitCallback = fn;
+    },
 
     toString: function() {
         return ((this.getRequest() == null) ? "?" : this.getRequest().getProtocol())

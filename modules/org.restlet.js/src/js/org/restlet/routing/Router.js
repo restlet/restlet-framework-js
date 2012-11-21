@@ -116,9 +116,9 @@ var Router = new [class Class]([class Restlet], {
    		next.handle(request, response);
     },
 
-    /*protected Route getCustom(Request request, Response response) {
+    getCustom: function(request, response) {
         return null;
-    }*/
+    },
 
     getDefaultMatchingMode: function() {
         return this.defaultMatchingMode;
@@ -233,15 +233,15 @@ var Router = new [class Class]([class Restlet], {
         }
     },
 
-    /*protected void logRoute(Route route) {
-        if (getLogger().isLoggable(Level.FINE)) {
-            if (getDefaultRoute() == route) {
-                getLogger().fine("The default route was selected");
+    logRoute: function(route) {
+        if (this.getLogger().isLoggable([class Level].FINE)) {
+            if (this.getDefaultRoute() == route) {
+            	this.getLogger().fine("The default route was selected");
             } else {
-                getLogger().fine("Selected route: " + route);
+            	this.getLogger().fine("Selected route: " + route);
             }
         }
-    }*/
+    },
 
     setDefaultMatchingMode: function(defaultMatchingMode) {
         this.defaultMatchingMode = defaultMatchingMode;

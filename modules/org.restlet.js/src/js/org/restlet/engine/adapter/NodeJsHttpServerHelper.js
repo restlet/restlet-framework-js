@@ -22,7 +22,7 @@ var NodeJsHttpServerHelper = new [class Class]([class HttpServerHelper], {
 
         var currentThis = this;
         http.createServer(function (request, response) {
-        	console.log("-> incoming request : "+request.url);
+        	currentThis.getLogger().info("-> incoming request : "+request.url);
         	currentThis.handle(
                     new [class NodeJsHttpServerCall](currentThis.getHelped(), request, response,
                             currentThis.isConfidential()));

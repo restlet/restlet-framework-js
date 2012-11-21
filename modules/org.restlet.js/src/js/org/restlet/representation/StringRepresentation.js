@@ -7,7 +7,7 @@ var StringRepresentation = new [class Class]([class Representation], {
         }
 
         this.setCharacterSet(characterSet);
-        this.setText(text);
+        this.write(text);
 	},
 
 	getText: function() {
@@ -27,6 +27,7 @@ var StringRepresentation = new [class Class]([class Representation], {
 	setText: function(text) {
 		this.text = text;
 		this.updateSize();
+		this.available = true;
 	},
 
 	toString: function() {

@@ -12,6 +12,7 @@ var Request = new [class Class]([class Message], {
 		this.ranges = [];
 		this.conditions = new [class Conditions]();
 		this.cookies = new [class Series]();
+		this.loggable = true;
 	},
 	
     abort: function() {

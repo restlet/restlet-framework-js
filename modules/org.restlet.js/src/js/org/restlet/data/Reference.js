@@ -1226,19 +1226,19 @@ var Reference = new [class Class]({
     	}
     },
 
-    /*public void setExtensions(String extensions) {
-        final String lastSegment = getLastSegment();
+    _setExtensions: function(extensions) {
+        var lastSegment = this.getLastSegment();
 
         if (lastSegment != null) {
-            final int extensionIndex = lastSegment.indexOf('.');
-            final int matrixIndex = lastSegment.indexOf(';');
-            final StringBuilder sb = new StringBuilder();
+            var extensionIndex = lastSegment.indexOf('.');
+            var matrixIndex = lastSegment.indexOf(';');
+            var sb = new StringBuilder();
 
             if (extensionIndex != -1) {
                 // Extensions found
                 sb.append(lastSegment.substring(0, extensionIndex));
 
-                if ((extensions != null) && (extensions.length() > 0)) {
+                if ((extensions != null) && (extensions.length > 0)) {
                     sb.append('.').append(extensions);
                 }
 
@@ -1247,7 +1247,7 @@ var Reference = new [class Class]({
                 }
             } else {
                 // Extensions not found
-                if ((extensions != null) && (extensions.length() > 0)) {
+                if ((extensions != null) && (extensions.length > 0)) {
                     if (matrixIndex != -1) {
                         // Matrix found, make sure we append it
                         // after the extensions
@@ -1265,31 +1265,31 @@ var Reference = new [class Class]({
             }
 
             // Finally update the last segment
-            setLastSegment(sb.toString());
+            this.setLastSegment(sb.toString());
         } else {
-            setLastSegment('.' + extensions);
+        	this.setLastSegment('.' + extensions);
         }
-    }
+    },
 
-    public void setExtensions(String[] extensions) {
-        String exts = null;
+    setExtensions: function(extensions) {
+    	if (arguments[0] instanceof Array) {
+            if (extensions != null) {
+                var sb = new [class StringBuilder]();
 
-        if (extensions != null) {
-            final StringBuilder sb = new StringBuilder();
+                for (var i = 0; i < extensions.length; i++) {
+                    if (i > 0) {
+                        sb.append('.');
+                    }
 
-            for (int i = 0; i < extensions.length; i++) {
-                if (i > 0) {
-                    sb.append('.');
+                    sb.append(extensions[i]);
                 }
 
-                sb.append(extensions[i]);
+                this._setExtensions(sb.toString());
             }
-
-            exts = sb.toString();
-        }
-
-        setExtensions(exts);
-    }*/
+    	} else {
+            this._setExtensions(extensions);
+    	}
+    },
 
     setFragment: function(fragment) {
         fragment = this.encodeInvalidCharacters(fragment);

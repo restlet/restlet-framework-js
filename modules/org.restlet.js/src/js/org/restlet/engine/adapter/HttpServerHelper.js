@@ -27,8 +27,14 @@ var HttpServerHelper = new [class Class]([class ServerHelper], {
 		try {
 			var request = this.getAdapter().toRequest(httpCall);
 			var response = new HttpResponse(httpCall, request);
+			var currentThis = this;
+			response.setCommitCallback(function() {
+				currentThis.getAdapter().commit(response);
+			});
 			this.callSuper("handle", request, response);
-			this.getAdapter().commit(response);
+			if (response.getStatus()!=[class Status].SUCCESS_OK) {
+				response.end();
+			}
 		} catch (err) {
                 this.getLogger().log([class Level].WARNING,
                         "Error while handling an HTTP server call: ",

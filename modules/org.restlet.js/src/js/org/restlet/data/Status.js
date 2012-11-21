@@ -401,7 +401,7 @@ var Status = new [class Class]({
         // [ifndef browserlight]
 
         if (result == null) {
-           /* switch (this.code) {
+            switch (this.code) {
             case 100:
                 result = Status.BASE_HTTP + "#sec10.1.1";
                 break;
@@ -566,7 +566,7 @@ var Status = new [class Class]({
                 result = Status.BBASE_RESTLET
                         + "org/restlet/data/Status.html#CONNECTOR_ERROR_INTERNAL";
                 break;
-            }*/
+            }
         }
 
         // [enddef]

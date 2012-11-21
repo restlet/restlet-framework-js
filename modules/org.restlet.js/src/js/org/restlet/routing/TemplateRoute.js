@@ -51,21 +51,21 @@ var TemplateRoute = new [class Class]([class Route], {
 
                 request.getResourceRef().setBaseRef(baseRef);
 
-                /*if (request.isLoggable()) {
-                    if (getLogger().isLoggable(Level.FINE)) {
+                if (request.isLoggable()) {
+                    if (this.getLogger().isLoggable([class Level].FINE)) {
                         remainingPart = request.getResourceRef()
-                                .getRemainingPart(false, isMatchingQuery());
+                                .getRemainingPart(false, this.isMatchingQuery());
 
                         if ((remainingPart != null)
                                 && (!"".equals(remainingPart))) {
-                            getLogger().fine(
+                            this.getLogger().fine(
                                     "New base URI: \""
                                             + request.getResourceRef()
                                                     .getBaseRef()
                                             + "\". New remaining part: \""
                                             + remainingPart + "\"");
                         } else {
-                            getLogger().fine(
+                            this.getLogger().fine(
                                     "New base URI: \""
                                             + request.getResourceRef()
                                                     .getBaseRef()
@@ -77,13 +77,13 @@ var TemplateRoute = new [class Class]([class Route], {
                         getLogger().finer(
                                 "Delegating the call to the target Restlet");
                     }
-                }*/
+                }
             } else {
-                /*if (request.isLoggable() && getLogger().isLoggable(Level.FINE)) {
-                    getLogger().fine(
+                if (request.isLoggable() && getLogger().isLoggable(Level.FINE)) {
+                    this.getLogger().fine(
                             "Unable to match this pattern: "
-                                    + getTemplate().getPattern());
-                }*/
+                                    + this.getTemplate().getPattern());
+                }
 
                 response.setStatus([class Status].CLIENT_ERROR_NOT_FOUND);
             }

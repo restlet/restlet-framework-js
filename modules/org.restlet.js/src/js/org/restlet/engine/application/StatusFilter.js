@@ -53,7 +53,7 @@ var StatusFilter = new [class Class]([class Filter], {
     },
 
     getDefaultRepresentation: function(status, request, response) {
-        var sb = new StringBuilder();
+        var sb = new [class StringBuilder]();
         sb.append("<html>\n");
         sb.append("<head>\n");
         sb.append("   <title>Status page</title>\n");

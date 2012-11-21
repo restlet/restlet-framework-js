@@ -4,8 +4,8 @@ var Template = new [class Class]({
     	var matchingMode = Template.MODE_EQUALS;
     	var defaultType = [class Variable].TYPE_ALL;
         var defaultDefaultValue = "";
-        var defaultRequired = true
-        var defaultFixed = false
+        var defaultRequired = true;
+        var defaultFixed = false;
         var encodingVariables = false;
         if (arguments.length==2) {
         	matchingMode = arguments[1];
@@ -25,6 +25,7 @@ var Template = new [class Class]({
         }
 
         //this.logger = (logger == null) ? [class Context].getCurrentLogger() : logger;
+        this.logger = [class Context].getCurrentLogger();
         this.pattern = pattern;
         this.defaultVariable = new [class Variable](defaultType, defaultDefaultValue,
                 defaultRequired, defaultFixed);
@@ -64,14 +65,14 @@ var Template = new [class Class]({
                 } else if (next == '}') {
                     // End of variable detected
                     if (varBuffer.length() == 0) {
-                        /*getLogger().warning(
+                        this.getLogger().warning(
                                 "Empty pattern variables are not allowed : "
-                                        + this.regexPattern);*/
+                                        + this.regexPattern);
                     } else {
                         var varName = varBuffer.toString();
                         var varValue = resolver.resolve(varName);
 
-                        var varb = this.getVariables().get(varName);
+                        var varb = this.getVariables()[varName];
 
                         // Use the default values instead
                         if (varValue == null) {
@@ -107,18 +108,18 @@ var Template = new [class Class]({
                     }
                     inVariable = false;
                 } else {
-                    /*getLogger().warning(
+                    this.getLogger().warning(
                             "An invalid character was detected inside a pattern variable : "
-                                    + this.regexPattern);*/
+                                    + this.regexPattern);
                 }
             } else {
                 if (next == '{') {
                     inVariable = true;
                     varBuffer = new [class StringBuilder]();
                 } else if (next == '}') {
-                    /*getLogger().warning(
+                    this.getLogger().warning(
                             "An invalid character was detected inside a pattern variable : "
-                                    + this.regexPattern);*/
+                                    + this.regexPattern);
                 } else {
                     result.append(next);
                 }
@@ -152,17 +153,18 @@ var Template = new [class Class]({
             var inVariable = false;
             for (var i = 0; i < this.getPattern().length; i++) {
                 next = this.getPattern().charAt(i);
+                var nextCode = this.getPattern().charCodeAt(i);
 
                 if (inVariable) {
-                    if ([class Reference].isUnreserved(next)) {
+                    if ([class Reference].isUnreserved(nextCode)) {
                         // Append to the variable name
                         varBuffer.append(next);
                     } else if (next == '}') {
                         // End of variable detected
                         if (varBuffer.length() == 0) {
-                            /*getLogger().warning(
+                            this.getLogger().warning(
                                     "Empty pattern variables are not allowed : "
-                                            + this.regexPattern);*/
+                                            + this.regexPattern);
                         } else {
                             var varName = varBuffer.toString();
                             var varIndex = this.getRegexVariables()
@@ -178,13 +180,12 @@ var Template = new [class Class]({
                                 // New variable detected. Insert a
                                 // capturing group.
                                 this.getRegexVariables().add(varName);
-                                var varb = this.getVariables().get(
-                                        varName);
+                                var varb = this.getVariables()[varName];
                                 if (varb == null) {
                                     varb = this.getDefaultVariable();
                                 }
                                 patternBuffer
-                                        .append(getVariableRegex(varb));
+                                        .append(Template.getVariableRegex(varb));
                             }
 
                             // Reset the variable name buffer
@@ -193,18 +194,18 @@ var Template = new [class Class]({
                         inVariable = false;
 
                     } else {
-                        /*getLogger().warning(
+                        this.getLogger().warning(
                                 "An invalid character was detected inside a pattern variable : "
-                                        + this.regexPattern);*/
+                                        + this.regexPattern);
                     }
                 } else {
                     if (next == '{') {
                         inVariable = true;
                         varBuffer = new [class StringBuilder]();
                     } else if (next == '}') {
-                        /*getLogger().warning(
+                        this.getLogger().warning(
                                 "An invalid character was detected inside a pattern variable : "
-                                        + this.regexPattern);*/
+                                        + this.regexPattern);
                     } else {
                         patternBuffer.append(this.quote(next));
                     }
@@ -235,17 +236,18 @@ var Template = new [class Class]({
 
         for (var i = 0; i < pattern.length(); i++) {
             next = pattern.charAt(i);
+            var nextCode = pattern.charCodeAt(i);
 
             if (inVariable) {
-                if ([class Reference].isUnreserved(next)) {
+                if ([class Reference].isUnreserved(nextCode)) {
                     // Append to the variable name
                     varBuffer.append(next);
                 } else if (next == '}') {
                     // End of variable detected
                     if (varBuffer.length() == 0) {
-                        /*getLogger().warning(
+                        this.getLogger().warning(
                                 "Empty pattern variables are not allowed : "
-                                        + this.pattern);*/
+                                        + this.pattern);
                     } else {
                         result.add(varBuffer.toString());
 
@@ -255,18 +257,18 @@ var Template = new [class Class]({
 
                     inVariable = false;
                 } else {
-                    /*getLogger().warning(
+                    this.getLogger().warning(
                             "An invalid character was detected inside a pattern variable : "
-                                    + this.pattern);*/
+                                    + this.pattern);
                 }
             } else {
                 if (next == '{') {
                     inVariable = true;
-                    varBuffer = new StringBuilder();
+                    varBuffer = new [class StringBuilder]();
                 } else if (next == '}') {
-                    /*getLogger().warning(
+                    this.getLogger().warning(
                             "An invalid character was detected inside a pattern variable : "
-                                    + this.pattern);*/
+                                    + this.pattern);
                 }
             }
         }
@@ -302,7 +304,7 @@ var Template = new [class Class]({
             }
         } catch (err) {
             this.getLogger().warning(
-                    "StackOverflowError exception encountered while matching this string : "
+                    "error encountered while matching this string : "
                             + formattedString, err);
         }
 
@@ -344,32 +346,33 @@ var Template = new [class Class]({
                 		result = index;
                 	}
 
+                	var groups = formattedString.match(regexPattern);
                     // Update the attributes with the variables value
                     var attributeName = null;
                     var attributeValue = null;
 
                     for (var i = 0; i < this.getRegexVariables().length; i++) {
                         attributeName = this.getRegexVariables()[i];
-                        attributeValue = matcher.group(i + 1);
-                        var varb = this.getVariables().get(attributeName);
+                        attributeValue = groups[i + 1];
+                        var varb = this.getVariables()[attributeName];
 
                         if ((varb != null) && varb.isDecodingOnParse()) {
                             attributeValue = [class Reference].decode(attributeValue);
                         }
 
-                        /*if (loggable) {
-                            getLogger().fine(
+                        if (loggable) {
+                            this.getLogger().fine(
                                     "Template variable \"" + attributeName
                                             + "\" matched with value \""
                                             + attributeValue + "\"");
-                        }*/
+                        }
 
-                        variables.put(attributeName, attributeValue);
+                        variables[attributeName] = attributeValue;
                     }
                 }
             } catch (err) {
                 this.getLogger().warning(
-                        "StackOverflowError exception encountered while matching this string : "
+                        "error encountered while matching this string : "
                                 + formattedString, err);
             }
         }
@@ -538,49 +541,49 @@ Template.extend({
 
             switch (variable.getType()) {
             case [class Variable].TYPE_ALL:
-                appendClass(coreRegex, ALL, variable.isRequired());
+            	Template.appendClass(coreRegex, ALL, variable.isRequired());
                 break;
             case [class Variable].TYPE_ALPHA:
-                appendClass(coreRegex, ALPHA, variable.isRequired());
+            	Template.appendClass(coreRegex, ALPHA, variable.isRequired());
                 break;
             case [class Variable].TYPE_DIGIT:
-                appendClass(coreRegex, DIGIT, variable.isRequired());
+            	Template.appendClass(coreRegex, DIGIT, variable.isRequired());
                 break;
             case [class Variable].TYPE_ALPHA_DIGIT:
-                appendClass(coreRegex, ALPHA_DIGIT, variable.isRequired());
+            	Template.appendClass(coreRegex, ALPHA_DIGIT, variable.isRequired());
                 break;
             case [class Variable].TYPE_URI_ALL:
-                appendGroup(coreRegex, URI_ALL, variable.isRequired());
+                Template.appendGroup(coreRegex, URI_ALL, variable.isRequired());
                 break;
             case [class Variable].TYPE_URI_UNRESERVED:
-                appendClass(coreRegex, URI_UNRESERVED, variable.isRequired());
+            	Template.appendClass(coreRegex, URI_UNRESERVED, variable.isRequired());
                 break;
             case [class Variable].TYPE_WORD:
-                appendClass(coreRegex, WORD, variable.isRequired());
+            	Template.appendClass(coreRegex, WORD, variable.isRequired());
                 break;
             case [class Variable].TYPE_URI_FRAGMENT:
-                appendGroup(coreRegex, FRAGMENT, variable.isRequired());
+            	Template.appendGroup(coreRegex, FRAGMENT, variable.isRequired());
                 break;
             case [class Variable].TYPE_URI_PATH:
-                appendGroup(coreRegex, URI_PATH, variable.isRequired());
+            	Template.appendGroup(coreRegex, URI_PATH, variable.isRequired());
                 break;
             case [class Variable].TYPE_URI_QUERY:
-                appendGroup(coreRegex, QUERY, variable.isRequired());
+            	Template.appendGroup(coreRegex, QUERY, variable.isRequired());
                 break;
             case [class Variable].TYPE_URI_QUERY_PARAM:
-                appendGroup(coreRegex, QUERY_PARAM, variable.isRequired());
+            	Template.appendGroup(coreRegex, QUERY_PARAM, variable.isRequired());
                 break;
             case [class Variable].TYPE_URI_SEGMENT:
-                appendGroup(coreRegex, PCHAR, variable.isRequired());
+            	Template.appendGroup(coreRegex, PCHAR, variable.isRequired());
                 break;
             case [class Variable].TYPE_TOKEN:
-                appendClass(coreRegex, TOKEN, variable.isRequired());
+            	Template.appendClass(coreRegex, TOKEN, variable.isRequired());
                 break;
             case [class Variable].TYPE_COMMENT:
-                appendClass(coreRegex, COMMENT, variable.isRequired());
+            	Template.appendClass(coreRegex, COMMENT, variable.isRequired());
                 break;
             case [class Variable].TYPE_COMMENT_ATTRIBUTE:
-                appendClass(coreRegex, COMMENT_ATTRIBUTE, variable.isRequired());
+            	Template.appendClass(coreRegex, COMMENT_ATTRIBUTE, variable.isRequired());
                 break;
             }
 
