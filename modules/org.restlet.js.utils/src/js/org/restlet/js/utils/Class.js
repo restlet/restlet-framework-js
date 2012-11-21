@@ -70,14 +70,18 @@ var Class = function() {
 			}
 
 			var currentLevel = this.__currentCallSuperLevel[methodName];
+			var ret = null;
 			if (currentLevel[methodName]!=null && typeof currentLevel[methodName]=="function") {
 				var args = [];
 				for (var i=1;i<arguments.length;i++) {
 					args.push(arguments[i]);
 				}
-				currentLevel[methodName].apply(this, args);
+				ret = currentLevel[methodName].apply(this, args);
 			}
 			this.__currentCallSuperLevel[methodName] = initialCurrentCallSuperLevel;
+			if (ret!=null) {
+				return ret;
+			}
 		};
 	} else {
 		clazz.prototype = {};
