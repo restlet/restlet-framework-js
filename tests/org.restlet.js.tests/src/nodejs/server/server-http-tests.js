@@ -15,20 +15,18 @@ application.createInboundRoot = function() {
 	var router = new restlet.Router();
 	router.appRouter = true;
 	//r1
-	var r1 = new restlet.Filter();
+	var r1 = new restlet.Restlet();
 	r1.handle = function(request, response) {
 		console.log("---> r1.handle");
 		var repr = new restlet.representation.StringRepresentation("test");
-		repr.setAvailable(true);
-		response.setEntity(repr);
-		//response.end();
+		response.endWithRepresentation(repr);
 	};
-	router.attach("/test1", r1);
+	router.attach("/test1/{id}", r1);
 	//r2
-	var r2 = new restlet.Filter();
+	var r2 = new restlet.Restlet();
 	r2.handle = function(request, response) {
 		console.log("---> r2.handle");
-		//response.end();
+		response.end();
 	};
 	router.attach("/test2", r2);
 	return router;
