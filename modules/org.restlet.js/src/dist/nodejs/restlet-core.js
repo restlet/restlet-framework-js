@@ -1,5 +1,6 @@
 var commons = require("./commons.js");
 var http = require("http");
+var iconv = require("iconv-lite");
 
 module.exports = {};
 
@@ -122,6 +123,8 @@ module.exports = {};
 #include org/restlet/engine/adapter/NodeJsHttpClientHelper.js#
 
 // Server
+
+#include org/restlet/engine/util/StringUtils.js#
 
 #include org/restlet/engine/Helper.js#
 
