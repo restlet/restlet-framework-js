@@ -17,6 +17,8 @@ var commons = require("./commons.js");
 
 #include org/restlet/representation/XmlRepresentation.js#
 
+#include org/restlet/representation/JadeRepresentation.js#
+
 module.exports = {
 	Variant: Variant,
 	RepresentationInfo: RepresentationInfo,
@@ -24,5 +26,6 @@ module.exports = {
 	EmptyRepresentation: EmptyRepresentation,
 	JsonRepresentation: JsonRepresentation,
 	DomRepresentation: DomRepresentation,
-	StringRepresentation: StringRepresentation
+	StringRepresentation: StringRepresentation,
+	JadeRepresentation: JadeRepresentation
 };
