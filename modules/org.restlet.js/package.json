@@ -10,6 +10,7 @@
   	"iconv-lite": "0.2.6"
   },
   "devDependencies": {
+  	"jade": "*"
   },
   "keywords": ["restlet", "framework", "web", "rest", "restful", "http"],
   "repository": "git://github.com/restlet/restlet-framework-js",
