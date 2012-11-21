@@ -75,8 +75,8 @@ var HeaderReader = new [class Class]({
                 this.skipValueSeparator();
             } while (this.peek() != -1);
         } catch (err) {
-            //Context.getCurrentLogger().log(Level.INFO,
-            //        "Unable to read a header", ioe);
+            [class Context].getCurrentLogger().log([class Level].INFO,
+                    "Unable to read a header", err);
         }
     },
     canAdd: function(value, values) {

@@ -1,7 +1,11 @@
 var Reference = new [class Class]({
-	initialize: function(urlString) {
-        // [ifndef nodejs]
-		this.internalRef = urlString;
+	initialize: function() {
+		if (arguments.length==1) {
+			this.internalRef = arguments[0];
+		} else if (arguments.length==2) {
+			this.baseRef = arguments[0];
+			this.internalRef = arguments[1];
+		}
 		/*var tmp = this.internalRef;
 		var index = tmp.indexOf("://");
 		if (index!=-1) {
@@ -33,11 +37,6 @@ var Reference = new [class Class]({
 		}*/
 		
 		this.updateIndexes();
-		// [enddef]
-		// [ifdef nodejs] uncomment
-		//this.internalRef = urlString;
-		//this.updateIndexes();
-		// [enddef]
 	},
 	getUrl: function() {
 		return this.url;
@@ -386,11 +385,11 @@ var Reference = new [class Class]({
                 try {
                     result = parseInt(authority.substring(index + 1));
                 } catch (err) {
-                    //Context.getCurrentLogger().log(
-                	//        Level.WARNING,
-                	//        "Can't parse hostPort : [hostRef,requestUri]=["
-                	//                + getBaseRef() + "," + this.internalRef
-                	//                + "]");
+                    [class Context].getCurrentLogger().log(
+                	        [class Level].WARNING,
+                	        "Can't parse hostPort : [hostRef,requestUri]=["
+                	                + this.getBaseRef() + "," + this.internalRef
+                	                + "]");
                 }
             }
         }
@@ -1070,12 +1069,12 @@ var Reference = new [class Class]({
         return (this.getScheme() == null);
     },
 
-    /*public Reference normalize() {
+    normalize: function() {
         // 1. The input buffer is initialized with the now-appended path
         // components and the output buffer is initialized to the empty string.
-        final StringBuilder output = new StringBuilder();
-        final StringBuilder input = new StringBuilder();
-        final String path = getPath();
+        var output = new [class StringBuilder]();
+        var input = new [class StringBuilder]();
+        var path = this.getPath();
         if (path != null) {
             input.append(path);
         }
@@ -1113,7 +1112,7 @@ var Reference = new [class Class]({
             } else if ((input.length() == 3)
                     && input.substring(0, 3).equals("/..")) {
                 input.delete(1, 3);
-                removeLastSegment(output);
+                this.removeLastSegment(output);
             }
 
             // D. if the input buffer consists only of "." or "..", then remove
@@ -1130,8 +1129,8 @@ var Reference = new [class Class]({
             // and any subsequent characters up to, but not including, the next
             // "/" character or the end of the input buffer.
             else {
-                int max = -1;
-                for (int i = 1; (max == -1) && (i < input.length()); i++) {
+                var max = -1;
+                for (var i = 1; (max == -1) && (i < input.length()); i++) {
                     if (input.charAt(i) == '/') {
                         max = i;
                     }
@@ -1143,39 +1142,36 @@ var Reference = new [class Class]({
                     input.delete(0, max);
                 } else {
                     // End of input buffer reached
-                    // [ifndef gwt] instruction
                     output.append(input);
-                    // [ifdef gwt] instruction uncomment
-                    // output.append(input.toString());
                     input.delete(0, input.length());
                 }
             }
         }
 
         // Finally, the output buffer is returned as the result
-        setPath(output.toString());
+        this.setPath(output.toString());
 
         // Ensure that the scheme and host names are reset in lower case
-        setScheme(getScheme());
-        setHostDomain(getHostDomain());
+        this.setScheme(this.getScheme());
+        this.setHostDomain(this.getHostDomain());
 
         // Remove the port if it is equal to the default port of the reference's
         // Protocol.
-        final int hostPort = getHostPort();
+        var hostPort = this.getHostPort();
         if (hostPort != -1) {
-            final int defaultPort = Protocol.valueOf(getScheme())
+        	var defaultPort = [class Protocol].valueOf(this.getScheme())
                     .getDefaultPort();
             if (hostPort == defaultPort) {
-                setHostPort(null);
+            	this.setHostPort(null);
             }
         }
 
         return this;
-    }
+    },
 
-    private void removeLastSegment(StringBuilder output) {
-        int min = -1;
-        for (int i = output.length() - 1; (min == -1) && (i >= 0); i--) {
+    removeLastSegment: function(output) {
+        var min = -1;
+        for (var i = output.length() - 1; (min == -1) && (i >= 0); i--) {
             if (output.charAt(i) == '/') {
                 min = i;
             }
@@ -1188,8 +1184,7 @@ var Reference = new [class Class]({
             // End of output buffer reached
             output.delete(0, output.length());
         }
-
-    }*/
+    },
 
     setAuthority: function(authority) {
         var oldPart = this.isRelative() ? this.getRelativePart()

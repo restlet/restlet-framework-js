@@ -1,6 +1,6 @@
 var LanguageReader = new [class Class](HeaderReader, {
     initialize: function(header) {
-        this.callSuper(header);
+        this.callSuperCstr(header);
     },
 
     readValue: function() {

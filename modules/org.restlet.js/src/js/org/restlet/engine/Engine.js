@@ -1,15 +1,75 @@
 var Engine = new [class Class]({
 	initialize: function() {
-        this.registeredClients = [];
-        this.registeredProtocols = [];
-        this.registeredServers = [];
-        this.registeredAuthenticators = [];
-        this.registeredConverters = [];
+        this.registeredClients = new [class ClientList]();
+        this.registeredClients.push([class NodeJsHttpClientHelper]);
+
+        //this.registeredProtocols = [];
+        this.registeredServers = new [class ServerList]();
+        this.registeredServers.push([class NodeJsHttpServerHelper]);
+        //this.registeredAuthenticators = [];
+        //this.registeredConverters = [];
 	},
 
 	createHelper: function(restlet) {
-		return new this.registeredClients[0]();
+		//TODO: fix me
+		//return new this.registeredClients[0]();
+		//return new this.registeredClients[0]();
+		return new this.registeredServers[0](restlet);
 	},
+	
+	/*
+    public ConnectorHelper<org.restlet.Server> createHelper(
+            org.restlet.Server server, String helperClass) {
+        ConnectorHelper<org.restlet.Server> result = null;
+
+        if (server.getProtocols().size() > 0) {
+            ConnectorHelper<org.restlet.Server> connector = null;
+            for (final Iterator<ConnectorHelper<org.restlet.Server>> iter = getRegisteredServers()
+                    .iterator(); (result == null) && iter.hasNext();) {
+                connector = iter.next();
+
+                if ((helperClass == null)
+                        || connector.getClass().getCanonicalName()
+                                .equals(helperClass)) {
+                    if (connector.getProtocols().containsAll(
+                            server.getProtocols())) {
+                        try {
+                            result = connector.getClass()
+                                    .getConstructor(org.restlet.Server.class)
+                                    .newInstance(server);
+                        } catch (Exception e) {
+                            Context.getCurrentLogger()
+                                    .log(Level.SEVERE,
+                                            "Exception while instantiation the server connector.",
+                                            e);
+                        }
+                    }
+                }
+            }
+
+            if (result == null) {
+                // Couldn't find a matching connector
+                final StringBuilder sb = new StringBuilder();
+                sb.append("No available server connector supports the required protocols: ");
+
+                for (final Protocol p : server.getProtocols()) {
+                    sb.append("'").append(p.getName()).append("' ");
+                }
+
+                sb.append(". Please add the JAR of a matching connector to your classpath.");
+
+                if (Edition.CURRENT == Edition.ANDROID) {
+                    sb.append(" Then, register this connector helper manually.");
+                }
+
+                Context.getCurrentLogger().log(Level.WARNING, sb.toString());
+            }
+        }
+
+        return result;
+    }
+
+	 */
 
 	getRegisteredClients: function() {
 		return this.registeredClients;
@@ -17,6 +77,14 @@ var Engine = new [class Class]({
 	
 	setRegisteredClients: function(registeredClients) {
 		this.registeredClients = registeredClients;
+	},
+	
+	getRegisteredServers: function() {
+		return this.registeredServers;
+	},
+	
+	setRegisteredServers: function(registeredServers) {
+		this.registeredServers = registeredServers;
 	},
 	
 	getDebugHandler: function() {
@@ -65,6 +133,9 @@ Engine.extend({
 			Engine.instance = new Engine();
 		}
 		return Engine.instance;
+	},
+	getLogger: function(loggerName) {
+		return new [class Logger](loggerName);
 	}
 });
 

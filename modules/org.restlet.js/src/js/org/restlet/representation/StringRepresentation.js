@@ -1,6 +1,6 @@
 var StringRepresentation = new [class Class]([class Representation], {
 	initialize: function(text, mediaType, language, characterSet) {
-        this.callSuper(mediaType);
+        this.callSuperCstr(mediaType);
         this.setMediaType(mediaType);
         if (language != null) {
             this.getLanguages().add(language);

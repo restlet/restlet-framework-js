@@ -1,7 +1,6 @@
 var ClientCall = new [class Class]([class Call], {
 	initialize: function() {
-		//TODO: fix recursive callSuper bug
-		//this.callSuper();
+		this.callSuperCstr();
 		this.requestHeaders = [];
 		this.responseHeaders = [];
 	},

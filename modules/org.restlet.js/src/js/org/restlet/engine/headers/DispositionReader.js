@@ -1,6 +1,6 @@
 var DispositionReader = new [class Class]([class HeaderReader], {
     initialize: function(header) {
-        this.callSuper(header);
+        this.callSuperCstr(header);
     },
 
 	readValue: function() {

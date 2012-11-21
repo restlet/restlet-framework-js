@@ -1,4 +1,4 @@
-var ClientAdapter = new [class Class]({
+var ClientAdapter = new [class Class]([class Adapter], {
 	initialize: function(context) {
 	},
     readResponseHeaders: function(httpCall, response) {

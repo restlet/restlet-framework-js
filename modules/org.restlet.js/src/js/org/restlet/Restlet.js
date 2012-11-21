@@ -40,24 +40,24 @@ var Restlet = new [class Class]({
         return this.description;
     },
     
-    /*public Logger getLogger() {
-        Logger result = null;
-        Context context = getContext();
+    getLogger: function() {
+        var result = null;
+        var context = this.getContext();
 
-        if (context == null) {
+        /*if (context == null) {
             context = Context.getCurrent();
-        }
+        }*/
 
         if (context != null) {
             result = context.getLogger();
         }
 
         if (result == null) {
-            result = Engine.getLogger(this, "org.restlet");
+            result = [class Engine].getLogger(this, "org.restlet");
         }
 
         return result;
-    }*/
+    },
 
     getName: function() {
         return this.name;
@@ -118,14 +118,14 @@ var Restlet = new [class Class]({
                 this.start();
             } catch (err) {
                 // Occurred while starting the Restlet
-                //getContext().getLogger().log(Level.WARNING, UNABLE_TO_START, e);
+                this.getContext().getLogger().log([class Level].WARNING, Restlet.UNABLE_TO_START, e);
                 response.setStatus([class Status].SERVER_ERROR_INTERNAL);
             }
 
             if (!this.isStarted()) {
                 // No exception raised but the Restlet somehow couldn't be
                 // started
-                //getContext().getLogger().log(Level.WARNING, UNABLE_TO_START);
+                this.getContext().getLogger().log([class Level].WARNING, Restlet.UNABLE_TO_START);
                 response.setStatus([class Status].SERVER_ERROR_INTERNAL);
             }
         }

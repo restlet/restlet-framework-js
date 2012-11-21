@@ -1,6 +1,6 @@
 var EncodingWriter = new [class Class]([class MetadataWriter], {
     initialize: function(header) {
-        this.callSuper(header);
+        this.callSuperCstr(header);
     },
     canAdd: function(value, values) {
         return value != null && ![class Encoding].IDENTITY.getName().equals(value.getName());

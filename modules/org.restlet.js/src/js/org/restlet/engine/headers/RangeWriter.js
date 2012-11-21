@@ -1,6 +1,6 @@
 var RangeWriter = new [class Class](HeaderWriter, {
 	initialize: function() {
-		this.callSuper();
+		this.callSuperCstr();
 	},
 
     appendCollection: function(ranges) {

@@ -1,6 +1,6 @@
 var MethodWriter = new [class Class](HeaderWriter, {
 	initialize: function() {
-		this.callSuper();
+		this.callSuperCstr();
 	},
 
     appendObject: function(method) {

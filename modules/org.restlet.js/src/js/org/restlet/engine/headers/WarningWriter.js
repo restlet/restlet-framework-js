@@ -1,6 +1,6 @@
 var WarningWriter = new [class Class]([class HeaderWriter], {
     initialize: function() {
-        this.callSuper();
+        this.callSuperCstr();
     },
 
     appendObject: function(warning) {

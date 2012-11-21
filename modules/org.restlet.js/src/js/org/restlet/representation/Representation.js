@@ -75,6 +75,9 @@ var Representation = new [class Class]([class RepresentationInfo], {
 	release: function() {
         this.setAvailable(false);
     },
+    hasKnownSize: function() {
+        return this.getSize() >= 0;
+    },
     isAvailable: function() {
         return this.available && (this.getSize() != 0);
     },

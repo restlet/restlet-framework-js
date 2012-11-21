@@ -8,6 +8,10 @@ var Series = new [class Class]({
 		return this.array;
 	},
 	
+	get: function(i) {
+		return this.array[i];
+	},
+	
 	size: function() {
 		return this.array.length;
 	},
@@ -29,7 +33,7 @@ var Series = new [class Class]({
 	},
 
 	createEntry: function(name, value) {
-		return new Parameter(name, value);
+		return new [class Parameter](name, value);
 	},
 	
 	equals: function(value1, value2, ignoreCase) {

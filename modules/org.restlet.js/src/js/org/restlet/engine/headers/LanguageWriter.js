@@ -1,6 +1,6 @@
 var LanguageWriter = new [class Class](MetadataWriter, {
     initialize: function(header) {
-        this.callSuper(header);
+        this.callSuperCstr(header);
     }
 });
 

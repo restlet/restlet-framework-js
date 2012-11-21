@@ -165,11 +165,11 @@ HeaderUtils.extend({
                         || param.getName().equalsIgnoreCase(
                                 [class HeaderConstants].HEADER_WWW_AUTHENTICATE)) {
                     // Standard headers that can't be overridden
-                    /*Context.getCurrentLogger()
+                    [class Context].getCurrentLogger()
                             .warning(
                                     "Addition of the standard header \""
                                             + param.getName()
-                                            + "\" is not allowed. Please use the equivalent property in the Restlet API.");*/
+                                            + "\" is not allowed. Please use the equivalent property in the Restlet API.");
                 } else if (param.getName().equalsIgnoreCase(
                         [class HeaderConstants].HEADER_PRAGMA)
                         || param.getName().equalsIgnoreCase(
@@ -181,10 +181,10 @@ HeaderUtils.extend({
                         || param.getName().equalsIgnoreCase(
                                 [class HeaderConstants].HEADER_UPGRADE)) {
                     // Standard headers that shouldn't be overridden
-                    /*Context.getCurrentLogger()
+                    [class Context].getCurrentLogger()
                             .info("Addition of the standard header \""
                                     + param.getName()
-                                    + "\" is discouraged as a future version of the Restlet API will directly support it.");*/
+                                    + "\" is discouraged as a future version of the Restlet API will directly support it.");
                     existingHeaders.push(param);
                 } else {
                     existingHeaders.push(param);
@@ -210,10 +210,10 @@ HeaderUtils.extend({
         if ((headerName != null) && (headerValue != null)
                 && (headerValue.length > 0)) {
             try {
-                headers.push(new [class Parameter](headerName, headerValue));
+                headers.add(new [class Parameter](headerName, headerValue));
             } catch (err) {
-                /*Context.getCurrentLogger().log(Level.WARNING,
-                        "Unable to format the " + headerName + " header", t);*/
+                [class Context].getCurrentLogger().log([class Level].WARNING,
+                        "Unable to format the " + headerName + " header", err);
             }
         }
 	},
@@ -224,11 +224,11 @@ HeaderUtils.extend({
                 		[class TagWriter].write(entity.getTag()), headers);
             }
 
-            /*if (entity.getLocationRef() != null) {
+            if (entity.getLocationRef() != null) {
                 [class HeaderUtils].addHeader([class HeaderConstants].HEADER_CONTENT_LOCATION,
                         entity.getLocationRef().getTargetRef().toString(),
                         headers);
-            }*/
+            }
         }
 	},
 	addRequestHeaders: function(request, headers) {
@@ -299,9 +299,9 @@ HeaderUtils.extend({
 
         if (conditions.getRangeTag() != null
                 && conditions.getRangeDate() != null) {
-            //Context.getCurrentLogger()
-            //        .log(Level.WARNING,
-            //                "Unable to format the HTTP If-Range header due to the presence of both entity tag and modification date.");
+            [class Context].getCurrentLogger()
+                    .log([class Level].WARNING,
+                            "Unable to format the HTTP If-Range header due to the presence of both entity tag and modification date.");
         } else if (conditions.getRangeTag() != null) {
         	[class HeaderUtils].addHeader([class HeaderConstants].HEADER_IF_RANGE,
         			[class TagWriter].write(conditions.getRangeTag()), headers);
@@ -388,8 +388,8 @@ HeaderUtils.extend({
                     	response.getAge().toString(), headers);
         }
 
-        if (response.getStatus().equals(Status.CLIENT_ERROR_METHOD_NOT_ALLOWED)
-                || Method.OPTIONS.equals(response.getRequest().getMethod())) {
+        if (response.getStatus().equals([class Status].CLIENT_ERROR_METHOD_NOT_ALLOWED)
+                || [class Method].OPTIONS.equals(response.getRequest().getMethod())) {
         	[class HeaderUtils].addHeader([class HeaderConstants].HEADER_ALLOW,
         			[class MethodWriter].write(response.getAllowedMethods()), headers);
         }
@@ -572,10 +572,10 @@ HeaderUtils.extend({
                     try {
                         response.setAge(parseInt(header.getValue()));
                     } catch (err) {
-                        /*Context.getCurrentLogger().log(
-                                Level.WARNING,
+                        [class Context].getCurrentLogger().log(
+                                [class Level].WARNING,
                                 "Error during Age header parsing. Header: "
-                                        + header.getValue(), nfe);*/
+                                        + header.getValue(), err);
                     }
                 } else if (header.getName().equalsIgnoreCase(
                         [class HeaderConstants].HEADER_DATE)) {

@@ -1,6 +1,6 @@
 var EncodingReader = new [class Class]([class HeaderReader], {
     initialize: function(header) {
-        this.callSuper(header);
+        this.callSuperCstr(header);
         /*this.header = header;
         this.index = ((header == null) || (header.length == 0)) ? -1 : 0;
         this.mark = this.index;*/

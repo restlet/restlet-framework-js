@@ -1,6 +1,6 @@
 var ChallengeWriter = new [class Class]([class HeaderWriter], {
 	initialize: function() {
-		this.callSuper();
+		this.callSuperCstr();
         this.firstChallengeParameter = true;
 	},
 

@@ -1,6 +1,6 @@
 var CookieWriter = new [class Class]([class HeaderWriter], {
 	initialize: function() {
-		this.callSuper();
+		this.callSuperCstr();
 	},
 
 	appendObject: function(cookie) {

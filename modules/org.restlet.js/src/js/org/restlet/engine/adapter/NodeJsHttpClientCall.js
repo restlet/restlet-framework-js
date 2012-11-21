@@ -1,6 +1,6 @@
 var NodeJsHttpClientCall = new [class Class]([class ClientCall], {
 	initialize: function() {
-		this.callSuper();
+		this.callSuperCstr();
 	},
 	extractResponseHeaders: function(clientResponse) {
 		var headers = [];

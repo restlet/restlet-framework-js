@@ -1,6 +1,6 @@
 var TagWriter = new [class Class](HeaderWriter, {
     initialize: function(header) {
-        this.callSuper(header);
+        this.callSuperCstr(header);
     },
 
     appendObject: function(tag) {

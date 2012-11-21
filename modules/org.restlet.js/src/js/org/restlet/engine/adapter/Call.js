@@ -8,9 +8,9 @@ var Call = new [class Class]({
         this.method = null;
         this.protocol = null;
         this.reasonPhrase = "";
-	    this.requestHeaders = [];
+	    this.requestHeaders = new [class Series]();
         this.requestUri = null;
-		this.responseHeaders = [];
+		this.responseHeaders = new [class Series]();
         this.serverAddress = null;
         this.serverPort = -1;
         this.statusCode = 200;
@@ -27,7 +27,7 @@ var Call = new [class Class]({
 	setClientPort: function(clientPort) {
 		this.clientPort = clientPort;
 	},
-	getConfidential: function() {
+	isConfidential: function() {
 		return this.confidential;
 	},
 	setConfidential: function(confidential) {
@@ -52,6 +52,9 @@ var Call = new [class Class]({
 		this.method = method;
 	},
 	getProtocol: function() {
+        if (this.protocol == null) {
+            this.protocol = this.isConfidential() ? [class Protocol].HTTPS : [class Protocol].HTTP;
+        }
 		return this.protocol;
 	},
 	setProtocol: function(protocol) {

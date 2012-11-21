@@ -55,7 +55,7 @@ var Response = new [class Class]([class Message], {
 
     getDimensions: function() {
         if (this.dimensions==null) {
-            this.dimensions = new [];
+            this.dimensions = [];
         }
         return this.dimensions;
     },
@@ -216,6 +216,12 @@ var Response = new [class Class]([class Message], {
     		this._setStatus(new [class Status](status, error, message));
     	}
     },
+    
+    /*setFirstOutboundFilter: function(firstOutboundFilter) {
+    	this.firstOutboundFilter = firstOutboundFilter;
+    },
+    
+    end: function*/
 
     toString: function() {
         return ((this.getRequest() == null) ? "?" : this.getRequest().getProtocol())

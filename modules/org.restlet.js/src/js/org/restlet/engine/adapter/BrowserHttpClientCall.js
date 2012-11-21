@@ -1,6 +1,6 @@
 var BrowserHttpClientCall = new [class Class]([class ClientCall], {
 	initialize: function() {
-		this.callSuper();
+		this.callSuperCstr();
 		this.xhr = this.createXhrObject();
 	},
 	getAcceptHeader: function() {

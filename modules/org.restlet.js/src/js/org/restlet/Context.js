@@ -3,15 +3,17 @@ var Context = new [class Class]({
     	var logger = null;
     	if (arguments.length==0) {
     		//logger = [class Engine].getLogger("org.restlet");
+    		logger = new Logger("org.restlet");
     	} else if (arguments.length==1 && typeof arguments[0] == "string") {
-    		//var loggerName = arguments[0];
+    		var loggerName = arguments[0];
     		//logger = [class Engine].getLogger(loggerName);
+    		logger = new Logger(loggerName);
     	} else {
     		logger = arguments[0];
     	}
         this.attributes = {};
-        //this.logger = logger;
-        this.parameters = new Series();
+        this.logger = logger;
+        this.parameters = new [class Series]();
         this.clientDispatcher = null;
 
         //this.defaultEnroler = null;
@@ -39,9 +41,9 @@ var Context = new [class Class]({
         return this.defaultVerifier;
     }*/
 
-    /*public Logger getLogger() {
+    getLogger: function() {
         return this.logger;
-    }*/
+    },
 
     getParameters: function() {
         return this.parameters;
@@ -95,3 +97,38 @@ var Context = new [class Class]({
         this.serverDispatcher = serverDispatcher;
     }
 });
+
+Context.extend({
+	getCurrentLogger: function() {
+		return new Logger("org.restlet");
+	}
+});
+
+var Logger = new [class Class]({
+	initialize: function(loggerName) {
+		this.loggerName = loggerName;
+	},
+	log: function(level, message, err) {
+		console.log("["+level+"] "+message);
+		if (err) {
+			console.log(err.stack);
+		}
+	},
+	
+	warning: function(message, err) {
+		this.log(Level.WARNING, message, err);
+	},
+	
+	fine: function(message, err) {
+		this.log(Level.FINE, message, err);
+	}
+})
+
+var Level = new [class Class]();
+
+Level.extend({
+	SEVERE: "severe",
+	WARNING: "warning",
+	INFO: "info",
+	FINE: "fine"
+})

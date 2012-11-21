@@ -5,7 +5,7 @@ var ServerInfo =new [class Class]({
         this.port = -1;
         this.acceptingRanges = false;
     },
-	getAcceptingRanges: function() {
+	isAcceptingRanges: function() {
 		return this.acceptingRanges;
 	},
 	setAcceptingRanges: function(acceptingRanges) {

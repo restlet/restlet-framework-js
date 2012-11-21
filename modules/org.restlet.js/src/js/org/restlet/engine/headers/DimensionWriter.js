@@ -1,4 +1,8 @@
 var DimensionWriter = new [class Class]([class HeaderWriter], {
+    initialize: function() {
+        this.callSuperCstr();
+    },
+
     appendCollection: function(dimensions) {
         if ((dimensions != null) && !dimensions.isEmpty()) {
             if (dimensions.contains([class Dimension].CLIENT_ADDRESS)
