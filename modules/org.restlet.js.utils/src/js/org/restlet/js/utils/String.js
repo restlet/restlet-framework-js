@@ -17,3 +17,6 @@ String.prototype.startsWith = function(arg) {
 		return false;
 	}
 };
+String.prototype.toBoolean = function() {
+	return (this=="true");
+}
