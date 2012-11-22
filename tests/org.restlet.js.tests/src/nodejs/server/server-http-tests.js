@@ -1,3 +1,4 @@
+var xmldom = require("xmldom");
 var restlet = require("restlet");
 var commons = restlet.commons;
 
@@ -10,27 +11,40 @@ component.getServers().addProtocol(restlet.data.Protocol.HTTP, 8182);
 	}
 });
 component.getDefaultHost().attach("/test",r);*/
-var application = new restlet.Application();
-application.createInboundRoot = function() {
+var application = restlet.Application.create(function() {
 	var router = new restlet.Router();
 	router.appRouter = true;
 	//r1
-	var r1 = new restlet.Restlet();
-	r1.handle = function(request, response) {
+	router.attach("/test1/{id}", function(request, response) {
 		console.log("---> r1.handle");
 		var repr = new restlet.representation.StringRepresentation("test");
 		response.endWithRepresentation(repr);
-	};
-	router.attach("/test1/{id}", r1);
+	});
 	//r2
-	var r2 = new restlet.Restlet();
-	r2.handle = function(request, response) {
+	router.attach("/test2", function(request, response) {
 		console.log("---> r2.handle");
-		response.end();
-	};
-	router.attach("/test2", r2);
+		var repr = new restlet.representation.JsonRepresentation({id:"testid",name:"testname"});
+		response.endWithRepresentation(repr);
+	});
+	//r3
+	router.attach("/test3", function(request, response) {
+		console.log("---> r3.handle");
+		  var doc = new xmldom.DOMParser().parseFromString("<person/>");
+		  var personElement = doc.documentElement;
+		  var idElement = doc.createElement("id");
+		  personElement.appendChild(idElement);
+		  var textIdElement = doc.createTextNode("testid");
+		  idElement.appendChild(textIdElement);
+		  var nameElement = doc.createElement("name");
+		  personElement.appendChild(nameElement);
+		  var textNameElement = doc.createTextNode("testname");
+		  nameElement.appendChild(textNameElement);
+		
+		  var repr = new restlet.representation.DomRepresentation(doc);
+		  response.endWithRepresentation(repr);
+	});
 	return router;
-};
+});
 component.getDefaultHost().attachDefault(application);
 
 component.start();
