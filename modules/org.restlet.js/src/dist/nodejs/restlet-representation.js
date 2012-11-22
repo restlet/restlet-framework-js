@@ -1,5 +1,6 @@
 var commons = require("./commons.js");
 //var libxmljs = require("libxmljs");
+var xmldom = require("xmldom");
 
 #include org/restlet/representation/Variant.js#
 
