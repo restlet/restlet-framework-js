@@ -6,6 +6,7 @@
 	<property name="target.nodejs.dir" value="${target.dir}/nodejs" />
 	<property name="src.dist.dir" value="${basedir}/src/dist" />
 	<property name="src.js.dir" value="${basedir}/src/js" />
+	<property name="test.js.dir" value="${basedir}/src/test" />
 	<property name="lib.js.dir" value="${basedir}/lib/js" />
 	
 	<property name="utils.src.dir" value="${basedir}/../org.restlet.js.utils/src"/>
@@ -254,6 +255,13 @@
 		<copy todir="${target.nodejs.dir}" file="${target.nodejs.dir}/lib/index.js"/>
 		<delete file="${target.nodejs.dir}/lib/index.js"/>
 		<copy todir="${target.nodejs.dir}" file=".npmignore"/>
+
+		<mkdir dir="${target.nodejs.dir}/test"/>
+		<copy todir="${target.nodejs.dir}/test" overwrite="true" includeEmptyDirs="false">
+			<fileset dir="${test.js.dir}">
+	        	<include name="**/*.js" />
+			</fileset>
+		</copy>
 	</target>
 
 	<target name="nodejs.dist" depends="build.nodejs">
