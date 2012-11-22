@@ -7,11 +7,11 @@
     { "name": "Thierry Templier", "email": "thierry.templier@restlet.com" }
   ],
   "dependencies": {
-  	"iconv-lite": "0.2.6"
+  	"iconv-lite": "0.2.6",
   	"xmldom": "*"
   },
   "devDependencies": {
-  	"jade": "*",
+  	"jade": "*"
   },
   "keywords": ["restlet", "framework", "web", "rest", "restful", "http"],
   "repository": "git://github.com/restlet/restlet-framework-js",
