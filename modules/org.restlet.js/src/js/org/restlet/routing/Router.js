@@ -25,6 +25,16 @@ var Router = new [class Class]([class Restlet], {
             Class<? extends ServerResource> targetClass, int matchingMode) {
         return attach(pathTemplate, createFinder(targetClass), matchingMode);
     }*/
+    
+    _checkTarget: function(target) {
+    	if (typeof target == "function") {
+    		var restlet = new [class Restlet]();
+    		restlet.handle = target;
+    		return restlet;
+    	} else {
+    		return target;
+    	}
+    },
 
     attach: function() {
     	var pathTemplate = "";
@@ -32,21 +42,21 @@ var Router = new [class Class]([class Restlet], {
         var matchingMode = null;
         if (arguments.length==1) {
         	pathTemplate = "";
-        	target = arguments[0];
+        	target = this._checkTarget(arguments[0]);
         	matchingMode = this.getMatchingMode(target);
         } else if (arguments.length==2) {
         	if (typeof arguments[0] == "string") {
             	pathTemplate = arguments[0];
-            	target = arguments[1];
+            	target = this._checkTarget(arguments[1]);
             	matchingMode = this.getMatchingMode(target);
         	} else {
             	pathTemplate = "";
-            	target = arguments[0];
+            	target = this._checkTarget(arguments[0]);
             	matchingMode = arguments[1];
         	}
         } else if (arguments.length==3) {
         	pathTemplate = arguments[0];
-        	target = arguments[1];
+        	target = this._checkTarget(arguments[1]);
         	matchingMode = arguments[2];
         }
 
@@ -56,7 +66,7 @@ var Router = new [class Class]([class Restlet], {
     },
 
     attachDefault: function(defaultTarget) {
-        var result = this.createRoute("", defaultTarget);
+        var result = this.createRoute("", this._checkTarget(defaultTarget));
         result.setMatchingMode([class Template].MODE_STARTS_WITH);
         this.setDefaultRoute(result);
         return result;

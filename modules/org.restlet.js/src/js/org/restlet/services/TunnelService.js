@@ -1,32 +1,35 @@
 var TunnelService = new [class Class](Service, {
-    public TunnelService(boolean methodTunnel, boolean preferencesTunnel) {
-        this(true, methodTunnel, preferencesTunnel);
-    }
+    initialize: function() {
+    	var enabled = true;
+    	var methodTunnel = false;
+    	var preferencesTunnel = false;
+    	var queryTunnel = true;
+    	var extensionsTunnel = false;
+    	var userAgentTunnel = false;
+    	var headersTunnel = true;
+    	if (arguments.length==2) {
+    		methodTunnel = arguments[0];
+    		preferencesTunnel = arguments[1];
+    	} else if (arguments.length==3) {
+    		enabled = arguments[0];
+    		methodTunnel = arguments[1];
+    		preferencesTunnel = arguments[2];
+    	} else if (arguments.length==5) {
+    		enabled = arguments[0];
+    		methodTunnel = arguments[1];
+    		preferencesTunnel = arguments[2];
+            queryTunnel = arguments[3];
+            extensionsTunnel = arguments[4];
+    	} else if (arguments.length==6) {
+    		enabled = arguments[0];
+    		methodTunnel = arguments[1];
+    		preferencesTunnel = arguments[2];
+            queryTunnel = arguments[3];
+            extensionsTunnel = arguments[4];
+            userAgentTunnel = arguments[5];
+    	}
 
-    public TunnelService(boolean enabled, boolean methodTunnel,
-            boolean preferencesTunnel) {
-        this(enabled, methodTunnel, preferencesTunnel, true, false);
-    }
-
-    public TunnelService(boolean enabled, boolean methodTunnel,
-            boolean preferencesTunnel, boolean queryTunnel,
-            boolean extensionsTunnel) {
-        this(enabled, methodTunnel, preferencesTunnel, queryTunnel,
-                extensionsTunnel, false);
-    }
-
-    public TunnelService(boolean enabled, boolean methodTunnel,
-            boolean preferencesTunnel, boolean queryTunnel,
-            boolean extensionsTunnel, boolean userAgentTunnel) {
-        this(enabled, methodTunnel, preferencesTunnel, queryTunnel,
-                extensionsTunnel, userAgentTunnel, true);
-    }
-
-    public TunnelService(boolean enabled, boolean methodTunnel,
-            boolean preferencesTunnel, boolean queryTunnel,
-            boolean extensionsTunnel, boolean userAgentTunnel,
-            boolean headersTunnel) {
-        super(enabled);
+    	this.callSuperCstr(enabled);
 
         this.extensionsTunnel = extensionsTunnel;
         this.methodTunnel = methodTunnel;
@@ -40,8 +43,8 @@ var TunnelService = new [class Class](Service, {
         this.languageParameter = "language";
         this.mediaTypeParameter = "media";
         this.methodParameter = "method";
-        this.methodHeader = HeaderConstants.HEADER_X_HTTP_METHOD_OVERRIDE;
-    }
+        this.methodHeader = [class HeaderConstants].HEADER_X_HTTP_METHOD_OVERRIDE;
+    },
 
     allowClient: function(client) {
         return true;

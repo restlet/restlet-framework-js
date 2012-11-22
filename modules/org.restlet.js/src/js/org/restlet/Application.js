@@ -246,3 +246,14 @@ var Application = new [class Class]([class Restlet], {
         }
     }
 });
+
+Application.extend({
+	create: function(fnInbound, fnOutbound) {
+		var application = new Application();
+		application.createInboundRoot = fnInbound;
+		if (fnOutbound!=null) {
+			application.createOutboundRoot = fnOutbound;
+		}
+		return application;
+	}
+});

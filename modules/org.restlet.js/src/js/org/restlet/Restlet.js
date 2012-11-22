@@ -151,5 +151,11 @@ Restlet.extend({
                 //            + restlet.getClass());
 			}*/
 		}
+	},
+	
+	create: function(fn) {
+		var restlet = new Restlet();
+		restlet.handle = fn;
+		return restlet;
 	}
 });

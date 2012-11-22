@@ -9,19 +9,27 @@ var DomRepresentation = new [class Class]([class Representation], {
 		this.representation = null;
 		if (typeof content == "string") {
 			this.text = content;
+			this.setSize(this.text.length);
+			this.setAvailable(true);
 		} else if (content instanceof [class Representation]) {
 			this.representation = content;
+			this.text = this.representation.getText();
+			this.setAvailable(this.representation.isAvailable());
 		} else if (typeof content == "object") {
 	        // [ifndef nodejs]
 			if (content instanceof Document) {
-			// [enddef]
-			// [ifdef nodejs] uncomment
-			//if (content instanceof libxmljs.Document) {
-			// [enddef]
 				this.xml = content;
 			} else {
 				this.obj = content;
 			}
+			// [enddef]
+			// [ifdef nodejs] uncomment
+			//this.xml = content;
+			/*var text = this.getText();
+			this.setSize(text.length);*/
+			this.setSize([class Representation].UNKNOWN_SIZE);
+			this.setAvailable(true);
+			// [enddef]
 		}
 		this.setMediaType([class MediaType].APPLICATION_XML);
 	},
@@ -36,7 +44,7 @@ var DomRepresentation = new [class Class]([class Representation], {
 			}
 			// [enddef]
 			// [ifdef nodejs] uncomment
-			//return this.xml.toString();
+			//return new xmldom.XMLSerializer().serializeToString(this.xml);
 			// [enddef]
 		}
 		return "";
@@ -47,7 +55,7 @@ var DomRepresentation = new [class Class]([class Representation], {
 			return this.representation.getXml();
 			// [enddef]
 			// [ifdef nodejs] uncomment
-			//return libxmljs.parseXmlString(this.representation.getText());
+			//return new xmldom.DOMParser().parseFromString(this.representation.getText());
 			// [enddef]
 		} else if (this.text!=null) {
 	        // [ifndef nodejs]
@@ -62,7 +70,7 @@ var DomRepresentation = new [class Class]([class Representation], {
 			} 
 			// [enddef]
 			// [ifdef nodejs] uncomment
-			//return libxmljs.parseXmlString(this.text);
+			//return new xmldom.DOMParser().parseFromString(this.text, "text/xml");
 			// [enddef]
 		} else {
 			return this.xml;
