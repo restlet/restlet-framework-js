@@ -1,5 +1,4 @@
 var restlet = require("restlet");
-var commons = restlet.commons;
 
 var component = new restlet.Component();
 component.getServers().addProtocol(restlet.data.Protocol.HTTP, 8182);
