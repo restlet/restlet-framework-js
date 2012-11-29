@@ -40,6 +40,7 @@ var StatusFilter = new [class Class]([class Filter], {
         try {
             this.callSuper("doHandle", request, response);
         } catch (err) {
+        	console.log(err.stack);
             this.getLogger().log(Level.WARNING,
                     "Exception or error caught in status service", err);
             response.setStatus(this.getStatus(err, request, response));

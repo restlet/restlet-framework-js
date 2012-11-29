@@ -24,9 +24,13 @@ var Restlet = new [class Class]({
         }
     },
 
-    /*public Application getApplication() {
-        return Application.getCurrent();
-    }*/
+    getApplication: function() {
+        return this.application;
+    },
+
+    setApplication: function(application) {
+        this.application = application;
+    },
 
     getAuthor: function() {
         return this.author;
@@ -129,6 +133,31 @@ var Restlet = new [class Class]({
                 response.setStatus([class Status].SERVER_ERROR_INTERNAL);
             }
         }
+    },
+
+    createFinder: function(resourceClass) {
+        var result = null;
+
+        if (this.getFinderClass() != null) {
+            result = [class Finder].createFinder(resourceClass,
+                    this.getFinderClass(), this.getContext(), this.getLogger());
+        } else if ((this.getApplication() != null) && (this.getApplication() != this)) {
+            result = this.getApplication().createFinder(resourceClass);
+        } else {
+            result = [class Finder].createFinder(resourceClass,
+                    [class Finder], this.getContext(),
+                    this.getLogger());
+        }
+
+        return result;
+    },
+
+    getFinderClass: function() {
+        return this.finderClass;
+    },
+
+    setFinderClass: function(finderClass) {
+        this.finderClass = finderClass;
     }
 });
 

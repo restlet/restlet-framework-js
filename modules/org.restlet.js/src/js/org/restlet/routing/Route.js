@@ -24,5 +24,12 @@ var Route = new [class Class]([class Filter], {
 
     setRouter: function(router) {
         this.router = router;
+    },
+    
+    setApplication: function(application) {
+    	this.callSuper("setApplication", application);
+    	if (this.next!=null) {
+    		this.next.setApplication(application);
+    	}
     }
 });

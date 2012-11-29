@@ -21,10 +21,6 @@ var Application = new [class Class]([class Restlet], {
         /*this.services.add(new ConnegService());
         this.services.add(new ConverterService());
         this.services.add(new MetadataService());*/
-
-        // [ifndef gae]
-        //this.services.add(new org.restlet.service.TaskService());
-        // [enddef]
     },
 
     createInboundRoot: function() {
@@ -62,6 +58,9 @@ var Application = new [class Class]([class Restlet], {
     getInboundRoot: function() {
         if (this.inboundRoot == null) {
             this.inboundRoot = this.createInboundRoot();
+            if (this.inboundRoot!=null) {
+            	this.inboundRoot.setApplication(this);
+            }
         }
 
         return this.inboundRoot;
@@ -74,6 +73,9 @@ var Application = new [class Class]([class Restlet], {
     getOutboundRoot: function() {
         if (this.outboundRoot == null) {
             this.outboundRoot = this.createOutboundRoot();
+            if (this.outboundRoot!=null) {
+            	this.outboundRoot.setApplication(this);
+            }
         }
 
         return this.outboundRoot;

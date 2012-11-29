@@ -27,11 +27,17 @@ var Router = new [class Class]([class Restlet], {
     }*/
     
     _checkTarget: function(target) {
+    	console.log("_checkTarget");
     	if (typeof target == "function") {
+        	/*console.log("_checkTarget - 1");
     		var restlet = new [class Restlet]();
     		restlet.handle = target;
     		return restlet;
+    	} else if (target instanceof [class ServerResource]) {*/
+        	console.log("_checkTarget - 2");
+    		return this.createFinder(target);
     	} else {
+        	console.log("_checkTarget - 3");
     		return target;
     	}
     },
@@ -283,6 +289,19 @@ var Router = new [class Class]([class Restlet], {
 
     setRoutingMode: function(routingMode) {
         this.routingMode = routingMode;
+    },
+    
+    setApplication: function(application) {
+    	this.callSuper("setApplication", application);
+
+    	for (var i=0; i<this.getRoutes().length; i++) {
+        	var route = this.getRoutes()[i];
+        	route.setApplication(application)
+        }
+
+        if (this.getDefaultRoute() != null) {
+        	this.getDefaultRoute().setApplication(application);
+        }
     },
 
     start: function() {

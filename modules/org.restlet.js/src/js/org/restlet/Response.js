@@ -113,16 +113,19 @@ var Response = new [class Class]([class Message], {
     redirectPermanent: function(target) {
         this.setLocationRef(target);
         this.setStatus([class Status].REDIRECTION_PERMANENT);
+        this.commit();
     },
 
     redirectSeeOther: function(target) {
     	this.setLocationRef(target);
     	this.setStatus([class Status].REDIRECTION_SEE_OTHER);
+        this.commit();
     },
 
     redirectTemporary: function(target) {
     	this.setLocationRef(target);
     	this.setStatus([class Status].REDIRECTION_TEMPORARY);
+        this.commit();
     },
 
     setAge: function(age) {
@@ -224,19 +227,15 @@ var Response = new [class Class]([class Message], {
     	this.firstOutboundFilter = firstOutboundFilter;
     },*/
     
-    end: function() {
+    commit: function() {
+    	if (arguments.length==1) {
+    		var representation = arguments[0];
+    		this.setEntity(representation);
+    	}
+
     	if (this.commitCallback!=null) {
     		this.commitCallback();
     	}
-    },
-
-    endWithRepresentation: function(representation) {
-		this.setEntity(representation);
-    	this.end();
-    },
-
-    endWithObject: function(obj) {
-    	
     },
 
     setCommitCallback: function(fn) {

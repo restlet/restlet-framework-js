@@ -4,11 +4,16 @@ var iconv = require("iconv-lite");
 
 module.exports = {};
 
+#include org/restlet/Level.js#
+module.exports["Level"] = Level;
+
 //Root entities
 
 #include org/restlet/Restlet.js#
 
 #include org/restlet/Context.js#
+
+#include org/restlet/Logger.js#
 
 #include org/restlet/Message.js#
 
@@ -19,6 +24,8 @@ module.exports = {};
 #include org/restlet/Connector.js#
 
 #include org/restlet/engine/util/ChildContext.js#
+
+#include org/restlet/resource/Finder.js#
 
 //Headers
 
@@ -196,6 +203,7 @@ module.exports = {};
 module.exports["Restlet"] = Restlet;
 module.exports["Filter"] = Filter;
 module.exports["Context"] = Context;
+module.exports["Logger"] = Logger;
 module.exports["Message"] = Message;
 module.exports["Request"] = Request;
 module.exports["Response"] = Response;

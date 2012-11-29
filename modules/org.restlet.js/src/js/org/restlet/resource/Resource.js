@@ -1,11 +1,10 @@
 var Resource = new [class Class]({
+    doCatch: function(err) {
+        this.getLogger().log([class Level].INFO, "Exception or error caught in resource",
+                err);
+    },
 
-    /*protected void doCatch(Throwable throwable) {
-        getLogger().log(Level.INFO, "Exception or error caught in resource",
-                throwable);
-    }
-
-    protected void doError(Status errorStatus) {
+    /*protected void doError(Status errorStatus) {
     }
 
     protected final void doError(Status errorStatus, String errorMessage) {
@@ -22,21 +21,9 @@ var Resource = new [class Class]({
         return this.getResponse() == null ? null : this.getResponse().getAllowedMethods();
     },
 
-    /*getApplication: function() {
-        var result = this.application;
-
-        if (result == null) {
-            result = Application.getCurrent();
-
-            if (result == null) {
-                result = new Application(this.getContext());
-            }
-
-            this.application = result;
-        }
-
-        return result;
-    },*/
+    getApplication: function() {
+        return this.application;
+    },
 
     getChallengeRequests: function() {
         return this.getResponse() == null ? null : this.getResponse()
@@ -60,31 +47,29 @@ var Resource = new [class Class]({
         return this.context;
     },
 
-    /*public org.restlet.service.ConnegService getConnegService() {
-        org.restlet.service.ConnegService result = null;
+    getConnegService: function() {
+        var result = null;
 
-        // [ifndef gwt] instruction
-        result = getApplication().getConnegService();
+        result = this.getApplication().getConnegService();
 
         if (result == null) {
-            result = new org.restlet.service.ConnegService();
+            result = new [class ConnegService]();
         }
 
         return result;
-    }*/
+    },
 
-    /*public org.restlet.service.ConverterService getConverterService() {
-        org.restlet.service.ConverterService result = null;
+    getConverterService: function() {
+        var result = null;
 
-        // [ifndef gwt] instruction
-        result = getApplication().getConverterService();
+        result = this.getApplication().getConverterService();
 
         if (result == null) {
-            result = new org.restlet.service.ConverterService();
+            result = new [class ConverterService]();
         }
 
         return result;
-    }*/
+    },
 
     getCookies: function() {
         return this.getRequest() == null ? null : this.getRequest().getCookies();
@@ -119,18 +104,17 @@ var Resource = new [class Class]({
         return this.getRequest() == null ? null : this.getRequest().getMaxForwards();
     },
 
-    /*public MetadataService getMetadataService() {
-        MetadataService result = null;
+    getMetadataService: function() {
+        var result = null;
 
-        // [ifndef gwt] instruction
-        result = getApplication().getMetadataService();
+        result = this.getApplication().getMetadataService();
 
         if (result == null) {
-            result = new MetadataService();
+            result = new [class MetadataService]();
         }
 
-        return result;,
-    }*/
+        return result;
+    },
 
     getMethod: function() {
         return this.getRequest() == null ? null : this.getRequest().getMethod();
@@ -205,32 +189,31 @@ var Resource = new [class Class]({
         return this.getResponse() == null ? null : this.getResponse().getStatus();
     },
 
-    /*public StatusService getStatusService() {
-        StatusService result = null;
+    getStatusService: function() {
+        var result = null;
 
-        // [ifndef gwt] instruction
-        result = getApplication().getStatusService();
+        result = this.getApplication().getStatusService();
 
         if (result == null) {
-            result = new StatusService();
+            result = new [class StatusService]();
         }
 
         return result;
-    }*/
+    },
 
     //public abstract Representation handle();
 
-    /*public void init(Context context, Request request, Response response) {
+    init: function(context, request, response) {
         this.context = context;
         this.request = request;
         this.response = response;
 
         try {
-            doInit();
-        } catch (Throwable t) {
-            doCatch(t);
+            this.doInit();
+        } catch (err) {
+            this.doCatch(err);
         }
-    }*/
+    },
 
     isConfidential: function() {
         return this.getRequest() == null ? null : this.getRequest().isConfidential();
@@ -260,39 +243,35 @@ var Resource = new [class Class]({
         this.response = response;
     },
 
-    /*toObject: function(source, target)
-            throws ResourceException {
-        T result = null;
+    toObject: function(source, target) {
+        var result = null;
 
         if (source != null) {
             try {
-                org.restlet.service.ConverterService cs = getConverterService();
+                var cs = this.getConverterService();
                 result = cs.toObject(source, target, this);
-            } catch (Exception e) {
-                throw new ResourceException(e);
+            } catch (err) {
+                throw new Error(err.message);
             }
         }
 
         return result;
-    }
+    },
 
-    public Representation toRepresentation(Object source, Variant target) {
-        Representation result = null;
+    toRepresentation: function(source, target) {
+        var result = null;
 
         if (source != null) {
-            // [ifndef gwt]
-            org.restlet.service.ConverterService cs = getConverterService();
-            result = cs.toRepresentation(source, target, this);
-            // [enddef]
-            // [ifdef gwt] uncomment
-            // if (source instanceof Representation) {
-            // result = (Representation) source;
-            // }
-            // [enddef]
+        	if (source instanceof [class Representation]) {
+                result = source;
+        	} else {
+        		var cs = this.getConverterService();
+        		result = cs.toRepresentation(source, target, this);
+        	}
         }
 
         return result;
-    }*/
+    },
 
     toString: function() {
         return (this.getRequest() == null ? "" : this.getRequest().toString())
