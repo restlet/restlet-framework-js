@@ -19,4 +19,10 @@ String.prototype.startsWith = function(arg) {
 };
 String.prototype.toBoolean = function() {
 	return (this=="true");
-}
+};
+String.prototype.firstUpper = function() {
+	return this.substring(0,1).toUpperCase() + this.substring(1, this.length);
+};
+String.prototype.firstLower = function() {
+	return this.substring(0,1).toLowerCase() + this.substring(1, this.length);
+};
