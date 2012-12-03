@@ -32,6 +32,9 @@ var Class = function() {
 		parent.prototype.__child = clazz.prototype;
 		parent.initializeExtend = null;
 		copyElements(content, clazz.prototype, clazz.prototype.__parent);
+		clazz.prototype["getClass"] = function() {
+			return clazz;
+		};
 		clazz.prototype["callSuperCstr"] = function() {
 			if (this.__currentCallSuperLevel==null) {
 				this.__currentCallSuperLevel = {};
