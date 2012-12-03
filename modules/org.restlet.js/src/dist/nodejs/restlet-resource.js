@@ -5,6 +5,8 @@ var commons = require("./commons.js");
 
 #include org/restlet/engine/resource/VariantInfo.js#
 
+#include org/restlet/engine/resource/AnnotationInfo.js#
+
 #include org/restlet/engine/resource/AnnotationUtils.js#
 
 #include org/restlet/resource/Resource.js#

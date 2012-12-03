@@ -7,6 +7,8 @@ module.exports = {};
 #include org/restlet/Level.js#
 module.exports["Level"] = Level;
 
+#require-include resource#
+
 //Root entities
 
 #include org/restlet/Restlet.js#
@@ -149,6 +151,14 @@ module.exports["Level"] = Level;
 
 #include org/restlet/services/StatusService.js#
 
+#include org/restlet/engine/application/MetadataExtension.js#
+
+#include org/restlet/services/MetadataService.js#
+
+#include org/restlet/services/ConverterService.js#
+
+#include org/restlet/services/ConnegService.js#
+
 #include org/restlet/routing/Route.js#
 
 #include org/restlet/routing/Router.js#
@@ -214,3 +224,7 @@ module.exports["Application"] = Application;
 module.exports["Component"] = Component;
 module.exports["Engine"] = Engine;
 module.exports["Router"] = Router;
+module.exports["MetadataService"] = MetadataService;
+module.exports["StatusService"] = StatusService;
+module.exports["ConverterService"] = ConverterService;
+module.exports["ConnegService"] = ConnegService;
