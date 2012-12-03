@@ -87,14 +87,27 @@ public class ReplaceIncludeTask extends Task {
 			}
 		}
 
+		String newContentString = newContent.toString();
 		StringBuilder requireContent = new StringBuilder();
+		List<String> specifiedRequires = new ArrayList<String>();
 		if (requirePattern!=null) {
 			for (String moduleName : moduleNames.keySet()) {
-				requireContent.append(requirePattern.replaceAll("\\{modulename\\}", moduleName));
-				requireContent.append("\n");
+				if (newContentString.indexOf("#require-include "+moduleName+"#")==-1) {
+					requireContent.append(requirePattern.replaceAll("\\{modulename\\}", moduleName));
+					requireContent.append("\n");
+				} else {
+					specifiedRequires.add(moduleName);
+				}
 			}
 			if (!requireContent.toString().equals("")) {
 				requireContent.append("\n");
+			}
+			
+			for (String moduleName : specifiedRequires) {
+				//newContentString.replaceAll("\\#require-include "+moduleName+"\\#", requirePattern.replaceAll("\\{modulename\\}", moduleName));
+				int startIndex = newContentString.indexOf("#require-include "+moduleName+"#");
+				int endIndex = startIndex + ("#require-include "+moduleName+"#").length();
+				newContent.replace(startIndex, endIndex, requirePattern.replaceAll("\\{modulename\\}", moduleName));
 			}
 		}
 		
@@ -157,14 +170,27 @@ public class ReplaceIncludeTask extends Task {
 			}
 		}
 
+		String newContentString = newContent.toString();
 		StringBuilder requireContent = new StringBuilder();
+		List<String> specifiedRequires = new ArrayList<String>();
 		if (requirePattern!=null) {
 			for (String moduleName : moduleNames.keySet()) {
-				requireContent.append(requirePattern.replaceAll("\\{modulename\\}", moduleName));
-				requireContent.append("\n");
+				if (newContentString.indexOf("#require-include "+moduleName+"#")==-1) {
+					requireContent.append(requirePattern.replaceAll("\\{modulename\\}", moduleName));
+					requireContent.append("\n");
+				} else {
+					specifiedRequires.add(moduleName);
+				}
 			}
 			if (!requireContent.toString().equals("")) {
 				requireContent.append("\n");
+			}
+			
+			for (String moduleName : specifiedRequires) {
+				//newContentString.replaceAll("\\#require-include "+moduleName+"\\#", requirePattern.replaceAll("\\{modulename\\}", moduleName));
+				int startIndex = newContentString.indexOf("#require-include "+moduleName+"#");
+				int endIndex = startIndex + ("#require-include "+moduleName+"#").length();
+				newContent.replace(startIndex, endIndex, requirePattern.replaceAll("\\{modulename\\}", moduleName));
 			}
 		}
 		
