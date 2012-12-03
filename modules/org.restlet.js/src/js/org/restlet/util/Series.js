@@ -232,6 +232,9 @@ var Series = new [class Class]({
 				} else {
 					// Change the value of the first matching entry
 					found = true;
+		        	for (var elt in param) {
+		        		console.log("- elt = "+elt);
+		        	}
 					param.setValue(value);
 					result = param;
 				}

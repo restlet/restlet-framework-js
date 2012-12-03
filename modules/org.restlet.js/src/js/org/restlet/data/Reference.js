@@ -575,17 +575,15 @@ var Reference = new [class Class]({
         return decode ? Reference.decode(this._getQuery()) : this._getQuery();
     },
 
-    /*public Form getQueryAsForm() {
-        return new Form(getQuery());
-    }
-
-    public Form getQueryAsForm(boolean decode) {
-        return new Form(getQuery(), decode);
-    }
-
-    public Form getQueryAsForm(CharacterSet characterSet) {
-        return new Form(getQuery(), characterSet);
-    }*/
+    getQueryAsForm: function() {
+    	if (arguments.length==0) {
+    		return new [class Form](this.getQuery());
+    	} else if (arguments.length==1) {
+            return new [class Form](this.getQuery(), arguments[0]);
+    	} else {
+    		return null;
+    	}
+    },
 
     _getRelativePart: function() {
         return this.isRelative() ? this.toString(false, false) : null;

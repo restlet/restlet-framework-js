@@ -6,8 +6,14 @@ var Parameter = new [class Class]({
 	getName: function() {
 		return this.name;
 	},
+	setName: function(name) {
+		this.name = name;
+	},
 	getValue: function() {
 		return this.value;
+	},
+	setValue: function(value) {
+		this.value = value;
 	}
 });
 exports.Parameter = Parameter;

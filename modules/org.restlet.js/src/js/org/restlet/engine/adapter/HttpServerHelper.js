@@ -32,9 +32,9 @@ var HttpServerHelper = new [class Class]([class ServerHelper], {
 				currentThis.getAdapter().commit(response);
 			});
 			this.callSuper("handle", request, response);
-			if (response.getStatus()!=[class Status].SUCCESS_OK) {
-				response.end();
-			}
+			/*if (response.getStatus()!=[class Status].SUCCESS_OK) {
+				response.commit();
+			}*/
 		} catch (err) {
                 this.getLogger().log([class Level].WARNING,
                         "Error while handling an HTTP server call: ",

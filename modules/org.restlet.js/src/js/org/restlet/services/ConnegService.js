@@ -11,11 +11,11 @@ var ConnegService = new [class Class](Service, {
         var conneg = this.isStrict() ? new [class StrictConneg](request, metadataService)
                 : new [class FlexibleConneg](request, metadataService);
         return conneg.getPreferredVariant(variants);
-    }
+    },
 
     isStrict: function() {
-        return strict;
-    }
+        return this.strict;
+    },
 
     setStrict: function(strict) {
         this.strict = strict;

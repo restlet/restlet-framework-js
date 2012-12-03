@@ -1,19 +1,42 @@
 var Status = new [class Class]({
-    initialize: function(code, reasonPhrase, description, uri) {
-    	this.code = code;
-    	if (reasonPhrase==null || typeof reasonPhrase=="undefined") {
-    		this.reasonPhrase = this.getReasonPhrase();
+    initialize: function() {
+    	if (arguments[0] instanceof Status) {
+    		var status = arguments[0];
+    		var error = null;
+    		var description = null;
+    		if (typeof arguments[1]=="String") {
+    			description = arguments[1];
+    		} else {
+    			error = arguments[1];
+    		}
+    		this.code = status.getCode();
+    		this.error = (error == null) ? status.getError()
+                    : error;
+    		this.description = (description == null) ? status.getDescription() : description;
+    		this.uri = status.getUri();
     	} else {
-        	this.reasonPhrase = reasonPhrase;
-    	}
-    	if (description==null || typeof description=="undefined") {
-    		this.description = this.getDescription();
-    	} else {
+        	var code = arguments[0];
+    		var reasonPhrase = null;
+        	var error = null;
+        	var description = null;
+        	var uri = null;
+
+        	if (arguments.length=4 && typeof arguments[1]=="String") {
+        		reasonPhrase = arguments[1];
+        		description = arguments[2];
+        		uri = arguments[3];
+        	} else {
+        		error = arguments[1];
+        		if (arguments.length==5) {
+            		reasonPhrase = arguments[2];
+                    description = arguments[3];
+            		uri = arguments[4];
+        		}
+        	}
+        	this.code = code;
+    		this.reasonPhrase = reasonPhrase;
+    		this.error = error;
     		this.description = description;
-    	}
-    	if (uri==null || typeof uri=="undefined") {
-    		this.uri = this.getUri();
-    	} else {
     		this.uri = uri;
     	}
     },

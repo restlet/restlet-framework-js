@@ -16,7 +16,7 @@ var AnnotationUtils = new [class Class]({
 
         var restletMethod = this.getRestletMethod(methodAnnotation);
         if (restletMethod != null) {
-            var toString = annotation.toString();
+            /*var toString = annotation.toString();
             var startIndex = annotation.annotationType().getCanonicalName()
                     .length() + 8;
             var endIndex = toString.length() - 1;
@@ -28,10 +28,11 @@ var AnnotationUtils = new [class Class]({
                 if ("".equals(value)) {
                     value = null;
                 }
-            }
+            }*/
+        	var value = "";
 
             result.push(new [class AnnotationInfo](initialResourceClass, restletMethod,
-                    javaMethod, value));
+                    javaScriptMethod, value));
 
         }
 
@@ -48,9 +49,11 @@ var AnnotationUtils = new [class Class]({
             }
 
             // Inspect the current class
-            for (var javaScriptMethodName in clazz) {
-            	var javaScriptMethod = clazz[javaScriptMethodName];
-                this.addAnnotationDescriptors(result, clazz, initialClass, javaScriptMethod);
+            for (var javaScriptMethodName in clazz.prototype) {
+            	var javaScriptMethod = clazz.prototype[javaScriptMethodName];
+            	if (typeof javaScriptMethod == "function") {
+            		this.addAnnotationDescriptors(result, clazz, initialClass, javaScriptMethod);
+            	}
             }
         }
 
@@ -63,9 +66,9 @@ var AnnotationUtils = new [class Class]({
 
     getAnnotation: function() {
     	if (arguments.length==2) {
-    		this._getAnnotationTwoParams.call(this, arguments);
-    	} else if (arguments.length==5) {
-    		this._getAnnotationFiveParams.call(this, arguments);
+    		this._getAnnotationTwoParams.apply(this, arguments);
+    	} else if (arguments.length==6) {
+    		this._getAnnotationFiveParams.apply(this, arguments);
     	}
     },
     
@@ -101,19 +104,19 @@ var AnnotationUtils = new [class Class]({
     	if (javaScriptMethod!=null) {
             return this.addAnnotationDescriptors(null, clazz, clazz, javaScriptMethod);
     	} else {
-            var result = this.cache.get(clazz);
+            var result = /*this.cache.get(clazz);*/null;
 
             if (result == null) {
                 // Inspect the class itself for annotations
                 result = this.addAnnotations(result, clazz, clazz);
 
                 // Put the list in the cache if no one was previously present
-                var prev = cache.putIfAbsent(clazz, result);
+                /*var prev = this.cache.putIfAbsent(clazz, result);
 
                 if (prev != null) {
                     // Reuse the previous entry
                     result = prev;
-                }
+                }*/
             }
 
             return result;
@@ -129,7 +132,7 @@ var AnnotationUtils = new [class Class]({
 AnnotationUtils.extend({
     instance: new AnnotationUtils(),
     getInstance: function() {
-        return instance;
+        return AnnotationUtils.instance;
     }
 });
 

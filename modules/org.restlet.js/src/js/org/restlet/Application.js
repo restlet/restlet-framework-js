@@ -31,25 +31,25 @@ var Application = new [class Class]([class Restlet], {
         return this.getHelper().getFirstOutboundFilter();
     },
 
-    /*getConnectorService: function() {
+    getConnectorService: function() {
         return this.getServices().get([class ConnectorService]);
-    },*/
+    },
 
-    /*public ConnegService getConnegService() {
-        return getServices().get(ConnegService.class);
-    }
+    getConnegService: function() {
+        return this.getServices().get([class ConnegService]);
+    },
 
-    public ConverterService getConverterService() {
-        return getServices().get(ConverterService.class);
-    }
+    getConverterService: function() {
+        return this.getServices().get([class ConverterService]);
+    },
 
-    public DecoderService getDecoderService() {
-        return getServices().get(DecoderService.class);
-    }
+    getDecoderService: function() {
+        return this.getServices().get([class DecoderService]);
+    },
 
-    public EncoderService getEncoderService() {
-        return getServices().get(EncoderService.class);
-    }*/
+    getEncoderService: function() {
+        return this.getServices().get([class EncoderService]);
+    },
 
     getHelper: function() {
         return this.helper;
@@ -66,9 +66,9 @@ var Application = new [class Class]([class Restlet], {
         return this.inboundRoot;
     },
 
-    /*public MetadataService getMetadataService() {
-        return getServices().get(MetadataService.class);
-    }*/
+    getMetadataService: function() {
+        return this.getServices().get([class MetadataService]);
+    },
 
     getOutboundRoot: function() {
         if (this.outboundRoot == null) {
@@ -81,9 +81,9 @@ var Application = new [class Class]([class Restlet], {
         return this.outboundRoot;
     },
 
-    /*public RangeService getRangeService() {
-        return getServices().get(RangeService.class);
-    }*/
+    getRangeService: function() {
+        return this.getServices().get([class RangeService]);
+    },
 
     getRole: function(name) {
         for (var i=0; i<this.getRoles().length; i++) {
@@ -104,13 +104,13 @@ var Application = new [class Class]([class Restlet], {
         return this.services;
     },
 
-    /*public StatusService getStatusService() {
-        return getServices().get(StatusService.class);
-    }*/
+    getStatusService: function() {
+        return this.getServices().get([class StatusService]);
+    },
 
-    /*public TunnelService getTunnelService() {
-        return getServices().get(TunnelService.class);
-    }*/
+    getTunnelService: function() {
+        return this.getServices().get([class TunnelService]);
+    },
 
     handle: function(request, response) {
         this.callSuper("handle", request, response);

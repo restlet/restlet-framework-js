@@ -49,7 +49,7 @@ var ServiceList = new [class Class]([class Array], {
     get: function(clazz) {
         for (var i=0; i<this.length; i++) {
         	var service = this[i];
-            if (clazz.isAssignableFrom(service.getClass())) {
+            if (service instanceof clazz) {
                 return service;
             }
         }

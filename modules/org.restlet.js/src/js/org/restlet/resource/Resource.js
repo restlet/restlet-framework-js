@@ -9,13 +9,13 @@ var Resource = new [class Class]({
 
     protected final void doError(Status errorStatus, String errorMessage) {
         doError(new Status(errorStatus, errorMessage));
-    }
-
-    protected void doInit() throws ResourceException {
-    }
-
-    protected void doRelease() throws ResourceException {
     }*/
+
+    doInit: function() {
+    },
+
+    doRelease: function() {
+    },
 
     getAllowedMethods: function() {
         return this.getResponse() == null ? null : this.getResponse().getAllowedMethods();
@@ -91,10 +91,10 @@ var Resource = new [class Class]({
         return this.getResponse() == null ? null : this.getResponse().getLocationRef();
     },
 
-    /*public Logger getLogger() {
-        return getContext() != null ? getContext().getLogger() : Context
-                .getCurrentLogger();
-    }*/
+    getLogger: function() {
+        return new [class Logger]();/*getContext() != null ? getContext().getLogger() : Context
+                .getCurrentLogger();*/
+    },
 
     getMatrix: function() {
         return this.getReference() == null ? null : this.getReference().getMatrixAsForm();
@@ -211,6 +211,8 @@ var Resource = new [class Class]({
         try {
             this.doInit();
         } catch (err) {
+        	console.log(err);
+        	console.log(err.stack);
             this.doCatch(err);
         }
     },
@@ -223,13 +225,13 @@ var Resource = new [class Class]({
         return this.getRequest() == null ? null : this.getRequest().isLoggable();
     },
 
-    /*public final void release() {
+    release: function() {
         try {
-            doRelease();
-        } catch (Throwable t) {
-            doCatch(t);
+            this.doRelease();
+        } catch (err) {
+            this.doCatch(err);
         }
-    }*/
+    },
 
     setApplication: function(application) {
         this.application = application;

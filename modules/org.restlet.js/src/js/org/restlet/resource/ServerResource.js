@@ -1,5 +1,6 @@
 var ServerResource = new [class Class]([class UniformResource], {
     initialize: function() {
+    	console.log("new ServerResource");
         this.annotated = true;
         this.conditional = true;
         this.existing = true;
@@ -51,7 +52,11 @@ var ServerResource = new [class Class]([class UniformResource], {
 
     doCatch: function(err) {
         var level = [class Level].INFO;
-        var status = thisgetStatusService().getStatus(err, this);
+        try {
+        } catch(err) {
+        	console.log(err.stack);
+        }
+        var status = this.getStatusService().getStatus(err, this);
 
         if (status.isServerError()) {
             level = [class Level].WARNING;
@@ -182,24 +187,27 @@ var ServerResource = new [class Class]([class UniformResource], {
 
     doHandle: function() {
     	if (arguments.length==0) {
-    		this.doHandleNoParam();
+    		this._doHandleNoParam();
     	} else if (arguments.length==1) {
-    		this.doHandleOneParam();
+    		this._doHandleOneParam();
     	} else if (arguments.length==2) {
-    		this.doHandleTwoParams();
+    		this._doHandleTwoParams();
     	} else if (arguments.length==3) {
-    		this.doHandleThreeParams();
+    		this._doHandleThreeParams();
     	}
     },
 
     _doHandleNoParam: function() {
+    	console.log("_doHandleNoParam");
         var method = this.getMethod();
+    	console.log("_doHandleNoParam - method = "+method.getName());
 
         if (method == null) {
             this.setStatus([class Status].CLIENT_ERROR_BAD_REQUEST, "No method specified");
         } else {
         	var currentThis = this;
         	var commit = function(obj) {
+        		currentThis.postHandleProcessing();
         		if (obj!=null) {
         			if (obj instanceof Representation) {
         				currentThis.commit(obj);
@@ -209,19 +217,26 @@ var ServerResource = new [class Class]([class UniformResource], {
         		}
         	}
             if (method.equals([class Method].PUT)) {
+            	console.log("_doHandleNoParam - put");
                 this.put(this.getRequestEntity(), commit);
             } else if (this.isExisting()) {
                 if (method.equals([class Method].GET)) {
+                	console.log("_doHandleNoParam - get");
                     this.get(commit);
                 } else if (method.equals([class Method].POST)) {
+                	console.log("_doHandleNoParam - post");
                     this.post(this.getRequestEntity(), commit);
                 } else if (method.equals([class Method].DELETE)) {
+                	console.log("_doHandleNoParam - delete");
                     this.delete(commit);
                 } else if (method.equals([class Method].HEAD)) {
+                	console.log("_doHandleNoParam - head");
                     this.head(commit);
                 } else if (method.equals([class Method].OPTIONS)) {
+                	console.log("_doHandleNoParam - options");
                     this.options(commit);
                 } else {
+                	console.log("_doHandleNoParam - doHandle");
                     this.doHandle(method, this.getQuery(), this.getRequestEntity(), commit);
                 }
             } else {
@@ -231,6 +246,7 @@ var ServerResource = new [class Class]([class UniformResource], {
     },
 
     _doHandleTwoParams: function(annotationInfo, variant) {
+    	console.log("_doHandleTwoParams");
         var result = null;
         var parameterTypes = annotationInfo.getJavaScriptInputTypes();
 
@@ -290,6 +306,7 @@ var ServerResource = new [class Class]([class UniformResource], {
     },
 
     _doHandleThreeParams: function(method, query, entity) {
+    	console.log("_doHandleThreeParams");
         var result = null;
 
         if (this.getAnnotation(method) != null) {
@@ -308,6 +325,7 @@ var ServerResource = new [class Class]([class UniformResource], {
     },
 
     _doHandleOneParam: function(variant) {
+    	console.log("_doHandleOneParam");
         var result = null;
         var method = this.getMethod();
 
@@ -351,22 +369,27 @@ var ServerResource = new [class Class]([class UniformResource], {
     },
 
     doNegotiatedHandle: function() {
+    	console.log("doNegotiatedHandle");
         var result = null;
 
         if ((this.getVariants() != null) && (!this.getVariants().isEmpty())) {
+        	console.log("doNegotiatedHandle - 1");
             var preferredVariant = this.getPreferredVariant(this.getVariants());
 
             if (preferredVariant == null) {
+            	console.log("doNegotiatedHandle - 2");
                 this.response.setEntity(this.describeVariants());
 
                 // No variant was found matching the client preferences
             	this.doError([class Status].CLIENT_ERROR_NOT_ACCEPTABLE);
             } else {
+            	console.log("doNegotiatedHandle - 3");
                 // Update the variant dimensions used for content negotiation
             	this.updateDimensions();
                 this.doHandle(preferredVariant);
             }
         } else {
+        	console.log("doNegotiatedHandle - 4");
             // No variant declared for this method.
             this.doHandle();
         }
@@ -375,25 +398,33 @@ var ServerResource = new [class Class]([class UniformResource], {
     },
 
     get: function() {
+    	console.log("get");
         var annotationInfo = null;
         var variant = null;
-        if (arguments.length==0) {
-        	annotationInfo = getAnnotation([class Method].GET);
-        } else if (arguments.length==1) {
-        	variant = arguments[0];
+        var end = arguments[0];
+        if (arguments.length==1) {
+        	console.log("get - 1");
+        	annotationInfo = this.getAnnotation([class Method].GET);
+        } else if (arguments.length==2) {
+        	console.log("get - 2");
+        	variant = arguments[1];
+        	console.log("get - variant = "+variant);
+        	console.log("get - variant info = "+(variant instanceof [class VariantInfo]));
         	if (variant instanceof [class VariantInfo]) {
         		annotationInfo = variant.getAnnotationInfo();
         	}
         }
+    	console.log("get - annotationInfo = "+annotationInfo);
 
         if (annotationInfo != null) {
-            this.doHandle(annotationInfo, variant);
+            this.doHandle(annotationInfo, variant, end);
         } else {
             this.doError([class Status].CLIENT_ERROR_METHOD_NOT_ALLOWED);
         }
     },
 
     getAnnotation: function(method, query, entity) {
+    	console.log("getAnnotation - method = "+method+", query = "+query+", entity = "+entity);
     	if (query==null) {
     		query = this.getQuery();
     	}
@@ -408,7 +439,7 @@ var ServerResource = new [class Class]([class UniformResource], {
 
     getAnnotations: function() {
         return this.isAnnotated() ? AnnotationUtils.getInstance().getAnnotations(
-                getClass()) : null;
+                this.getClass()) : null;
     },
 
     getAttribute: function(name) {
@@ -430,7 +461,7 @@ var ServerResource = new [class Class]([class UniformResource], {
         // If variants were found, select the best matching one
         if ((variants != null) && (!variants.isEmpty())) {
             result = this.getConnegService().getPreferredVariant(variants,
-                    this.getRequest(), this.getgetMetadataService());
+                    this.getRequest(), this.getMetadataService());
         }
 
         return result;
@@ -450,7 +481,7 @@ var ServerResource = new [class Class]([class UniformResource], {
             result = [];
 
             // Add annotation-based variants in priority
-            if (this.isAnnotated() && this.gethasAnnotations()) {
+            if (this.isAnnotated() && this.hasAnnotations()) {
                 var annoVariants = null;
                 method = ([class Method].HEAD.equals(method)) ? [class Method].GET : method;
 
@@ -460,7 +491,7 @@ var ServerResource = new [class Class]([class UniformResource], {
                     if (annotationInfo.isCompatible(method, this.getQuery(),
                     		this.getRequestEntity(), this.getMetadataService(),
                     		this.getConverterService())) {
-                        annoVariants = annotationInfo.getResponseVariants(
+                        /*annoVariants = annotationInfo.getResponseVariants(
                         		this.getMetadataService(), this.getConverterService());
 
                         if (annoVariants != null) {
@@ -495,7 +526,11 @@ var ServerResource = new [class Class]([class UniformResource], {
                                 vi.setInputScore(score);
                                 result.push(vi);
                             }
-                        }
+                        }*/
+                        var vi = new [class VariantInfo](null/*v*/,
+                                annotationInfo);
+                        vi.setInputScore(1.0/*score*/);
+                        result.push(vi);
                     }
                 }
             }
@@ -506,6 +541,24 @@ var ServerResource = new [class Class]([class UniformResource], {
         return result;
     },
 
+    postHandleProcessing: function() {
+        if (!this.getResponse().isEntityAvailable()) {
+        	// If the user manually set the entity, keep it
+        	this.getResponse().setEntity(result);
+        }
+
+        if ([class Status].CLIENT_ERROR_METHOD_NOT_ALLOWED.equals(this.getStatus())) {
+        	this.updateAllowedMethods();
+        } else if ([class Method].GET.equals(this.getMethod())
+        		&& [class Status].SUCCESS_OK.equals(this.getStatus())
+        		&& (this.getResponseEntity() == null || !this.getResponseEntity()
+        				.isAvailable())) {
+        	this.getLogger()
+                .fine("A response with a 200 (Ok) status should have an entity. Changing the status to 204 (No content).");
+        	this.setStatus([class Status].SUCCESS_NO_CONTENT);
+        }
+    },
+    
     handle: function() {
     	console.log("server resource - handle");
         // If the resource is not available after initialization and if this a
@@ -525,28 +578,10 @@ var ServerResource = new [class Class]([class UniformResource], {
                 	console.log("server resource - handle - 4");
                     this.doHandle();
                 }
-
-                if (!this.getResponse().isEntityAvailable()) {
-                    // If the user manually set the entity, keep it
-                	this.getResponse().setEntity(result);
-                }
-
-                if ([class Status].CLIENT_ERROR_METHOD_NOT_ALLOWED.equals(this.getStatus())) {
-                	this.updateAllowedMethods();
-                } else if ([class Method].GET.equals(this.getMethod())
-                        && [class Status].SUCCESS_OK.equals(this.getStatus())
-                        && (this.getResponseEntity() == null || !this.getResponseEntity()
-                                .isAvailable())) {
-                	this.getLogger()
-                            .fine("A response with a 200 (Ok) status should have an entity. Changing the status to 204 (No content).");
-                	this.setStatus([class Status].SUCCESS_NO_CONTENT);
-                }
             } catch (err) {
             	this.doCatch(err);
             }
         }
-
-        return result;
     },
 
     hasAnnotations: function() {
@@ -733,7 +768,7 @@ var ServerResource = new [class Class]([class UniformResource], {
 
     setStatus: function() {
         if (this.getResponse() != null) {
-            this.getResponse().setStatus.call(this.getResponse(), arguments);
+            this.getResponse().setStatus.apply(this.getResponse(), arguments);
         }
     },
 
@@ -775,7 +810,11 @@ ServerResource.extend({
     },
 
 	createSubServerResource: function() {
-		var subServerResource = new [class Class](ServerResource, {});
+		var subServerResource = new [class Class](ServerResource, {
+			initialize: function() {
+				this.callSuperCstr();
+			}
+		});
 		subServerResource.addMethod = function(method, parameters, fn) {
 	    	if (typeof method == "string") {
 	    		method = [class Method].valueOf(method.toUpperCase());

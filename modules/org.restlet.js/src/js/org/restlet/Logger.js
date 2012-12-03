@@ -12,6 +12,7 @@ var Logger = new [class Class]({
 	
 	warning: function(message, err) {
 		this.log([class Level].WARNING, message, err);
+		console.log(err.stack);
 	},
 	
 	fine: function(message, err) {

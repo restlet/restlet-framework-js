@@ -1,16 +1,51 @@
 var Method = new [class Class]({
-	initialize: function(name, description, uri, safe, idempotent) {
+	initialize: function(name, description, uri, safe, idempotent, replying) {
 		this.name = name;
 		this.description = description;
 		this.uri = uri;
-		this.safe = safe;
-		this.idempotent = idempotent;
+		if (safe!=null) {
+			this.safe = safe;
+		} else {
+			this.safe = false;
+		}
+		if (idempotent!=null) {
+			this.idempotent = idempotent;
+		} else {
+			this.idempotent = false;
+		}
+		if (replying!=null) {
+			this.replying = replying;
+		} else {
+			this.replying = true;
+		}
 	},
+
 	getName: function() {
 		return this.name;
 	},
+
+	getUri: function() {
+        return this.uri;
+    },
+
+    isIdempotent: function() {
+        return this.idempotent;
+    },
+
+    isReplying: function() {
+        return this.replying;
+    },
+
+    isSafe: function() {
+        return this.safe;
+    },
+
     equals: function(status) {
     	return (this.getName()==status.getName());
+    },
+
+    toString: function() {
+        return this.getName();
     }
 });
 

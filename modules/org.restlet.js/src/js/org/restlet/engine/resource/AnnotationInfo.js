@@ -136,6 +136,24 @@ var AnnotationInfo = new [class Class]({
         return this.resourceClass;
     },
 
+    /*getResponseVariants(MetadataService metadataService,
+            org.restlet.service.ConverterService converterService) {
+        List<Variant> result = null;
+
+        if ((getJavaOutputType() != null)
+                && (getJavaOutputType() != void.class)
+                && (getJavaOutputType() != Void.class)) {
+            result = getVariants(metadataService, getOutput());
+
+            if (result == null) {
+                result = (List<Variant>) converterService.getVariants(
+                        getJavaOutputType(), null);
+            }
+        }
+
+        return result;
+    },*/
+
     getRestletMethod: function() {
         return this.restletMethod;
     },

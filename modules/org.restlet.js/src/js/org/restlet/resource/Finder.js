@@ -10,7 +10,7 @@ var Finder = new [class Class]([class Restlet], {
 
         if (this.getTargetClass() != null) {
             try {
-            	console.log("this.getTargetClass() = "+this.getTargetClass());
+            	console.log("this.getTargetClass() = "+this.getTargetClass().className);
                 // Invoke the default constructor
                 result = new this.targetClass();
                 if (this.getApplication()!=null) {

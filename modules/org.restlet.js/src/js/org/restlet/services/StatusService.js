@@ -26,21 +26,26 @@ var StatusService = new [class Class](Service, {
         return null;
     },
 
-    getStatus: function(err, request, response) {
+    getStatus: function() {
+    	console.log("getStatus");
     	var err = null;
     	var request = null;
     	var response = null;
     	if (arguments.length==2) {
+        	console.log("getStatus - 1");
     		err = arguments[0];
-    		request = arguments[1];
-    		response = arguments[2];
-    	} else if (arguments.length==3) {
-    		err = arguments[0];
+        	console.log("getStatus - 1 - err = "+err+", arguments[0] = "+arguments[0]);
     		var resource = arguments[1];
     		if (resource!=null) {
     			request = resource.getRequest();
     			response = resource.getResponse();
     		}
+    	} else if (arguments.length==3) {
+        	console.log("getStatus - 2");
+    		err = arguments[0];
+        	console.log("getStatus - 2 - err = "+err+", arguments[0] = "+arguments[0]);
+    		request = arguments[1];
+    		response = arguments[2];
     	}
 
     	var result = null;
@@ -55,7 +60,9 @@ var StatusService = new [class Class](Service, {
                 result = re.getStatus();
             }
         } else {*/
+    	console.log("getStatus -  err = "+err);
     	if (err!=null) {
+        	console.log("getStatus - 3");
     		console.log("err - "+err.stack);
             result = new [class Status]([class Status].SERVER_ERROR_INTERNAL, err);
     	}

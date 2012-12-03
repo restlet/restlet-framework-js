@@ -247,12 +247,12 @@ var ServerCall = new [class Class]([class Call], {
 
     writeResponseHead: function(response) {
         // We don't support persistent connections yet
-        this.getResponseHeaders().set(HeaderConstants.HEADER_CONNECTION, "close",
+        this.getResponseHeaders().set([class HeaderConstants].HEADER_CONNECTION, "close",
                 true);
 
         // Check if 'Transfer-Encoding' header should be set
         if (this.shouldResponseBeChunked(response)) {
-            this.getResponseHeaders().add(HeaderConstants.HEADER_TRANSFER_ENCODING,
+            this.getResponseHeaders().add([class HeaderConstants].HEADER_TRANSFER_ENCODING,
                     "chunked");
         }
 
