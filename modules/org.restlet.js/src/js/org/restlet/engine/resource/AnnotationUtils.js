@@ -29,7 +29,7 @@ var AnnotationUtils = new [class Class]({
                     value = null;
                 }
             }*/
-        	var value = "";
+        	var value = methodAnnotation.extension;
 
             result.push(new [class AnnotationInfo](initialResourceClass, restletMethod,
                     javaScriptMethod, value));
@@ -66,9 +66,9 @@ var AnnotationUtils = new [class Class]({
 
     getAnnotation: function() {
     	if (arguments.length==2) {
-    		this._getAnnotationTwoParams.apply(this, arguments);
+    		return this._getAnnotationTwoParams.apply(this, arguments);
     	} else if (arguments.length==6) {
-    		this._getAnnotationFiveParams.apply(this, arguments);
+    		return this._getAnnotationFiveParams.apply(this, arguments);
     	}
     },
     

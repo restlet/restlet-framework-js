@@ -4,7 +4,7 @@ var CacheDirectiveReader = new [class Class]([class HeaderReader], {
     },
 
     readValue: function() {
-        return readNamedValue([class CacheDirective].class);
+        return this.readNamedValue([class CacheDirective].class);
     }
 });
 

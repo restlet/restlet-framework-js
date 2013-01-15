@@ -136,11 +136,12 @@ var AnnotationInfo = new [class Class]({
         return this.resourceClass;
     },
 
-    /*getResponseVariants(MetadataService metadataService,
-            org.restlet.service.ConverterService converterService) {
-        List<Variant> result = null;
+    getResponseVariants: function(metadataService, converterService) {
+        var result = null;
+        
+        result = this.getVariants(metadataService, this.getOutput());
 
-        if ((getJavaOutputType() != null)
+        /*if ((getJavaOutputType() != null)
                 && (getJavaOutputType() != void.class)
                 && (getJavaOutputType() != Void.class)) {
             result = getVariants(metadataService, getOutput());
@@ -149,13 +150,17 @@ var AnnotationInfo = new [class Class]({
                 result = (List<Variant>) converterService.getVariants(
                         getJavaOutputType(), null);
             }
-        }
+        }*/
 
         return result;
-    },*/
+    },
 
     getRestletMethod: function() {
         return this.restletMethod;
+    },
+    
+    getValue: function() {
+    	return this.value;
     },
 
     getVariants: function(metadataService, annotationValue) {
@@ -289,9 +294,8 @@ var AnnotationInfo = new [class Class]({
     },
 
     toString: function() {
-        return "AnnotationInfo [javaMethod: " + javaMethod
-                + ", resourceInterface: " + resourceClass + ", restletMethod: "
-                + restletMethod + ", input: " + this.getInput() + ", output: "
-                + this.getOutput() + ", query: " + this.getQuery() + "]";
+        return "AnnotationInfo [resourceInterface: " + this.resourceClass + ", restletMethod: "
+                + this.restletMethod + ", input: " + this.getInput() + ", output: "
+                + this.getOutput() + ", query: " + this.getQuery() + ", value = "+ this.getValue() +"]";
     }
 });

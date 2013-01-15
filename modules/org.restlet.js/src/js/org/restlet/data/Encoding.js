@@ -6,7 +6,20 @@ var Encoding = new [class Class](Metadata, {
 		}
         this.name = name;
         this.description = description;*/
-	}
+	},
+
+    equals: function(object) {
+        return (object instanceof [class Encoding])
+                && this.getName().equalsIgnoreCase(object.getName());
+    },
+
+    getParent: function() {
+        return this.equals(Encoding.ALL) ? null : Encoding.ALL;
+    },
+
+    includes: function(included) {
+        return this.equals(Encoding.ALL) || (included == null) || this.equals(included);
+    }
 });
 Encoding.extend({
     /** All encodings acceptable. */

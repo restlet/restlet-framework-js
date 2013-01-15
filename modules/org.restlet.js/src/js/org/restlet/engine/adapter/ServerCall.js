@@ -218,6 +218,8 @@ var ServerCall = new [class Class]([class Call], {
                         }
                     }*/
                 }
+            } catch(err) {
+            	console.log(err.stack);
             } finally {
                 if (responseEntity != null) {
                     responseEntity.release();

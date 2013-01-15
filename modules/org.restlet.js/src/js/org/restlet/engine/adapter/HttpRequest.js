@@ -118,7 +118,7 @@ HttpRequest = new [class Class]([class Request], {
             // Parse the Accept* headers. If an error occurs during the parsing
             // of each header, the error is traced and we keep on with the other
             // headers.
-            /*try {
+            try {
             	[class PreferenceReader].addCharacterSets(acceptCharset, result);
             } catch (err) {
             	console.log(err.stack);
@@ -137,9 +137,9 @@ HttpRequest = new [class Class]([class Request], {
             } catch (err) {
             	console.log(err.stack);
                 //this.context.getLogger().log([class Level].INFO, err.message);
-            }*/
+            }
 
-            /*try {
+            try {
             	[class PreferenceReader].addMediaTypes(acceptMediaType, result);
             } catch (err) {
             	console.log(err.stack);
@@ -161,7 +161,7 @@ HttpRequest = new [class Class]([class Request], {
             result.setAddress(this.getHttpCall().getClientAddress());
             result.setPort(this.getHttpCall().getClientPort());
 
-            if (this.getHttpCall().getUserPrincipal() != null) {
+            /*if (this.getHttpCall().getUserPrincipal() != null) {
                 result.getPrincipals().add(this.getHttpCall().getUserPrincipal());
             }*/
 

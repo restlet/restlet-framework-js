@@ -18,6 +18,9 @@ var Call = new [class Class]({
 
 		return this.clientAddress;
 	},
+	getClientAddress: function() {
+		return this.clientAddress;
+	},
 	setClientAddress: function(clientAddress) {
 		this.clientAddress = clientAddress;
 	},

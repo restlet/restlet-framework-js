@@ -26,6 +26,7 @@ var ServerAdapter = new [class Class]([class Adapter], {
                         response.getStatus().getReasonPhrase());
             }
         } catch (err) {
+        	console.log(err.stack);
             this.getLogger().log([class Level].INFO,
                     "Exception intercepted while adding the response headers",
                     err);

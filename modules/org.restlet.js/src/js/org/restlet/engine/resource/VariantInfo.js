@@ -2,6 +2,7 @@ var VariantInfo = new [class Class]([class Variant], {
     initialize: function(mediaType, annotationInfo) {
     	var mediaType = arguments[0];
     	if (mediaType instanceof [class Variant]) {
+    		var variant = mediaType;
     		mediaType = mediaType.getMediaType();
             this.setCharacterSet(variant.getCharacterSet());
             this.setEncodings(variant.getEncodings());

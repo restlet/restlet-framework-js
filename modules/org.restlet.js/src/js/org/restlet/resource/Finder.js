@@ -5,12 +5,10 @@ var Finder = new [class Class]([class Restlet], {
     },
 
     create: function(request, response) {
-    	console.log("Finder create");
         var result = null;
 
         if (this.getTargetClass() != null) {
             try {
-            	console.log("this.getTargetClass() = "+this.getTargetClass().className);
                 // Invoke the default constructor
                 result = new this.targetClass();
                 if (this.getApplication()!=null) {
@@ -36,7 +34,6 @@ var Finder = new [class Class]([class Restlet], {
     },
 
     handle: function(request, response) {
-    	console.log("Finder handle");
         this.callSuper("handle", request, response);
 
         if (this.isStarted()) {

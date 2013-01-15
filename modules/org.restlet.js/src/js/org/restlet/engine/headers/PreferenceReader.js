@@ -63,13 +63,14 @@ var PreferenceReader = new [class Class](HeaderReader, {
         if (parameters != null) {
             result = new [class Series]();
             
-            for (var i=0; !qualityFound && i<parameters.elements().length; i++) {
-                param = parameters.elements()[i];
+            var elements = parameters.getElements();
+            for (var i=0; !qualityFound && i<elements.length; i++) {
+                param = elements[i];
 
                 if (param.getName().equals("q")) {
                     qualityFound = true;
                 } else {
-                    iter.remove();
+                    elements.remove(i);
                     result.add(param);
                 }
             }
@@ -85,16 +86,17 @@ var PreferenceReader = new [class Class](HeaderReader, {
         if (parameters != null) {
             var param = null;
 
-            for (var i=0; !found && i<parameters.elements().length; i++) {
-                param = parameters.elements()[i];
+            var elements = parameters.getElements();
+            for (var i=0; !found && i<elements.length; i++) {
+                param = elements[i];
                 if (param.getName().equals("q")) {
-                    result = this.readQuality(param.getValue());
+                    result = PreferenceReader.readQuality(param.getValue());
                     found = true;
 
                     //TODO
                     // Remove the quality parameter as we will directly store it
                     // in the Preference object
-                    iter.remove();
+                    elements.remove(i);
                 }
             }
         }
@@ -120,7 +122,7 @@ var PreferenceReader = new [class Class](HeaderReader, {
             next = this.read();
 
             if (readingMetadata) {
-                if ((next == -1) || isComma(next)) {
+                if ((next == -1) ||  [class HeaderUtils].isComma(next)) {
                     if (metadataBuffer.length() > 0) {
                         // End of metadata section
                         // No parameters detected
@@ -136,13 +138,13 @@ var PreferenceReader = new [class Class](HeaderReader, {
                         readingMetadata = false;
                         readingParamName = true;
                         paramNameBuffer = new [class StringBuilder]();
-                        parameters = new Series();
+                        parameters = new [class Series]();
                     } else {
                         throw new Error("Empty metadata name detected.");
                     }
-                } else if (this.isSpace(next)) {
+                } else if ([class HeaderUtils].isSpace(next)) {
                     // Ignore spaces
-                } else if (this.isText(next)) {
+                } else if ([class HeaderUtils].isText(next)) {
                     metadataBuffer.append(next);
                 } else {
                     throw new Error("Unexpected character \""
@@ -158,7 +160,7 @@ var PreferenceReader = new [class Class](HeaderReader, {
                     } else {
                         throw new Error("Empty parameter name detected.");
                     }
-                } else if ((next == -1) || this.isComma(next)) {
+                } else if ((next == -1) || [class HeaderUtils].isComma(next)) {
                     if (paramNameBuffer.length() > 0) {
                         // End of parameters section
                         parameters.add([class Parameter].create(paramNameBuffer, null));
@@ -172,16 +174,16 @@ var PreferenceReader = new [class Class](HeaderReader, {
                     paramNameBuffer = new [class StringBuilder]();
                     readingParamName = true;
                     readingParamValue = false;
-                } else if (this.isSpace(next) && (paramNameBuffer.length() == 0)) {
+                } else if ([class HeaderUtils].isSpace(next) && (paramNameBuffer.length() == 0)) {
                     // Ignore white spaces
-                } else if (this.isTokenChar(next)) {
+                } else if ([class HeaderUtils].isTokenChar(next)) {
                     paramNameBuffer.append(next);
                 } else {
                     throw new Error("Unexpected character \""
                             + next + "\" detected.");
                 }
             } else if (readingParamValue) {
-                if ((next == -1) || this.isComma(next) || this.isSpace(next)) {
+                if ((next == -1) || [class HeaderUtils].isComma(next) || [class HeaderUtils].isSpace(next)) {
                     if (paramValueBuffer.length() > 0) {
                         // End of parameters section
                         parameters.add([class Parameter].create(paramNameBuffer,
@@ -207,27 +209,27 @@ var PreferenceReader = new [class Class](HeaderReader, {
 
                         if (quotedPair) {
                             // End of quoted pair (escape sequence)
-                            if (this.isText(next)) {
+                            if ([class HeaderUtils].isText(next)) {
                                 paramValueBuffer.append(next);
                                 quotedPair = false;
                             } else {
                                 throw new Error(
                                         "Invalid character detected in quoted string. Please check your value");
                             }
-                        } else if (this.isDoubleQuote(next)) {
+                        } else if ([class HeaderUtils].isDoubleQuote(next)) {
                             // End of quoted string
                             done = true;
                         } else if (next == '\\') {
                             // Begin of quoted pair (escape sequence)
                             quotedPair = true;
-                        } else if (this.isText(next)) {
+                        } else if ([class HeaderUtils].isText(next)) {
                             paramValueBuffer.append(next);
                         } else {
                             throw new Error(
                                     "Invalid character detected in quoted string. Please check your value");
                         }
                     }
-                } else if (this.isTokenChar(next)) {
+                } else if ([class HeaderUtils].isTokenChar(next)) {
                     paramValueBuffer.append(next);
                 } else {
                     throw new Error("Unexpected character \""
@@ -236,7 +238,7 @@ var PreferenceReader = new [class Class](HeaderReader, {
             }
         }
 
-        if (this.isComma(next)) {
+        if ([class HeaderUtils].isComma(next)) {
             // Unread character which isn't part of the value
         	this.unread();
         }
@@ -266,7 +268,7 @@ PreferenceReader.extend({
 			}
 		} else {
 			clientInfo.getAcceptedCharacterSets().add(
-					new [class Preference](CharacterSet.ALL));
+					new [class Preference]([class CharacterSet].ALL));
 		}
 	},
 

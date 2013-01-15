@@ -4,60 +4,6 @@ var HeaderReader = new [class Class]({
         this.index = ((header == null) || (header.length == 0)) ? -1 : 0;
         this.mark = this.index;
 	},
-    readDate: function(date, cookie) {
-        if (cookie) {
-            return DateUtils.parse(date, [class DateUtils].FORMAT_RFC_1036);
-        }
-
-        return DateUtils.parse(date, [class DateUtils].FORMAT_RFC_1123);
-    },
-    readHeader: function(header) {
-        var result = null;
-
-        if (header.length > 0) {
-            // Detect the end of headers
-            var start = 0;
-            var index = 0;
-            var next = header.charAt(index++);
-
-            if (HeaderUtils.isCarriageReturn(next)) {
-                next = header.charAt(index++);
-
-                if (![class HeaderUtils].isLineFeed(next)) {
-                    throw new Error(
-                            "Invalid end of headers. Line feed missing after the carriage return.");
-                }
-            } else {
-                result = new Parameter();
-
-                // Parse the header name
-                while ((index < header.length) && (next != ':')) {
-                    next = header.charAt(index++);
-                }
-
-                if (index == header.length) {
-                    throw new Error(
-                            "Unable to parse the header name. End of line reached too early.");
-                }
-
-                result.setName(header.substring(start, index - 1).toString());
-                next = header.charAt(index++);
-
-                while ([class HeaderUtils].isSpace(next)) {
-                    // Skip any separator space between colon and header value
-                    next = header.charAt(index++);
-                }
-
-                start = index - 1;
-
-                // Parse the header value
-                result.setValue(header.substring(start, header.length)
-                        .toString());
-            }
-        }
-
-        return result;
-    },
     addValues: function(values) {
         try {
             // Skip leading spaces
@@ -75,6 +21,7 @@ var HeaderReader = new [class Class]({
                 this.skipValueSeparator();
             } while (this.peek() != -1);
         } catch (err) {
+        	console.log(err.stack);
             [class Context].getCurrentLogger().log([class Level].INFO,
                     "Unable to read a header", err);
         }
@@ -165,6 +112,28 @@ var HeaderReader = new [class Class]({
         this.unread();
 
         return sb.toString();
+    },
+    readNamedValue: function(resultClass) {
+    	var result = null;
+    	var name = this.readToken();
+    	var nextChar = this.read();
+
+    	if (name.length > 0) {
+    		if (nextChar == '=') {
+    			// The parameter has a value
+    			result = HeaderReader.createNamedValue(resultClass, name,
+    					this.readActualNamedValue());
+    		} else {
+    			// The parameter has not value
+    			this.unread();
+    			result = HeaderReader.createNamedValue(resultClass, name);
+    		}
+    	} else {
+    		throw new Error(
+    			"Parameter or extension has no name. Please check your value");
+    	}
+
+    	return result;
     },
     readParameter: function() {
         var result = null;
@@ -360,5 +329,72 @@ var HeaderReader = new [class Class]({
         if (this.index > 0) {
             this.index--;
         }
+    }
+});
+
+HeaderReader.extend({
+    createNamedValue: function(resultClass, name, value) {
+        try {
+            return new resultClass(name, value);
+        } catch (err) {
+            /*Context.getCurrentLogger().log(Level.WARNING,
+                    "Unable to create named value", e);*/
+        	console.log(err.stack);
+            return null;
+        }
+    },
+    readDate: function(date, cookie) {
+        if (cookie) {
+            return DateUtils.parse(date, [class DateUtils].FORMAT_RFC_1036);
+        }
+
+        return DateUtils.parse(date, [class DateUtils].FORMAT_RFC_1123);
+    },
+    readHeader: function(header) {
+        var result = null;
+
+        if (header.length > 0) {
+            // Detect the end of headers
+            var start = 0;
+            var index = 0;
+            var next = header.charAt(index++);
+
+            if (HeaderUtils.isCarriageReturn(next)) {
+                next = header.charAt(index++);
+
+                if (![class HeaderUtils].isLineFeed(next)) {
+                    throw new Error(
+                            "Invalid end of headers. Line feed missing after the carriage return.");
+                }
+            } else {
+                result = new Parameter();
+
+                // Parse the header name
+                while ((index < header.length) && (next != ':')) {
+                    next = header.charAt(index++);
+                }
+
+                if (index == header.length) {
+                    throw new Error(
+                            "Unable to parse the header name. End of line reached too early.");
+                }
+
+                result.setName(header.substring(start, index - 1).toString());
+                next = header.charAt(index++);
+
+                while ([class HeaderUtils].isSpace(next)) {
+                    // Skip any separator space between colon and header value
+                    next = header.charAt(index++);
+                }
+
+                start = index - 1;
+
+                // Parse the header value
+                result.setValue(header.substring(start, header.length)
+                        .toString());
+            }
+        }
+
+        return result;
     }
 });

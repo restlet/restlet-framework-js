@@ -4,7 +4,7 @@ var ExpectationReader = new [class Class]([class HeaderReader], {
     },
 
     readValue: function() {
-        var result = this.readNamedValue();
+        var result = this.readNamedValue([class Expectation]);
 
         while (this.skipParameterSeparator()) {
             result.getParameters().add(this.readParameter());

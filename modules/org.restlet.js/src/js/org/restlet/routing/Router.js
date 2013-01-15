@@ -27,17 +27,14 @@ var Router = new [class Class]([class Restlet], {
     }*/
     
     _checkTarget: function(target) {
-    	console.log("_checkTarget");
     	if (typeof target == "function") {
         	/*console.log("_checkTarget - 1");
     		var restlet = new [class Restlet]();
     		restlet.handle = target;
     		return restlet;
     	} else if (target instanceof [class ServerResource]) {*/
-        	console.log("_checkTarget - 2");
     		return this.createFinder(target);
     	} else {
-        	console.log("_checkTarget - 3");
     		return target;
     	}
     },

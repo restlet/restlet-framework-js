@@ -1,4 +1,17 @@
 var Variant = new [class Class]({
+	initialize: function(mediaType, language) {
+        this.characterSet = null;
+        this.encodings = null;
+
+        if (language != null) {
+            this.getLanguages().add(language);
+        } else {
+            this.languages = null;
+        }
+
+        this.mediaType = mediaType;
+        this.locationRef = null;
+	},
 	setMediaType: function(mediaType) {
 		this.mediaType = mediaType;
 	},

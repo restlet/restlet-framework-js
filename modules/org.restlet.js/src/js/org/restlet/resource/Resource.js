@@ -245,13 +245,13 @@ var Resource = new [class Class]({
         this.response = response;
     },
 
-    toObject: function(source, target) {
+    toObject: function(source/*, target*/) {
         var result = null;
 
         if (source != null) {
             try {
                 var cs = this.getConverterService();
-                result = cs.toObject(source, target, this);
+                result = cs.toObject(source/*, target*/, this);
             } catch (err) {
                 throw new Error(err.message);
             }

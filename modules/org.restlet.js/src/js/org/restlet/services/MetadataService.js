@@ -187,10 +187,10 @@ var MetadataService = new [class Class](Service, {
     	}
         if (preferred) {
             // Add the mapping at the beginning of the list
-            extensions.push(0, new [class MetadataExtension](extension, metadata));
+            extensions.add(0, new [class MetadataExtension](extension, metadata));
         } else {
             // Add the mapping at the end of the list
-            extensions.push(new [class MetadataExtension](extension, metadata));
+            extensions.add(new [class MetadataExtension](extension, metadata));
         }
     },
 

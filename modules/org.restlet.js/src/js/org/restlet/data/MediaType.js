@@ -6,6 +6,28 @@ var MediaType = new [class Class](Metadata, {
         this.callSuperCstr(MediaType.normalizeType(name, parameters), description);
     },
 
+    equals: function(obj, ignoreParameters) {
+    	if (ignoreParameters==null) {
+    		ignoreParameters = false;
+    	}
+        var result = (obj == this);
+
+        // if obj == this no need to go further
+        if (!result) {
+            // if obj isn't a mediatype or is null don't evaluate further
+            if (obj instanceof MediaType) {
+                var that = obj;
+                if (this.getMainType().equals(that.getMainType())
+                        && this.getSubType().equals(that.getSubType())) {
+                    result = ignoreParameters
+                            || this.getParameters().equals(that.getParameters());
+                }
+            }
+        }
+
+        return result;
+    },
+
     getMainType: function() {
         var result = null;
 
@@ -81,6 +103,33 @@ var MediaType = new [class Class](Metadata, {
         }
 
         return result;
+    },
+
+    includes: function(included) {
+        var result = this.equals(MediaType.ALL) || this.equals(included);
+
+        if (!result && (included instanceof MediaType)) {
+            var includedMediaType = included;
+
+            if (this.getMainType().equals(includedMediaType.getMainType())) {
+                // Both media types are different
+                if (this.getSubType().equals(includedMediaType.getSubType())) {
+                    result = true;
+                } else if (this.getSubType().equals("*")) {
+                    result = true;
+                } else if (this.getSubType().startsWith("*+")
+                        && includedMediaType.getSubType().endsWith(
+                        		this.getSubType().substring(2))) {
+                    result = true;
+                }
+            }
+        }
+
+        return result;
+    },
+
+    isConcrete: function() {
+        return !this.getName().contains("*");
     }
 });
 
@@ -226,3 +275,5 @@ MediaType.APPLICATION_JSONP = MediaType.register("application/jsonp", "");
 MediaType.TEXT_JSON = MediaType.register("text/json", "");
 MediaType.APPLICATION_XML = MediaType.register("application/xml", "");
 MediaType.TEXT_XML = MediaType.register("text/xml", "");
+MediaType.TEXT_HTML = MediaType.register("text/html", "");
+MediaType.TEXT_PLAIN = MediaType.register("text/plain", "");
