@@ -18,6 +18,7 @@ var commons = require("./commons.js");
 #include org/restlet/resource/ClientResource.js#
 
 module.exports = {
+	VariantInfo: VariantInfo,
 	Resource: Resource,
 	UniformResource: UniformResource,
 	ServerResource: ServerResource,

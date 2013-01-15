@@ -15,8 +15,6 @@ var url = require("url");
 
 #include org/restlet/data/CacheDirective.js#
 
-#include org/restlet/data/CharacterSet.js#
-
 #include org/restlet/data/Cookie.js#
 
 #include org/restlet/data/CookieSetting.js#
@@ -32,6 +30,8 @@ var url = require("url");
 #include org/restlet/data/Metadata.js#
 
 #include org/restlet/data/Encoding.js#
+
+#include org/restlet/data/Expectation.js#
 
 #include org/restlet/data/Form.js#
 
@@ -49,6 +49,8 @@ var url = require("url");
 
 #include org/restlet/data/MediaType.js#
 
+#include org/restlet/data/CharacterSet.js#
+
 module.exports = {
 	Protocol: Protocol,
 	ClientInfo: ClientInfo,
@@ -57,7 +59,6 @@ module.exports = {
 	Method: Method,
 	Status: Status,
 	CacheDirective: CacheDirective,
-	CharacterSet: CharacterSet,
 	Cookie: Cookie,
 	CookieSetting: CookieSetting,
 	Conditions: Conditions,
@@ -73,5 +74,7 @@ module.exports = {
 	RecipientInfo: RecipientInfo,
 	Tag: Tag,
 	Warning: Warning,
-	MediaType: MediaType
+	MediaType: MediaType,
+	Expectation: Expectation,
+	CharacterSet: CharacterSet,
 };

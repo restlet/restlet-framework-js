@@ -157,6 +157,12 @@ module.exports["Level"] = Level;
 
 #include org/restlet/services/ConverterService.js#
 
+#include org/restlet/engine/application/Conneg.js#
+
+#include org/restlet/engine/application/StrictConneg.js#
+
+#include org/restlet/engine/application/FlexibleConneg.js#
+
 #include org/restlet/services/ConnegService.js#
 
 #include org/restlet/routing/Route.js#
