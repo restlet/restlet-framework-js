@@ -26,3 +26,6 @@ String.prototype.firstUpper = function() {
 String.prototype.firstLower = function() {
 	return this.substring(0,1).toLowerCase() + this.substring(1, this.length);
 };
+String.prototype.contains = function(s) {
+	return (this.indexOf(s)!=-1);
+};

@@ -13,8 +13,15 @@ Array.prototype.getFirstValue = function(key, ignoreCase) {
 	return null;
 };
 
-Array.prototype.add = function(element) {
-	this.push(element);
+Array.prototype.add = function() {
+	if (arguments.length==1) {
+		var element = arguments[0];
+		this.push(element);
+	} else if (arguments.length==2) {
+		var index = arguments[0];
+		var element = arguments[1];
+		this.splice(index, 0, element);
+	}
 };
 
 Array.prototype.addAll = function(elements) {
@@ -42,4 +49,17 @@ Array.prototype.indexOf = function(element) {
 		}
 	}
 	return -1;
-}
+};
+
+Array.prototype.remove = function(i) {
+	return this.splice(i, 1);
+};
+
+Array.prototype.contains = function(obj) {
+	for (var i=0; i<this.length; i++) {
+		if (this[i]==obj) {
+			return true;
+		}
+	}
+	return false;
+};
