@@ -1,1 +1,0 @@
-Ant is available at the following address: http://ant.apache.org/

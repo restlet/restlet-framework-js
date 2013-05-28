@@ -1,1 +1,0 @@
-See the following address for more details: http://code.google.com/p/jsmin-ant-task/

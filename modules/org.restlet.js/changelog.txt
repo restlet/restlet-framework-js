@@ -1,5 +1,0 @@
-** Changelog **
-
-Version 0.1.0
-
-- Imported initial Restlet JS content

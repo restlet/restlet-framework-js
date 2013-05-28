@@ -1,7 +1,0 @@
-.git*
-.project
-build.xml
-changelog.txt
-docs/
-tests/
-testing.js
