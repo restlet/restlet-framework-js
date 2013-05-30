@@ -25,7 +25,9 @@ var Class = function() {
 			content["initialize"].apply(this, arguments);
 		}
 	}
+	//console.log("parent = "+parent);
 	if (parent!=null) {
+		//console.log("1");
 		parent.initializeExtend = true;
 		clazz.prototype = new parent();
 		clazz.prototype.__parent = parent.prototype;
@@ -87,6 +89,7 @@ var Class = function() {
 			}
 		};
 	} else {
+		//console.log("2");
 		clazz.prototype = {};
 		copyElements(content, clazz.prototype);
 	}

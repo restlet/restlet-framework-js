@@ -85,6 +85,7 @@ Finder.extend({
 	        try {
                 result = new finderClass(context, targetClass);
 	        } catch (err) {
+	        	console.log(err.stack);
 	            if (logger != null) {
 	                logger.log([class Level].WARNING,
 	                        "Exception while instantiating the finder.", err);

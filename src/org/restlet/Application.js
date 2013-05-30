@@ -244,7 +244,7 @@ var Application = new [class Class]([class Restlet], {
             }
 
             // Clear the annotations cache
-            [class AnnotationUtils].getInstance().clearCache();
+            //[class AnnotationUtils].getInstance().clearCache();
         }
     }
 });
