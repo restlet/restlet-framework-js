@@ -58,4 +58,5 @@ module.exports = function(grunt) {
   // Default task(s).
   grunt.registerTask('package', ['clean','mkdir','build']);
   grunt.registerTask('test', ['nodeunit']);
+  grunt.registerTask('default', ['package','test']);
 };
