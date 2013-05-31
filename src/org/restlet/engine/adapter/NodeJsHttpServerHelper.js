@@ -21,7 +21,7 @@ var NodeJsHttpServerHelper = new [class Class]([class HttpServerHelper], {
         var port = this.getHelped().getPort();
 
         var currentThis = this;
-        http.createServer(function (request, response) {
+        this.internalServer = http.createServer(function (request, response) {
         	currentThis.getLogger().info("-> incoming request : "+request.url);
         	currentThis.handle(
                     new [class NodeJsHttpServerCall](currentThis.getHelped(), request, response,
@@ -32,5 +32,11 @@ var NodeJsHttpServerHelper = new [class Class]([class HttpServerHelper], {
         //setConfidential(false);
 
         this.callSuper("start");
+	},
+
+	stop: function() {
+		if (this.internalServer!=null) {
+			this.internalServer.close();
+		}
 	}
 });
