@@ -1,7 +1,7 @@
 var restlet = require("../../../build/nodejs/index.js");
 var utils = require("../../lib/utils.js");
 
-exports['simple representation with text'] = {
+exports['simple resource tests'] = {
   setUp: function(done) {
     this.component = new restlet.Component();
     this.component.getServers().addProtocol(restlet.data.Protocol.HTTP, 8000);
@@ -52,7 +52,7 @@ exports['simple representation with text'] = {
     done();
   },
  
-  /*'get with json': function (test) {
+  'get with json': function (test) {
     var options = utils.createRequestOptions('localhost:8000/test1/id','GET',{});
     utils.executeHttpRequest(test, options, null, function(res) {
       test.equal(200, res.statusCode);
@@ -72,7 +72,7 @@ exports['simple representation with text'] = {
         test.done();
       });
     });
-  },*/
+  },
 
   'get with html': function (test) {
     var options = utils.createRequestOptions('localhost:8000/test1/id','GET',{'accept':'text/html'});
