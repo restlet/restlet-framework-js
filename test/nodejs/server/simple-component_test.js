@@ -18,14 +18,14 @@ exports['simple resource tests'] = {
         //console.log("> commit");
         this.commit(repr);
         //console.log("< commit");
-      }),
+      });
       r1.addMethod("get", "html", function() {
         //console.log("---> r1.handle get (2)");
         //console.log("---> "+restlet.data.MediaType.TEXT_HTML);
       	var param = this.getRequestAttributes()['id'];
         var repr = new restlet.representation.StringRepresentation("<html><body>test - param = "+param+"</body></html>", restlet.data.MediaType.TEXT_HTML);
         this.commit(repr);
-      }),
+      });
       r1.addMethod("put", "json", function(representation) {
         //console.log("---> r1.handle put (1)");
         //console.log("---> "+restlet.data.MediaType.TEXT_HTML);
