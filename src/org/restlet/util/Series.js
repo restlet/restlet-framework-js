@@ -57,10 +57,12 @@ var Series = new [class Class]({
 			ignoreCase = false;
 		}
 
-		for (var i=0; i<this.array.length; i++) {
-			var param = this.array[i];
-			if (this.equals(param.getName(), name, ignoreCase)) {
-				return param;
+		if (this.array!=null) {
+			for (var i=0; i<this.array.length; i++) {
+				var param = this.array[i];
+				if (this.equals(param.getName(), name, ignoreCase)) {
+					return param;
+				}
 			}
 		}
 

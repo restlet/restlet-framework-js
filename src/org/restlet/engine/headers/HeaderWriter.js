@@ -54,7 +54,18 @@ var HeaderWriter = new [class Class]({
         return this.append(")");
     },
 
-    appendExtension: function(extension) {
+    appendExtension: function() {
+    	if (arguments.length==1) {
+    		var extension = arguments[0];
+    		return this.appendExtension1(extension);
+    	} else if (arguments.length==2) {
+    		var name = arguments[0];
+    		var value = arguments[1];
+    		return this.appendExtension2(name, value);
+    	}
+    },
+    
+    appendExtension1: function(extension) {
         if (extension != null) {
             return this.appendExtension(extension.getName(), extension.getValue());
         } else {
@@ -62,7 +73,7 @@ var HeaderWriter = new [class Class]({
         }
     },
 
-    appendExtension: function(name, value) {
+    appendExtension2: function(name, value) {
         if ((name != null) && (name.length() > 0)) {
             this.append(name);
 

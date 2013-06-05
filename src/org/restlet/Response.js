@@ -20,9 +20,9 @@ var Response = new [class Class]([class Message], {
         this.getRequest().abort();
     },
 
-    commit: function() {
+    /*commit: function() {
         this.getRequest().commit(this);
-    },
+    },*/
 
     getAge: function() {
         return this.age;

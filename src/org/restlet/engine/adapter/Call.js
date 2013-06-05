@@ -105,12 +105,6 @@ var Call = new [class Class]({
 	setStatusCode: function(statusCode) {
 		this.statusCode = statusCode;
 	},
-	getStatusCode: function() {
-		return this.statusCode;
-	},
-	setStatusCode: function(statusCode) {
-		this.statusCode = statusCode;
-	},
 	getVersion: function() {
 		return this.version;
 	},

@@ -132,6 +132,17 @@ var Resource = new [class Class]({
         return this.getReference() == null ? null : this.getReference().getQueryAsForm();
     },
 
+    getQueryValue: function(name) {
+        var result = null;
+        var query = this.getQuery();
+
+        if (query != null) {
+            result = query.getFirstValue(name);
+        }
+
+        return result;
+    },
+
     getRanges: function() {
         return this.getRequest() == null ? null : this.getRequest().getRanges();
     },
