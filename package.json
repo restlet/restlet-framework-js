@@ -18,7 +18,8 @@
     "grunt-contrib-nodeunit": "~0.1.2",
     "grunt-contrib-clean": "*",
     "grunt-contrib-copy": "*",
-    "grunt-mkdir": "*"
+    "grunt-mkdir": "*",
+    "shelljs": "*"
   },
   "keywords": ["restlet", "framework", "web", "rest", "restful", "http", "javascript"],
   "repository": "git://github.com/restlet/restlet-framework-js",
