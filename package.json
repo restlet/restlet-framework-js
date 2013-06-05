@@ -25,5 +25,27 @@
   "repository": "git://github.com/restlet/restlet-framework-js",
   "main": "index",
   "scripts": { "prepublish" : "npm prune" },
-  "engines": { "node":">= 0.8.0" }
+  "engines": { "node":">= 0.8.0" },
+  "licenses": [
+    {
+      "type": "Apache 2.0",
+      "url": "http://www.opensource.org/licenses/apache-2.0"
+    },
+    {
+      "type": "LGPL 3.0",
+      "url": "http://www.opensource.org/licenses/lgpl-3.0"
+    },
+    {
+      "type": "LGPL 2.1",
+      "url": "http://www.opensource.org/licenses/lgpl-2.1"
+    },
+    {
+      "type": "CDDL 1.0",
+      "url": "http://www.opensource.org/licenses/cddl1"
+    },
+    {
+       "type": "EPL 1.0",
+       "url": "http://www.opensource.org/licenses/eclipse-1.0"
+    }
+  ]
 }
