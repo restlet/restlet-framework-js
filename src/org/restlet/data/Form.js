@@ -1,6 +1,24 @@
 var Form = new [class Class]([class Series], {
 	initialize: function() {
-		this.callSuperCstr();
+		if (arguments.length==0) {
+			this.callSuperCstr();
+		} else if (arguments.length>=1) {
+			this.callSuperCstr();
+			var parametersString = arguments[0];
+			var characterSet = [class CharacterSet].UTF_8;
+			var decode = true;
+			var separator = '&';
+			if (arguments.length>=2) {
+				characterSet = arguments[1];
+			}
+			if (arguments.length>=3) {
+				decode = arguments[2];
+			}
+			if (arguments.length>=4) {
+				separator = arguments[3];
+			}
+	        [class FormUtils].parse(this, parametersString, characterSet, decode, separator);
+		}
 	},
 
 	createEntry: function(name, value) {

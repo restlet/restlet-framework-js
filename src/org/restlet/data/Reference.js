@@ -6,52 +6,8 @@ var Reference = new [class Class]({
 			this.baseRef = arguments[0];
 			this.internalRef = arguments[1];
 		}
-		/*var tmp = this.internalRef;
-		var index = tmp.indexOf("://");
-		if (index!=-1) {
-			this.scheme = tmp.substring(0, index);
-			tmp = tmp.substring(index+3);
-		}
-		index = tmp.indexOf(":");
-		if (index!=-1) {
-			this.host = tmp.substring(0, index);
-			tmp = tmp.substring(index+1);
-			index = tmp.indexOf("/");
-			if (index!=-1) {
-				this.port = parseInt(tmp.substring(0, index));
-				tmp = tmp.substring(index);
-				this.path = tmp;
-			}
-		} else {
-			if (this.protocol=="http") {
-				this.port = 80;
-			} if (this.protocol=="https") {
-				this.port = 443;
-			}
-			index = tmp.indexOf("/");
-			if (index!=-1) {
-				this.host = tmp.substring(0, index);
-				tmp = tmp.substring(index);
-				this.path = tmp;
-			}			
-		}*/
 		
 		this.updateIndexes();
-	},
-	getUrl: function() {
-		return this.url;
-	},
-	getScheme: function() {
-		return this.scheme;
-	},
-	getPort: function() {
-		return this.port;
-	},
-	getHost: function() {
-		return this.host;
-	},
-	getPath: function() {
-		return this.path;
 	},
 
 	addQueryParameter: function() {
@@ -476,12 +432,12 @@ var Reference = new [class Class]({
 
     //TODO:
     getMatrixAsForm: function() {
-        return new Form(this.getMatrix(), ';');
-    },
-
-    //TODO:
-    getMatrixAsForm: function(characterSet) {
-        return new Form(this.getMatrix(), characterSet, ';');
+    	if (arguments.length==0) {
+    		return new Form(this.getMatrix(), ';');
+    	} else if (arguments.length==1) {
+    		var characterSet = arguments[0];
+            return new Form(this.getMatrix(), characterSet, ';');
+    	}
     },
 
     getParentRef: function() {
@@ -766,11 +722,16 @@ var Reference = new [class Class]({
     },
 
     getRemainingPart: function() {
-        return this._getRemainingPart(false, true);
-    },
-
-    getRemainingPart: function(decode) {
-        return this._getRemainingPart(true, true);
+    	if (arguments.length==0) {
+    		return this._getRemainingPart(false, true);
+    	} else if (arguments.length==1) {
+    		var decode = arguments[0];
+    		return this._getRemainingPart(decode, true);
+    	} else {
+    		var decode = arguments[0];
+    		var query = arguments[1];
+    		return this._getRemainingPart(decode, query);
+    	}
     },
 
     _getRemainingPart: function(decode, query) {
@@ -1667,10 +1628,16 @@ var Reference = new [class Class]({
     },
 
     toString: function() {
-        return this.internalRef;
+    	if (arguments.length==0) {
+    		return this.internalRef;
+    	} else if (arguments.length==2) {
+    		var query = arguments[0];
+    		var fragment = arguments[1];
+    		return this._toString(query, fragment);
+    	}
     },
 
-    toString: function(query, fragment) {
+    _toString: function(query, fragment) {
         if (query) {
             if (fragment) {
                 return this.internalRef;
