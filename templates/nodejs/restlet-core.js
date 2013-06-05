@@ -4,9 +4,23 @@ var iconv = require("iconv-lite");
 
 module.exports = {};
 
+//Utils entities
+
+#include org/restlet/engine/util/StringUtils.js#
+
+#include org/restlet/engine/util/FormReader.js#
+
+#include org/restlet/engine/util/FormUtils.js#
+module.exports["FormUtils"] = FormUtils;
+
+// Level
+
 #include org/restlet/Level.js#
 module.exports["Level"] = Level;
 
+#require-include representation#
+#require-include util#
+#require-include data#
 #require-include resource#
 
 //Root entities
@@ -132,8 +146,6 @@ module.exports["Level"] = Level;
 #include org/restlet/engine/adapter/NodeJsHttpClientHelper.js#
 
 // Server
-
-#include org/restlet/engine/util/StringUtils.js#
 
 #include org/restlet/engine/Helper.js#
 
