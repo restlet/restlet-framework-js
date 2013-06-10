@@ -3,6 +3,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-mkdir');
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-contrib-nodeunit');
+  grunt.loadNpmTasks('grunt-karma');
   grunt.loadTasks('lib/grunt');
 
   // Project configuration.
@@ -69,10 +70,17 @@ module.exports = function(grunt) {
       browserSmallest: 'build/browser/restlet-browser-smallest.js',
       browserSmall: 'build/browser/restlet-browser-small.js',
       browserMedium: 'build/browser/restlet-browser-medium.js',
-      browserMaximum: 'build/browser/restlet-browser-maximum.js',
+      browserMaximum: 'build/browser/restlet-browser-maximum.js'
 	},
     nodeunit: {
       nodejs: ['test/commons/**/*_test.js','test/nodejs/**/*_test.js']
+    },
+    karma: {
+      unit: {
+        configFile: 'test/conf/karma.conf.js',
+        singleRun: true,
+        browsers: ['Firefox']
+      }
     }
   });
 
@@ -84,7 +92,12 @@ module.exports = function(grunt) {
                                          'build:browserMedium','min:browserMedium',
                                          'build:browserSmall','min:browserSmall',
                                          'build:browserSmallest','min:browserSmallest']);
+  grunt.registerTask('package:browserMaximum', ['clean','mkdir:browser','build:browserMaximum','min:browserMaximum']);
+  grunt.registerTask('package:browserMedium', ['clean','mkdir:browser','build:browserMedium','min:browserMedium']);
+  grunt.registerTask('package:browserMedium', ['clean','mkdir:browser','build:browserSmall','min:browserSmall']);
+  grunt.registerTask('package:browserMedium', ['clean','mkdir:browser','build:browserSmallest','min:browserSmallest']);
   grunt.registerTask('test', ['nodeunit']);
   grunt.registerTask('test:nodejs', ['nodeunit']);
+  grunt.registerTask('test:browser', ['karma']);
   grunt.registerTask('default', ['package','test']);
 };

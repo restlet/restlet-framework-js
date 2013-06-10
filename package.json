@@ -19,6 +19,9 @@
     "grunt-contrib-clean": "*",
     "grunt-contrib-copy": "*",
     "grunt-mkdir": "*",
+    "grunt-karma": "*",
+    "phantomjs": "*",
+    "expect.js": "~0.2.0",
     "shelljs": "*"
   },
   "keywords": ["restlet", "framework", "web", "rest", "restful", "http", "javascript"],

@@ -2,6 +2,8 @@ _js:
   - 0.8
 
 before_script:
+  - export DISPLAY=:99.0
+  - sh -e /etc/init.d/xvfb start
   - npm install -g grunt-cli
   - npm install
   - grunt package
