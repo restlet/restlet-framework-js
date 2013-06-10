@@ -9,5 +9,8 @@ var Connector = new [class Class]([class Restlet], {
 	},
 	getProtocols: function() {
 		return this.protocols;
+	},
+	setProtocols: function(protocols) {
+		this.protocols = protocols;
 	}
 });

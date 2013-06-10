@@ -1,11 +1,18 @@
 var Engine = new [class Class]({
 	initialize: function() {
         this.registeredClients = new [class ClientList]();
-        this.registeredClients.push([class NodeJsHttpClientHelper]);
+        // [ifdef nodejs] uncomment
+        // this.registeredClients.push([class NodeJsHttpClientHelper]);
+        // [enddef]
+        // [ifndef nodejs]
+        this.registeredClients.push([class BrowserHttpClientHelper]);
+        // [enddef]
 
         //this.registeredProtocols = [];
-        this.registeredServers = new [class ServerList]();
-        this.registeredServers.push([class NodeJsHttpServerHelper]);
+        // [ifdef nodejs] uncomment
+        // this.registeredServers = new [class ServerList]();
+        // this.registeredServers.push([class NodeJsHttpServerHelper]);
+        // [enddef]
         //this.registeredAuthenticators = [];
         //this.registeredConverters = [];
 	},
@@ -14,7 +21,16 @@ var Engine = new [class Class]({
 		//TODO: fix me
 		//return new this.registeredClients[0]();
 		//return new this.registeredClients[0]();
-		return new this.registeredServers[0](restlet);
+        // [ifndef nodejs]
+		return new this.registeredClients[0](restlet);
+		// [enddef]
+        // [ifdef nodejs] uncomment
+		// if (restlet instanceof [class Client]) {
+		// 	return new this.registeredClients[0](restlet);
+		// } else if (restlet instanceof [class Server]) {
+		// 	return new this.registeredServers[0](restlet);
+		// }
+		// [enddef]
 	},
 	
 	/*
@@ -127,7 +143,12 @@ Engine.extend({
     RELEASE_NUMBER: "@release-type@@release-number@",*/
     MAJOR_NUMBER: "2.1",
     MINOR_NUMBER: "2.0",
-    RELEASE_NUMBER: "nodejs2.1",
+// [ifdef nodejs] uncomment
+//    RELEASE_NUMBER: "2.1/nodejs",
+// [enddef]
+// [ifndef nodejs]
+	RELEASE_NUMBER: "2.1/browser",
+// [enddef]
 	getInstance: function() {
 		if (Engine.instance==null) {
 			Engine.instance = new Engine();

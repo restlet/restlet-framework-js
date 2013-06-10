@@ -34,5 +34,3 @@ var StringBuilder = new Class({
 	    this.append(endString);
 	}
 });
-
-module.exports = StringBuilder;

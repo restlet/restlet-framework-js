@@ -16,6 +16,8 @@
 
 // Restlet
 
+#include org/restlet/Logger.js#
+
 #include org/restlet/Context.js#
 
 #include org/restlet/data/Protocol.js#
@@ -39,8 +41,6 @@
 #include org/restlet/util/Series.js#
 
 #include org/restlet/data/CacheDirective.js#
-
-#include org/restlet/data/CharacterSet.js#
 
 #include org/restlet/data/Cookie.js#
 
@@ -73,6 +73,8 @@
 #include org/restlet/data/Tag.js#
 
 #include org/restlet/data/Warning.js#
+
+#include org/restlet/data/CharacterSet.js#
 
 #include org/restlet/engine/headers/HeaderReaderUtils.js#
 
@@ -132,7 +134,13 @@
 
 #include org/restlet/Connector.js#
 
+#include org/restlet/util/Series.js#
+
+#include org/restlet/util/ClientList.js#
+
 #include org/restlet/engine/Engine.js#
+
+#include org/restlet/engine/adapter/Adapter.js#
 
 #include org/restlet/engine/adapter/Call.js#
 

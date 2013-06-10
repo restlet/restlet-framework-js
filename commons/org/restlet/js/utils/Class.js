@@ -99,5 +99,3 @@ var Class = function() {
 	};
 	return clazz;
 };
-
-module.exports = Class;

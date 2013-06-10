@@ -80,4 +80,6 @@ Parameter.extend({
 	}
 });
 
-exports.Parameter = Parameter;
+// [ifdef nodejs] uncomment
+// exports.Parameter = Parameter;
+// [enddef]

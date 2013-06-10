@@ -69,6 +69,7 @@ var ClientAdapter = new [class Class]([class Adapter], {
         }
     },
     commit: function(httpCall, request, callback) {
+    	console.log("1 -commit");
     	if (httpCall != null) {
             // Send the request to the client
         	var currentThis = this;

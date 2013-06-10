@@ -214,4 +214,6 @@ var Server = new [class Class]([class Connector], {
 
 });
 
-exports.Server = Server;
+// [ifdef nodejs] uncomment
+// exports.Server = Server;
+// [enddef]

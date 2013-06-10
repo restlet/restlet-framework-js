@@ -60,9 +60,6 @@ var Representation = new [class Class]([class RepresentationInfo], {
         // [ifndef nodejs]
 		} else if (content instanceof Document) {
 		// [enddef]
-		// [ifdef nodejs] uncomment
-		//} else if (content instanceof libxmljs.Document) {
-		// [enddef]
 			this.xml = content;
 			this.setAvailable(true);
 		} else {

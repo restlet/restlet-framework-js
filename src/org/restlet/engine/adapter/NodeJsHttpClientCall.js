@@ -34,6 +34,13 @@ var NodeJsHttpClientCall = new [class Class]([class ClientCall], {
 		var currentThis = this;
 		var response = new [class Response](request);
 		var port = request.getResourceRef().getHostPort();
+		if (port==-1) {
+			if (request.getResourceRef().getScheme()=='http') {
+				port = 80;
+			} else if (request.getResourceRef().getScheme()=='http') {
+				port = 443;
+			}
+		}
 		var host = request.getResourceRef().getHostDomain();
 		var path = request.getResourceRef().getPath();
 
@@ -77,8 +84,7 @@ var NodeJsHttpClientCall = new [class Class]([class ClientCall], {
 			//TODO: support chunking
 			//TODO: support encoding
 			clientRequest.write(data);
-		}// else {
+		}
 		clientRequest.end();
-		//}
 	}
 });
