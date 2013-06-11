@@ -9,6 +9,9 @@ NOTE: this is a port in progress of the Restlet Framework for Java. See wiki pag
 
 http://restlet.org
 
+* Documentation: https://github.com/restlet/restlet-framework-js/blob/master/docs/index.md
+* Building the source: https://github.com/restlet/restlet-framework-js/blob/master/docs/building.md
+
 ## Copyright
 
 Copyright 2013 Restlet, Inc.
