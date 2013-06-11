@@ -1,5 +1,3 @@
-# Documentation
-
 # Restlet.JS for browsers
 
 ## Importing Restlet in the web page
