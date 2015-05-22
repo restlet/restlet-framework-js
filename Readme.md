@@ -26,8 +26,6 @@
   </tbody>
 </table>
 
- [![Build Status](https://secure.travis-ci.org/restlet/restlet-framework-js.png)](http://travis-ci.org/restlet/restlet-framework-js)
-
 Do you want to blend your web services, web sites and web clients into unified web applications exposing and consuming RESTful web APIs?
 Leverage the open source Restlet Framework and its unique JavaScript API available in two consistent editions: Node.js and Browser/AJAX! 
 
