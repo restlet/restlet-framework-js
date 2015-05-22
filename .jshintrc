@@ -1,0 +1,32 @@
+{
+  "node": true,
+  "browser": true,
+  "esnext": true,
+  "bitwise": true,
+  "curly": true,
+  "immed": true,
+  "indent": 2,
+  "latedef": true,
+  "newcap": true,
+  "noarg": true,
+  "regexp": true,
+  "strict": true,
+  "trailing": true,
+  "smarttabs": true,
+  "laxbreak": true,
+  "laxcomma": true,
+  "quotmark": "single",
+  "unused": true,
+  "eqnull": true,
+  "undef": true,
+//  "eqeqeq": true, // TODO to restore after migration
+  //
+  "globals": {
+    "angular": false,
+    "_": false,
+    "moment": false,
+    "$": false,
+    "Stripe": false,
+    "ngGridFlexibleHeightPlugin": false
+  }
+}
