@@ -35,4 +35,4 @@ http://restlet.org
 
 ## Copyright
 
-Copyright 2013 Restlet, Inc.
+Copyright 2015 Restlet, Inc.
