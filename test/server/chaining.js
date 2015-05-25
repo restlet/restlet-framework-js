@@ -44,8 +44,8 @@ describe('request / response chaining', function() {
       virtualHost.handle(request, response);
 
       assert.equal(0, restlet1Called);
-      assert.equal(1, restlet1Called);
-      assert.equal(1, endCalled);
+      assert.equal(1, restlet2Called);
+      assert.equal(2, endCalled);
     });
   });
 

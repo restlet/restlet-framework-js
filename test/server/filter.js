@@ -1,5 +1,6 @@
 var assert = require('assert');
 var restlet = require('../..');
+var testUtils = require('./test-utils');
 
 describe('filter', function() {
   // Simple creations
@@ -11,14 +12,10 @@ describe('filter', function() {
         called = true;
       });
 
-      var request = {
-        method: 'GET',
-        reference: {
-          path: '/path'
-        }
-      };
+      var request = testUtils.createRequest('GET', '/path');
       var response = {};
       serverResource.handle(request, response);
+      request.trigger('end');
       assert.equal(true, called);
     });
   });

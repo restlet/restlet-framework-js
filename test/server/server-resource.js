@@ -1,5 +1,6 @@
 var assert = require('assert');
 var restlet = require('../..');
+var testUtils = require('./test-utils');
 
 describe('server resource', function() {
   // Simple creations
@@ -11,14 +12,10 @@ describe('server resource', function() {
         called = true;
       });
 
-      var request = {
-        method: 'GET',
-        reference: {
-          path: '/path'
-        }
-      };
+      var request = testUtils.createRequest('GET', '/path');
       var response = {};
       serverResource.handle(request, response);
+      request.trigger('end');
       assert.equal(true, called);
     });
 
@@ -29,14 +26,10 @@ describe('server resource', function() {
         called = true;
       });
 
-      var request = {
-        method: 'GET',
-        reference: {
-          path: '/path'
-        }
-      };
+      var request = testUtils.createRequest('GET', '/path');
       var response = {};
       serverResource.handle(request, response);
+      request.trigger('end');
       assert.equal(true, called);
     });
 
@@ -48,12 +41,7 @@ describe('server resource', function() {
         called = true;
       });
 
-      var request = {
-        method: 'GET',
-        reference: {
-          path: '/path'
-        }
-      };
+      var request = testUtils.createRequest('GET', '/path');
       var response = {
         setStatus: function(code) {
           if (code == 405) {
@@ -68,6 +56,7 @@ describe('server resource', function() {
         }
       };
       serverResource.handle(request, response);
+      request.trigger('end');
       assert.equal(false, called);
       assert.equal(true, notAllowedCalled);
     });
@@ -82,14 +71,10 @@ describe('server resource', function() {
         called = true;
       });
 
-      var request = {
-        method: 'GET',
-        reference: {
-          path: '/path'
-        }
-      };
+      var request = testUtils.createRequest('GET', '/path');
       var response = {};
       serverResource.handle(request, response);
+      request.trigger('end');
       assert.equal(true, called);
     });
 
@@ -100,14 +85,10 @@ describe('server resource', function() {
         called = true;
       });
 
-      var request = {
-        method: 'GET',
-        reference: {
-          path: '/path'
-        }
-      };
+      var request = testUtils.createRequest('GET', '/path');
       var response = {};
       serverResource.handle(request, response);
+      request.trigger('end');
       assert.equal(true, called);
     });
 
@@ -119,12 +100,7 @@ describe('server resource', function() {
         called = true;
       });
 
-      var request = {
-        method: 'GET',
-        reference: {
-          path: '/path'
-        }
-      };
+      var request = testUtils.createRequest('GET', '/path');
       var response = {
         setStatus: function(code) {
           if (code == 405) {
@@ -139,6 +115,7 @@ describe('server resource', function() {
         }
       };
       serverResource.handle(request, response);
+      request.trigger('end');
       assert.equal(false, called);
       assert.equal(true, notAllowedCalled);
     });
@@ -153,14 +130,10 @@ describe('server resource', function() {
         called = true;
       });
 
-      var request = {
-        method: 'GET',
-        reference: {
-          path: '/path'
-        }
-      };
+      var request = testUtils.createRequest('GET', '/path');
       var response = {};
       serverResource.handle(request, response);
+      request.trigger('end');
       assert.equal(true, called);
     });
 
@@ -172,12 +145,7 @@ describe('server resource', function() {
         called = true;
       });
 
-      var request = {
-        method: 'POST',
-        reference: {
-          path: '/path'
-        }
-      };
+      var request = testUtils.createRequest('POST', '/path');
       var response = {
         setStatus: function(code) {
           if (code == 405) {
@@ -192,6 +160,7 @@ describe('server resource', function() {
         }
       };
       serverResource.handle(request, response);
+      request.trigger('end');
       assert.equal(false, called);
       assert.equal(true, notAllowedCalled);
     });
@@ -206,14 +175,10 @@ describe('server resource', function() {
         called = true;
       });
 
-      var request = {
-        method: 'POST',
-        reference: {
-          path: '/path'
-        }
-      };
+      var request = testUtils.createRequest('POST', '/path');
       var response = {};
       serverResource.handle(request, response);
+      request.trigger('end');
       assert.equal(true, called);
     });
 
@@ -225,12 +190,7 @@ describe('server resource', function() {
         called = true;
       });
 
-      var request = {
-        method: 'GET',
-        reference: {
-          path: '/path'
-        }
-      };
+      var request = testUtils.createRequest('GET', '/path');
       var response = {
         setStatus: function(code) {
           if (code == 405) {
@@ -245,6 +205,7 @@ describe('server resource', function() {
         }
       };
       serverResource.handle(request, response);
+      request.trigger('end');
       assert.equal(false, called);
       assert.equal(true, notAllowedCalled);
     });
