@@ -9,6 +9,7 @@
       <th>OS X</th>
       <th>Windows</th>
       <th>Coverage</th>
+      <th>Dependencies</th>
     </tr>
   </thead>
   <tbody>
@@ -22,6 +23,9 @@
       <td align="center">
         <a href="https://coveralls.io/r/restlet/restlet-framework-js"><img src="https://coveralls.io/repos/restlet/restlet-framework-js/badge.svg" alt="Coverage Status"></a>
       </td>
+      <td align="center">
+        <a href="https://david-dm.org/"><img src="https://david-dm.org/restlet/restlet-framework-js.svg"></a>
+      </td>
     </tr>
   </tbody>
 </table>
@@ -32,6 +36,14 @@ Leverage the open source Restlet Framework and its unique JavaScript API availab
 NOTE: this is a port in progress of the Restlet Framework for Java. See wiki pages for usage instructions.
 
 http://restlet.org
+
+## Installing
+
+For Node, use NPM with the following command:
+
+```
+npm install restlet
+```
 
 ## Copyright
 
