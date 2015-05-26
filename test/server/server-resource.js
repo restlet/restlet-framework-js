@@ -209,5 +209,72 @@ describe('server resource', function() {
       assert.equal(false, called);
       assert.equal(true, notAllowedCalled);
     });
+
+    it('with function and text payload', function() {
+      var called = false;
+      var notAllowedCalled = false;
+      var textPayload = null;
+      var serverResource = restlet.createServerResource()
+                                  .post(function(request, response) {
+        called = true;
+        textPayload = request.entity.text;
+      });
+
+      var request = testUtils.createRequest('POST', '/path', 'application/xml');
+      var response = {
+        setStatus: function(code) {
+          if (code == 405) {
+            notAllowedCalled = true;
+          }
+        },
+        writeRepresentation: function() {
+
+        },
+        end: function() {
+
+        }
+      };
+      serverResource.handle(request, response);
+      request.trigger('data', 'chunk1');
+      request.trigger('data', 'chunk2');
+      request.trigger('end');
+      assert.equal(true, called);
+      assert.equal(false, notAllowedCalled);
+      assert.equal('chunk1chunk2', textPayload);
+    });
+
+    it('with function and byte payload', function() {
+      var called = false;
+      var notAllowedCalled = false;
+      var bytePayload = null;
+      var serverResource = restlet.createServerResource()
+                                  .post(function(request, response) {
+        called = true;
+        bytePayload = request.entity.raw;
+      });
+
+      var request = testUtils.createRequest('POST', '/path');
+      var response = {
+        setStatus: function(code) {
+          if (code == 405) {
+            notAllowedCalled = true;
+          }
+        },
+        writeRepresentation: function() {
+
+        },
+        end: function() {
+
+        }
+      };
+      serverResource.handle(request, response);
+      request.trigger('data', new Buffer('chunk1', 'utf-8'));
+      request.trigger('data', new Buffer('chunk2', 'utf-8'));
+      request.trigger('end');
+      assert.equal(true, called);
+      assert.equal(false, notAllowedCalled);
+      assert.equal(new Buffer('chunk1chunk2', 'utf-8').toString(),
+        bytePayload.toString());
+    });
   });
 });
