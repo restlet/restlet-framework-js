@@ -1,9 +1,9 @@
-var restlet = require('./index');
+var restlet = require('../index');
 var _ = require('lodash');
 
 var component = restlet.createComponent();
 
-// Add a new HTTP server listening on port 8182.
+// Add a new HTTP server listening on port 3000.
 component.addServer('http', 3000);
 
 // Create the sample application.
