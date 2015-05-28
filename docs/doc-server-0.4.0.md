@@ -15,14 +15,13 @@
 - [Application](#application)
   - [Method converters()](#method-converters)
   - [Method handle(request, response)](#method-handlerequest-response-1)
-  - [Method handle(request, response)](#method-handlerequest-response-2)
 - [Router](#router)
   - [Method attach(path, [configuration], handler)](#method-attachpath-configuration-handler)
 - [Restlet](#restlet)
-  - [Method handle(request, response)](#method-handlerequest-response-3)
+  - [Method handle(request, response)](#method-handlerequest-response-2)
   - [Method next(handler)](#method-nexthandler)
 - [Filter](#filter)
-  - [Method handle(request, response)](#method-handlerequest-response-4)
+  - [Method handle(request, response)](#method-handlerequest-response-3)
   - [Method next(handler)](#method-nexthandler-1)
 - [Server resource](#server-resource)
   - [Method handler(handler)](#method-handlerhandler)
@@ -35,6 +34,7 @@
   - [Method head(handler)](#method-headhandler)
   - [Method options(handler)](#method-optionshandler)
 - [Directory](#directory)
+  - [Method handle(request, response)](#method-handlerequest-response-4)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -50,9 +50,9 @@ application. The following code describes how to use this method:
 
     var component = restlet.createComponent();
 
-A {Component} allows then to add one or several servers, configure
+A component allows then to add one or several servers, configure
 virtual hosts and attach elements on them. Notice that a default
-virtual host (reachable using {getDefaultHost}) is automatically
+virtual host (reachable using the method `getDefaultHost`) is automatically
 created and is used when any other virtual hosts match for the
 request.
 
@@ -174,23 +174,10 @@ __Methods__
 | ------ | ----------- |
 | converters | The list of converters associated with the application. |
 | handle | The entry point for router. |
-| handle | The entry point for router. |
 
 ### Method converters()
 
 The list of converters associated with the application.
-
-### Method handle(request, response)
-
-The entry point for router.
-
-| Argument | Type | Description |
-| -------- | ---- | ----------- |
-| request | Request | the request |
-| response | Response | the response |
-
-Notice that this method shouldn't be called explicitly since it
-involves within the request processing chain.
 
 ### Method handle(request, response)
 
@@ -546,3 +533,21 @@ TODO
 __`restlet.createDirectory`__
 
 Create a directory.
+
+__Methods__
+
+| Method | Description |
+| ------ | ----------- |
+| handle | The entry point for directory. |
+
+### Method handle(request, response)
+
+The entry point for directory.
+
+| Argument | Type | Description |
+| -------- | ---- | ----------- |
+| request | Request | the request |
+| response | Response | the response |
+
+Notice that this method shouldn't be called explicitly since it
+involves within the request processing chain.
