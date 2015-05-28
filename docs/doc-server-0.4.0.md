@@ -1,12 +1,15 @@
 # Server side support - API documentation
 
-## `restlet.createComponent`
+## Component
 
-Create a new Restlet component. This is typically what you do
-first to initialize your Restlet application. The following code
-describes how to use this method:
+__`restlet.createComponent`__
 
-var component = restlet.createComponent();
+Create a new Restlet component.
+
+This is typically what you do first to initialize your Restlet
+application. The following code describes how to use this method:
+
+    var component = restlet.createComponent();
 
 A {Component} allows then to add one or several servers, configure
 virtual hosts and attach elements on them. Notice that a default
@@ -39,10 +42,9 @@ __Methods__
 | ------ | ----------- |
 | addServer | Configure a server for the component to serve requests for a particular protocol. |
 | start | Start the component and all the configured servers. |
-| getDefaultHost | Get the default host associated with the component. For each component, a default host is implicitely created. It's
-called if any other virtual hosts match for the request. |
+| getDefaultHost | Get the default host associated with the component. For each component, a default host is implicitely created. It's called if any other virtual hosts match for the request. |
 
-### Method `addServer(protocol, port)`
+### Method addServer(protocol, port)
 
 Configure a server for the component to serve requests
 for a particular protocol.
@@ -52,17 +54,19 @@ for a particular protocol.
 | protocol | String | the protocol of the server to add |
 | port | Number | the port of the server to add  |
 
-### Method `start()`
+### Method start()
 
 Start the component and all the configured servers.
 
-### Method `getDefaultHost()`
+### Method getDefaultHost()
 
 Get the default host associated with the component. For
 each component, a default host is implicitely created. It's
 called if any other virtual hosts match for the request.
 
-## `restlet.createVirtualHost`
+## Virtual host
+
+__`restlet.createVirtualHost`__
 
 Create a virtual host.
 
@@ -74,7 +78,7 @@ __Methods__
 | attachDefault | Attach a default route on a router. |
 | handle | The entry point for virtual host. |
 
-### Method `attach(path, handler)`
+### Method attach(path, handler)
 
 Attach a route on a virtual host.
 
@@ -96,7 +100,7 @@ of use:
     var application = (...)
     router.attach('/path', application);
 
-### Method `attachDefault(handler)`
+### Method attachDefault(handler)
 
 Attach a default route on a router.
 
@@ -107,7 +111,7 @@ Attach a default route on a router.
 The attached handler will be called only if no route matches for
 the request.
 
-### Method `handle(request, response)`
+### Method handle(request, response)
 
 The entry point for virtual host.
 
@@ -119,7 +123,9 @@ The entry point for virtual host.
 Notice that this method shouldn't be called explicitly since it
 involves within the request processing chain.
 
-## `restlet.createApplication`
+## Application
+
+__`restlet.createApplication`__
 
 Create a new application.
 
@@ -131,11 +137,11 @@ __Methods__
 | handle | The entry point for router. |
 | handle | The entry point for router. |
 
-### Method `converters()`
+### Method converters()
 
 The list of converters associated with the application.
 
-### Method `handle(request, response)`
+### Method handle(request, response)
 
 The entry point for router.
 
@@ -147,7 +153,7 @@ The entry point for router.
 Notice that this method shouldn't be called explicitly since it
 involves within the request processing chain.
 
-### Method `handle(request, response)`
+### Method handle(request, response)
 
 The entry point for router.
 
@@ -159,7 +165,9 @@ The entry point for router.
 Notice that this method shouldn't be called explicitly since it
 involves within the request processing chain.
 
-## `restlet.createRouter`
+## Router
+
+__`restlet.createRouter`__
 
 Create a new router.
 
@@ -181,10 +189,8 @@ __Methods__
 | Method | Description |
 | ------ | ----------- |
 | attach | Attach a route on a router. |
-| attachDefault | Attach a default route on a router. |
-| handle | The entry point for router. |
 
-### Method `attach(path, [configuration], handler)`
+### Method attach(path, [configuration], handler)
 
 Attach a route on a router.
 
@@ -238,30 +244,9 @@ Notice that path variables are evaluated by the router itself.
 For this reason, they are available in the request processing
 chain after the router.
 
-### Method `attachDefault(handler)`
+## Restlet
 
-Attach a default route on a router.
-
-| Argument | Type | Description |
-| -------- | ---- | ----------- |
-| handler | Function or Object | the processing element when the router matches  |
-
-The attached handler will be called only if no route matches for
-the request.
-
-### Method `handle(request, response)`
-
-The entry point for router.
-
-| Argument | Type | Description |
-| -------- | ---- | ----------- |
-| request | Request | the request |
-| response | Response | the response  |
-
-Notice that this method shouldn't be called explicitly since it
-involves within the request processing chain.
-
-## `restlet.createRestlet`
+__`restlet.createRestlet`__
 
 Create a new restlet.
 
@@ -294,7 +279,7 @@ __Methods__
 | handle | The entry point for router. |
 | next | Define the next element of the current restlet. |
 
-### Method `handle(request, response)`
+### Method handle(request, response)
 
 The entry point for router.
 
@@ -306,7 +291,7 @@ The entry point for router.
 Notice that this method shouldn't be called explicitly since it
 involves within the request processing chain.
 
-### Method `next(handler)`
+### Method next(handler)
 
 Define the next element of the current restlet.
 
@@ -329,7 +314,9 @@ The following snippet describes this mechanism:
 Notice that this method shouldn't be called explicitly since it
 involves within the request processing chain.
 
-## `restlet.createFilter`
+## Filter
+
+__`restlet.createFilter`__
 
 Create a new server filter.
 
@@ -340,7 +327,7 @@ __Methods__
 | handle | The entry point for router. |
 | next | Define the next element of the current restlet. |
 
-### Method `handle(request, response)`
+### Method handle(request, response)
 
 The entry point for router.
 
@@ -352,7 +339,7 @@ The entry point for router.
 Notice that this method shouldn't be called explicitly since it
 involves within the request processing chain.
 
-### Method `next(handler)`
+### Method next(handler)
 
 Define the next element of the current restlet.
 
@@ -363,7 +350,9 @@ Define the next element of the current restlet.
 Notice that this method shouldn't be called explicitly since it
 involves within the request processing chain.
 
-## `restlet.createServerResource`
+## Server resource
+
+__`restlet.createServerResource`__
 
 Create a server server resource.
 
@@ -441,7 +430,7 @@ __Methods__
 | head | TODO |
 | options | TODO |
 
-### Method `handler(handler)`
+### Method handler(handler)
 
 TODO
 
@@ -449,7 +438,7 @@ TODO
 | -------- | ---- | ----------- |
 | handler | Function or Object | the processing element when the router matches |
 
-### Method `get(handler)`
+### Method get(handler)
 
 TODO
 
@@ -457,7 +446,7 @@ TODO
 | -------- | ---- | ----------- |
 | handler | Function or Object | the processing element when the router matches |
 
-### Method `getJson(handler)`
+### Method getJson(handler)
 
 TODO
 
@@ -465,7 +454,7 @@ TODO
 | -------- | ---- | ----------- |
 | handler | Function or Object | the processing element when the router matches |
 
-### Method `post(handler)`
+### Method post(handler)
 
 TODO
 
@@ -473,7 +462,7 @@ TODO
 | -------- | ---- | ----------- |
 | handler | Function or Object | the processing element when the router matches |
 
-### Method `put(handler)`
+### Method put(handler)
 
 TODO
 
@@ -481,7 +470,7 @@ TODO
 | -------- | ---- | ----------- |
 | handler | Function or Object | the processing element when the router matches |
 
-### Method `patch(handler)`
+### Method patch(handler)
 
 TODO
 
@@ -489,7 +478,7 @@ TODO
 | -------- | ---- | ----------- |
 | handler | Function or Object | the processing element when the router matches |
 
-### Method `delete(handler)`
+### Method delete(handler)
 
 TODO
 
@@ -497,7 +486,7 @@ TODO
 | -------- | ---- | ----------- |
 | handler | Function or Object | the processing element when the router matches |
 
-### Method `head(handler)`
+### Method head(handler)
 
 TODO
 
@@ -505,7 +494,7 @@ TODO
 | -------- | ---- | ----------- |
 | handler | Function or Object | the processing element when the router matches |
 
-### Method `options(handler)`
+### Method options(handler)
 
 TODO
 
@@ -513,6 +502,8 @@ TODO
 | -------- | ---- | ----------- |
 | handler | Function or Object | the processing element when the router matches |
 
-## `restlet.createDirectory`
+## Directory
+
+__`restlet.createDirectory`__
 
 Create a directory.
