@@ -72,7 +72,8 @@ function createArgumentsTable(methodDocContent, mardownDocContent) {
 }
 
 function createElementConstructorDocMarkdown(mardownDocContent, constructorDocContent) {
-  mardownDocContent.push('## `restlet.' + constructorDocContent.ctx.name + '`');
+  mardownDocContent.push('');
+  mardownDocContent.push('__`restlet.' + constructorDocContent.ctx.name + '`__');
   mardownDocContent.push('');
   mardownDocContent.push(_.trim(constructorDocContent.description.summary));
 
@@ -86,7 +87,7 @@ function createElementConstructorDocMarkdown(mardownDocContent, constructorDocCo
 
 function createElementMethodDocMarkdown(mardownDocContent, methodDocContent) {
   mardownDocContent.push('');
-  mardownDocContent.push('### Method `' + methodDocContent.ctx.name + '(' + createParamList(methodDocContent) + ')`');
+  mardownDocContent.push('### Method ' + methodDocContent.ctx.name + '(' + createParamList(methodDocContent) + ')');
   mardownDocContent.push('');
   mardownDocContent.push(_.trim(methodDocContent.description.summary));
 
@@ -99,11 +100,11 @@ function createElementMethodDocMarkdown(mardownDocContent, methodDocContent) {
 }
 
 function formatDescriptionSummaryForTable(summary) {
-  var formattedSummary = summary.replace('\n', ' ');
+  var formattedSummary = summary.replace(/\n/g, ' ');
   return _.trim(formattedSummary);
 }
 
-function fillMethodTable(methodsDocContent, mardownDocContent) {
+function fillMethodsTable(methodsDocContent, mardownDocContent) {
   _.forEach(methodsDocContent, function(methodDocContent) {
   	if (!methodsDocContent.isConstructor) {
       var methodLine = '| ';
@@ -130,7 +131,7 @@ function createMethodsTable(methodsDocContent, mardownDocContent) {
   mardownDocContent.push('');
   mardownDocContent.push('| Method | Description |');
   mardownDocContent.push('| ------ | ----------- |');
-  fillMethodTable(methodsDocContent, mardownDocContent);
+  fillMethodsTable(methodsDocContent, mardownDocContent);
 }
 
 function createElementMethodsSummary(mardownDocContent, methodsDocContent) {
@@ -141,12 +142,14 @@ function createElementMethodsSummary(mardownDocContent, methodsDocContent) {
   }
 }
 
-function createElementDocMarkdown(mardownDocContent, elementDocs) {
+function createElementDocMarkdown(mardownDocContent, elementDocs, elementDescription) {
   if (elementDocs == null) {
   	return;
   }
 
   mardownDocContent.push('');
+
+  mardownDocContent.push('## ' + elementDescription);
 
   var constructorDocContent = elementDocs.filter(function(elementDoc) {
     return elementDoc.isConstructor;
@@ -174,11 +177,11 @@ function writeDocFile(filename, mardownDocContent) {
   });
 }
 
-function generateElementDocMarkdown(mardownDocContent, docContent, elementName) {
+function generateElementDocMarkdown(mardownDocContent, docContent, elementName, elementDescription) {
   var elementDoc = getElementDocs(docContent, elementName);
   console.log('Creating documentation for ' + elementName + '...');
   if (elementDoc != null && !_.isEmpty(elementDoc)) {
-    createElementDocMarkdown(mardownDocContent, elementDoc);
+    createElementDocMarkdown(mardownDocContent, elementDoc, elementDescription);
     console.log('  -> ok');
   } else {
     console.log('  -> no doc elements found');
@@ -192,23 +195,31 @@ fs.readFile('docs/doc-server.json', 'utf8', function (err, data) {
   var mardownDocContent = [];
 
   mardownDocContent.push('# Server side support - API documentation')
+  mardownDocContent.push('');
+  mardownDocContent.push('__Restlet JS for Node__');
+  mardownDocContent.push('');
+  mardownDocContent.push('__Version ' + packageJson.version + '__');
+  mardownDocContent.push('');
+  mardownDocContent.push('<!-- START doctoc -->');
+  mardownDocContent.push('<!-- END doctoc -->');
+  mardownDocContent.push('');
 
   // Component
-  generateElementDocMarkdown(mardownDocContent, docContent, 'component');
+  generateElementDocMarkdown(mardownDocContent, docContent, 'component', 'Component');
   // Virtual host
-  generateElementDocMarkdown(mardownDocContent, docContent, 'virtualhost');
+  generateElementDocMarkdown(mardownDocContent, docContent, 'virtualhost', 'Virtual host');
   // Application
-  generateElementDocMarkdown(mardownDocContent, docContent, 'application');
+  generateElementDocMarkdown(mardownDocContent, docContent, 'application', 'Application');
   // Router
-  generateElementDocMarkdown(mardownDocContent, docContent, 'router');
+  generateElementDocMarkdown(mardownDocContent, docContent, 'router', 'Router');
   // Restlet
-  generateElementDocMarkdown(mardownDocContent, docContent, 'restlet');
+  generateElementDocMarkdown(mardownDocContent, docContent, 'restlet', 'Restlet');
   // Filter
-  generateElementDocMarkdown(mardownDocContent, docContent, 'filter');
+  generateElementDocMarkdown(mardownDocContent, docContent, 'filter', 'Filter');
   // Server resource
-  generateElementDocMarkdown(mardownDocContent, docContent, 'serverresource');
+  generateElementDocMarkdown(mardownDocContent, docContent, 'serverresource', 'Server resource');
   // Directory
-  generateElementDocMarkdown(mardownDocContent, docContent, 'directory');
+  generateElementDocMarkdown(mardownDocContent, docContent, 'directory', 'Directory');
 
   writeDocFile('docs/doc-server-' + packageJson.version + '.md', mardownDocContent);
 });
