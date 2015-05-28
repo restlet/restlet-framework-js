@@ -45,6 +45,72 @@ For Node, use NPM with the following command:
 npm install restlet
 ```
 
+## Getting started
+
+### Within Node applications
+
+Restlet JS follows the same concepts than the Java version. It leverages the following elements:
+
+* __Component__ that integrates the whole engine (server and application)
+* __Server__ that makes available the Restlet applications for a specific protocol
+* __Application__ that corresponds to the Restlet application itself and allows to define
+processing elements for requests
+* __Router__ that defines how can server resources will be accessed
+* __Server resource__ corresponds to the element to process request
+
+Following code describes how to implement a simple Restlet application using JavaScript
+and Node:
+
+    var restlet = require('restlet');
+
+    var component = restlet.createComponent();
+
+    // Add a new HTTP server listening on port 3000.
+    component.addServer('http', 3000);
+
+    // Create the sample application.
+    var application = restlet.createApplication(function() {
+      // Create the application router
+      var router = restlet.createRouter();
+
+      // Attach a list element server resource
+      router.attach('/contacts/',
+        restlet.createServerResource().get(function(request, response) {
+          var contacts = [
+            {
+                id: '1',
+                lastName: 'Fielding',
+                firstName: 'Roy'
+            }
+          ];
+          response.writeObject(contacts);
+          response.end();
+        })
+        .post({ convertInputEntity: true,
+            parameters: [ 'entity', 'response'] }, function(contact, response) {
+          // add contact
+          (...)
+
+          response.status('201');
+          response.end();
+        });
+      );
+
+      return router;
+    });
+
+    // Attach the sample application.
+    component.getDefaultHost().attachDefault(application);
+
+    // Start the component.
+    component.start();
+
+## Documentation
+
+| Version | Status | Documentation |
+| ------- | -------| --------------|
+| 0.4.0   | In progress | [API Reference](/restlet/restlet-framework-js/blob/master/docs/doc-server-0.4.0.md) |
+
 ## Copyright
 
 Copyright 2015 Restlet, Inc.
