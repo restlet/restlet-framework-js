@@ -34,7 +34,12 @@ function fillParamTable(methodDocContent, mardownDocContent) {
   _.forEach(methodDocContent.tags, function(tag) {
   	if (tag.type == 'param') {
       var paramLine = '| ';
-      paramLine += tag.name;
+      var name = tag.name;
+      console.log('>> name = '+name);
+      if (name.indexOf('|') != -1) {
+        name = name.split('|').join(' or ');
+      }
+      paramLine += name;
       paramLine += ' | ';
       var types = '';
       _.forEach(tag.types, function(type) {

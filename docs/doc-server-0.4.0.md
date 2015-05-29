@@ -9,7 +9,7 @@ __Version 0.4.0__
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
 - [Component](#component)
-  - [Method addServer(protocol, port)](#method-addserverprotocol-port)
+  - [Method addServer(protocol, port|configuration)](#method-addserverprotocol-port%7Cconfiguration)
   - [Method getDefaultHost()](#method-getdefaulthost)
   - [Method start()](#method-start)
   - [Method stop()](#method-stop)
@@ -89,7 +89,7 @@ __Methods__
 | start | Start the component and all the configured servers. |
 | stop | Stop the component and all the configured servers. |
 
-### Method addServer(protocol, port)
+### Method addServer(protocol, port|configuration)
 
 Configure a server for the component to serve requests
 for a particular protocol.
@@ -97,7 +97,7 @@ for a particular protocol.
 | Argument | Type | Description |
 | -------- | ---- | ----------- |
 | protocol | String | the protocol of the server to add |
-| port | Number or Object | the port or the configuratiuon object of the server to add  |
+| port or configuration | Number or Object | the port or the configuration object of the server to add  |
 
 This allows to internally attach a server to the component
 and link it to its lifecycle. When the component is started,
@@ -116,7 +116,6 @@ you can use a configuration object as second parameter:
         keyFile: '/path/to/agent2-key.pem',
         certFile: '/path/to/agent2-cert.pem'
     });
-     })
 
 ### Method getDefaultHost()
 
