@@ -127,7 +127,9 @@ called if any other virtual hosts match for the request.
 
 Start the component and all the configured servers.
 
-var component = restlet.createComponent();
+Following snippet provides a sample of use of this method:
+
+    var component = restlet.createComponent();
     (...)
 
     // Start the component.
@@ -137,7 +139,9 @@ var component = restlet.createComponent();
 
 Stop the component and all the configured servers.
 
-var component = restlet.createComponent();
+Following snippet provides a sample of use of this method:
+
+    var component = restlet.createComponent();
     (...)
 
     // Stop the component.
