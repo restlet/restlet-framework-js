@@ -10,8 +10,9 @@ __Version 0.4.0__
 
 - [Component](#component)
   - [Method addServer(protocol, port)](#method-addserverprotocol-port)
-  - [Method start()](#method-start)
   - [Method getDefaultHost()](#method-getdefaulthost)
+  - [Method start()](#method-start)
+  - [Method stop()](#method-stop)
 - [Virtual host](#virtual-host)
   - [Method attach(path, handler)](#method-attachpath-handler)
   - [Method attachDefault(handler)](#method-attachdefaulthandler)
@@ -84,8 +85,9 @@ __Methods__
 | Method | Description |
 | ------ | ----------- |
 | addServer | Configure a server for the component to serve requests for a particular protocol. |
-| start | Start the component and all the configured servers. |
 | getDefaultHost | Get the default host associated with the component. For each component, a default host is implicitely created. It's called if any other virtual hosts match for the request. |
+| start | Start the component and all the configured servers. |
+| stop | Stop the component and all the configured servers. |
 
 ### Method addServer(protocol, port)
 
@@ -95,17 +97,52 @@ for a particular protocol.
 | Argument | Type | Description |
 | -------- | ---- | ----------- |
 | protocol | String | the protocol of the server to add |
-| port | Number | the port of the server to add  |
+| port | Number or Object | the port or the configuratiuon object of the server to add  |
 
-### Method start()
+This allows to internally attach a server to the component
+and link it to its lifecycle. When the component is started,
+all registered servers are also started and the same for stopping.
 
-Start the component and all the configured servers.
+The simplest way to add a server is to provided a protocol
+and the associated port, as described below:
+
+    component.addServer('http', 3000);
+
+If you need to provide additional parameters to the server,
+you can use a configuration object as second parameter:
+
+    component.addServer('https', {
+        port: 3000,
+        keyFile: '/path/to/agent2-key.pem',
+        certFile: '/path/to/agent2-cert.pem'
+    });
+     })
 
 ### Method getDefaultHost()
 
 Get the default host associated with the component. For
 each component, a default host is implicitely created. It's
 called if any other virtual hosts match for the request.
+
+### Method start()
+
+Start the component and all the configured servers.
+
+var component = restlet.createComponent();
+    (...)
+
+    // Start the component.
+    component.start();
+
+### Method stop()
+
+Stop the component and all the configured servers.
+
+var component = restlet.createComponent();
+    (...)
+
+    // Stop the component.
+    component.stop();
 
 ## Virtual host
 
@@ -118,7 +155,7 @@ __Methods__
 | Method | Description |
 | ------ | ----------- |
 | attach | Attach a route on a virtual host. |
-| attachDefault | Attach a default route on a router. |
+| attachDefault | Attach a default route on a virtual host. |
 | handle | The entry point for virtual host. |
 
 ### Method attach(path, handler)
@@ -145,7 +182,7 @@ of use:
 
 ### Method attachDefault(handler)
 
-Attach a default route on a router.
+Attach a default route on a virtual host.
 
 | Argument | Type | Description |
 | -------- | ---- | ----------- |
