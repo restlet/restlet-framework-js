@@ -1,4 +1,4 @@
-var restlet = require('../index');
+var restlet = require('../../index');
 var _ = require('lodash');
 
 var component = restlet.createComponent();
@@ -13,8 +13,11 @@ var application = restlet.createApplication(function() {
 
   // Attach a server resource
   router.attach('/app/ping1',
-    restlet.createServerResource().post(function(request, response) {
-      response.writeObject({test: 'hello12'});
+    restlet.createServerResource().post({
+      parameters: ['entity', 'response'], convertInputEntity: true
+    }, function(entity, response) {
+      response.writeObject({test: 'hello12', input: entity.test});
+      response.end();
     })
   );
 

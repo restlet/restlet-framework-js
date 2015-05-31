@@ -4,44 +4,8 @@ __Restlet JS for Node__
 
 __Version 0.4.0__
 
-<!-- START doctoc generated TOC please keep comment here to allow auto update -->
-<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
-
-- [Component](#component)
-  - [Method addServer(protocol, port|configuration)](#method-addserverprotocol-port%7Cconfiguration)
-  - [Method getDefaultHost()](#method-getdefaulthost)
-  - [Method start()](#method-start)
-  - [Method stop()](#method-stop)
-- [Virtual host](#virtual-host)
-  - [Method attach(path, handler)](#method-attachpath-handler)
-  - [Method attachDefault(handler)](#method-attachdefaulthandler)
-  - [Method handle(request, response)](#method-handlerequest-response)
-- [Application](#application)
-  - [Method converters()](#method-converters)
-  - [Method handle(request, response)](#method-handlerequest-response-1)
-- [Router](#router)
-  - [Method attach(path, [configuration], handler)](#method-attachpath-configuration-handler)
-- [Restlet](#restlet)
-  - [Method handle(request, response)](#method-handlerequest-response-2)
-  - [Method next(handler)](#method-nexthandler)
-- [Filter](#filter)
-  - [Method handle(request, response)](#method-handlerequest-response-3)
-  - [Method next(handler)](#method-nexthandler-1)
-- [Server resource](#server-resource)
-  - [Method handler(handler)](#method-handlerhandler)
-  - [Method get(handler)](#method-gethandler)
-  - [Method getJson(handler)](#method-getjsonhandler)
-  - [Method post(handler)](#method-posthandler)
-  - [Method put(handler)](#method-puthandler)
-  - [Method patch(handler)](#method-patchhandler)
-  - [Method delete(handler)](#method-deletehandler)
-  - [Method head(handler)](#method-headhandler)
-  - [Method options(handler)](#method-optionshandler)
-- [Directory](#directory)
-  - [Method handle(request, response)](#method-handlerequest-response-4)
-
-<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+<!-- START doctoc -->
+<!-- END doctoc -->
 
 
 ## Component

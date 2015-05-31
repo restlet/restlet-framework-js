@@ -226,5 +226,5 @@ fs.readFile('docs/doc-server.json', 'utf8', function (err, data) {
   // Directory
   generateElementDocMarkdown(mardownDocContent, docContent, 'directory', 'Directory');
 
-  writeDocFile('docs/doc-server-' + packageJson.version + '.md', mardownDocContent);
+  writeDocFile('docs/references/doc-server-' + packageJson.version + '.md', mardownDocContent);
 });
