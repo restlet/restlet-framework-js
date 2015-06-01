@@ -8,7 +8,7 @@ describe('converters', function() {
       var converter = converters.getBuiltinConverter('xml2js');
 
       var xmlString = null;
-      converter.toString({ attr1: 10, attr2: 'my string'}, function(s) {
+      converter.toString({ attr1: 10, attr2: 'my string'}, function(err, s) {
         xmlString = s;
       });
 
@@ -25,7 +25,7 @@ describe('converters', function() {
       converter.toObject('<root>\n'
         + ' <attr1>10</attr1>\n'
         + ' <attr2>my string</attr2>\n'
-        + '</root>', function(obj) {
+        + '</root>', function(err, obj) {
           savedObj = obj;
         });
 

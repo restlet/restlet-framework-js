@@ -13,7 +13,7 @@ describe('filter', function() {
       });
 
       var request = testUtils.createRequest('GET', '/path');
-      var response = {};
+      var response = testUtils.createResponse();
       serverResource.handle(request, response);
       request.trigger('end');
       assert.equal(true, called);

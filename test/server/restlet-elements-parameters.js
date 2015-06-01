@@ -21,19 +21,16 @@ describe('server resource parameters', function() {
 
       var request = testUtils.createRequest(
         'POST', '/path', 'application/xml');
-      var response = {
-        setStatus: function(code) {
+      var response = testUtils.createResponse({
+        onSetStatus: function(code) {
           if (code == 405) {
             notAllowedCalled = true;
           }
         },
-        writeRepresentation: function() {
-
-        },
-        end: function() {
+        onEnd: function() {
           endCalled = true;
         }
-      };
+      });
       serverResource.handle(request, response);
       request.trigger('data', 'chunk1');
       request.trigger('data', 'chunk2');
@@ -60,19 +57,13 @@ describe('server resource parameters', function() {
 
       var request = testUtils.createRequest('POST',
         '/path', 'application/xml');
-      var response = {
-        setStatus: function(code) {
+      var response = testUtils.createResponse({
+        onSetStatus: function(code) {
           if (code == 405) {
             notAllowedCalled = true;
           }
-        },
-        writeRepresentation: function() {
-
-        },
-        end: function() {
-
         }
-      };
+      });
       serverResource.handle(request, response);
       request.trigger('data', 'chunk1');
       request.trigger('data', 'chunk2');
@@ -95,21 +86,12 @@ describe('server resource parameters', function() {
       });
 
       var request = testUtils.createRequest('POST',
-        '/path', 'application/xml');
+        '/path', 'application/json');
       request.clientInfo = {
         acceptedMediaTypes: [ 'application/json' ]
       }
-      var response = {
-        setStatus: function(code) {
+      var response = testUtils.createResponse();
 
-        },
-        writeRepresentation: function() {
-
-        },
-        end: function() {
-
-        }
-      };
       serverResource.handle(request, response);
       request.trigger('data', '{"attr1":');
       request.trigger('data', '10,"attr2":"a string"}');
@@ -117,6 +99,41 @@ describe('server resource parameters', function() {
       assert.equal(true, called);
       assert.equal(10, objEntity.attr1);
       assert.equal('a string', objEntity.attr2);
+    });
+
+    it('with entity and conversion (error)', function() {
+      var called = false;
+      var objEntity = null;
+      var notSupportedMediaTypeCalled = false;
+      var serverResource = restlet.createServerResource()
+                                  .post({
+                                    convertInputEntity: true,
+                                    parameters: [ 'entity' ]
+                                  }, function(entity) {
+        called = true;
+        objEntity = entity;
+      });
+
+      var request = testUtils.createRequest('POST',
+        '/path', 'application/xml');
+      request.clientInfo = {
+        acceptedMediaTypes: [ 'application/json' ]
+      }
+      var response = testUtils.createResponse({
+        onSetStatus: function(code) {
+          if (code == 415) {
+            notSupportedMediaTypeCalled = true;
+          }
+        }
+      });
+
+      serverResource.handle(request, response);
+      request.trigger('data', '{"attr1":');
+      request.trigger('data', '10,"attr2":"a string"}');
+      request.trigger('end');
+      assert.equal(false, called);
+      assert.equal(true, notSupportedMediaTypeCalled);
+      assert.equal(null, objEntity);
     });
   });
 
@@ -134,17 +151,7 @@ describe('server resource parameters', function() {
 
       var request = testUtils.createRequest('POST',
         '/path?test=10', 'application/xml');
-      var response = {
-        setStatus: function(code) {
-
-        },
-        writeRepresentation: function() {
-
-        },
-        end: function() {
-
-        }
-      };
+      var response = testUtils.createResponse();
       serverResource.handle(request, response);
       request.trigger('end');
       assert.equal(true, called);
@@ -166,16 +173,7 @@ describe('server resource parameters', function() {
 
       var request = testUtils.createRequest('POST',
         '/path?param1=10&param2=un%20test', 'application/xml');
-      var response = {
-        setStatus: function(code) {
-        },
-        writeRepresentation: function() {
-
-        },
-        end: function() {
-
-        }
-      };
+      var response = testUtils.createResponse();
       serverResource.handle(request, response);
       request.trigger('end');
       assert.equal(true, called);
@@ -200,16 +198,7 @@ describe('server resource parameters', function() {
 
       var request = testUtils.createRequest('POST',
         '/path?param1=10&param2=un%20test', 'application/xml');
-      var response = {
-        setStatus: function(code) {
-        },
-        writeRepresentation: function() {
-
-        },
-        end: function() {
-
-        }
-      };
+      var response = testUtils.createResponse();
       serverResource.handle(request, response);
       request.trigger('end');
       assert.equal(true, called);

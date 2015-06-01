@@ -20,7 +20,7 @@ describe('entity headers', function() {
         { 'content-type': 'application/json' });
 
       var request = serverUtils.createRequest(rawRequest, 'http');
-      assert.equal('application/json', request.entity.mediaType);
+      assert.equal('application/json', request.entity.mediaType.name);
     });
 
     it('header with wrong format', function() {
@@ -28,7 +28,7 @@ describe('entity headers', function() {
         { 'content-type': 'application/json' });
 
       var request = serverUtils.createRequest(rawRequest, 'http');
-      assert.equal('application/json', request.entity.mediaType);
+      assert.equal('application/json', request.entity.mediaType.name);
     });
   });
 
