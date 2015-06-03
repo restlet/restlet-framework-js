@@ -28,6 +28,7 @@
  */
 
 var server = require('./lib/server');
+var client = require('./lib/client');
 
 exports = module.exports;
 
@@ -43,3 +44,4 @@ restlet.createApplication = server.createApplication;
 restlet.createDirectory = server.createDirectory;
 restlet.createFilter = server.createFilter;
 restlet.createServerResource = server.createServerResource;
+restlet.createClientResource = client.createClientResource;
