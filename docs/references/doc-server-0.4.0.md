@@ -224,8 +224,8 @@ Create a new application.
 
 __Properties__
 
-| Property | Description |
-| -------- | ----------- |
+| Property | Type | Description |
+| -------- | ---- | ----------- |
 | converters|   | The list of converters associated with the application. |
 
 __Methods__
@@ -645,8 +645,8 @@ involves within the request processing chain.
 
 __Properties__
 
-| Property | Description |
-| -------- | ----------- |
+| Property | Type | Description |
+| -------- | ---- | ----------- |
 | attributes| Object | The attributes associated with the request |
 | method| String | The HTTP method |
 | entity| Representation | The entity associated with the request |
@@ -657,8 +657,8 @@ __Properties__
 
 __Properties__
 
-| Property | Description |
-| -------- | ----------- |
+| Property | Type | Description |
+| -------- | ---- | ----------- |
 | hostDomain| String | The host domain |
 | hostPort| String | The host port |
 | path| String | The path |
