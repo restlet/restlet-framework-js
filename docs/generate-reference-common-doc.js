@@ -174,8 +174,8 @@ function hasFields(fieldsDocContent) {
 
 function createFieldsTable(fieldsDocContent, mardownDocContent) {
   mardownDocContent.push('');
-  mardownDocContent.push('| Property | Description |');
-  mardownDocContent.push('| -------- | ----------- |');
+  mardownDocContent.push('| Property | Type | Description |');
+  mardownDocContent.push('| -------- | ---- | ----------- |');
   fillFieldsTable(fieldsDocContent, mardownDocContent);
 }
 
