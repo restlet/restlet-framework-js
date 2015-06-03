@@ -33,7 +33,7 @@ testUtils.createRawRequest = function(headers, path) {
   };
 };
 
-testUtils.createRequest = function(method, path, contentType) {
+testUtils.createRequest = function(method, path, contentType, acceptType) {
   var handlers = {};
   var entity = {
     on: function(event, handler) {
@@ -46,11 +46,17 @@ testUtils.createRequest = function(method, path, contentType) {
 
     }
   };
-  var queryParameters = {};
+
   if (contentType != null) {
     entity.mediaType = { name: contentType };
   }
 
+  var clientInfo = {};
+  if (acceptType != null) {
+    clientInfo.acceptedMediaTypes = [ acceptType ];
+  }
+
+  var queryParameters = {};
   if (path != null) {
     var urlParts = urlApi.parse(path, true);
     queryParameters = urlParts.query;
@@ -61,6 +67,7 @@ testUtils.createRequest = function(method, path, contentType) {
       path: path
     },
     entity: entity,
+    clientInfo: clientInfo,
     queryParameters: queryParameters,
     trigger: function(event, data) {
       if (handlers[event] != null) {
@@ -78,23 +85,23 @@ testUtils.createResponse = function(listeners) {
     status: {
       code: 200,
       isError: function() {
-        return (this.code >=400 && this.code<600);
+        return (this.code >= 400 && this.code < 600);
       }
     },
     setStatus: function(code, description) {
       this.status.code = code;
       this.status.description = description;
-      if (listeners!=null && listeners.onSetStatus!=null) {
+      if (listeners != null && listeners.onSetStatus != null) {
         listeners.onSetStatus(code, description);
       }
     },
     writeRepresentation: function(repr) {
-      if (listeners!=null && listeners.onWriteRepresentation!=null) {
+      if (listeners != null && listeners.onWriteRepresentation != null) {
         listeners.onWriteRepresentation(repr);
       }
     },
     end: function() {
-      if (listeners!=null && listeners.onEnd!=null) {
+      if (listeners != null && listeners.onEnd != null) {
         listeners.onEnd();
       }
     }
