@@ -4,6 +4,10 @@ var _ = require('lodash');
 var fs = require('fs');
 var packageJson = require('../package.json');
 
+exports = module.exports;
+
+var docCommon = exports;
+
 function getElementDocs(docContent, elementName) {
   var elementDocContent = docContent.filter(function(docElement) {
     var isElement = false;
@@ -35,7 +39,6 @@ function fillParamTable(methodDocContent, mardownDocContent) {
   	if (tag.type == 'param') {
       var paramLine = '| ';
       var name = tag.name;
-      console.log('>> name = '+name);
       if (name.indexOf('|') != -1) {
         name = name.split('|').join(' or ');
       }
@@ -92,7 +95,7 @@ function createElementConstructorDocMarkdown(mardownDocContent, constructorDocCo
 
 function createElementMethodDocMarkdown(mardownDocContent, methodDocContent) {
   mardownDocContent.push('');
-  mardownDocContent.push('### Method ' + methodDocContent.ctx.name + '(' + createParamList(methodDocContent) + ')');
+  mardownDocContent.push('#### Method ' + methodDocContent.ctx.name + '(' + createParamList(methodDocContent) + ')');
   mardownDocContent.push('');
   mardownDocContent.push(_.trim(methodDocContent.description.summary));
 
@@ -147,6 +150,57 @@ function createElementMethodsSummary(mardownDocContent, methodsDocContent) {
   }
 }
 
+function fillFieldsTable(fieldsDocContent, mardownDocContent) {
+  _.forEach(fieldsDocContent, function(fieldDocContent) {
+    var fieldLine = '| ';
+    fieldLine += fieldDocContent.ctx.name;
+    var typeTag = getTag(fieldDocContent, 'member');
+    fieldLine += '| ';
+    if (typeTag != null && !_.isEmpty(typeTag.string)) {
+      fieldLine += typeTag.string;
+    } else {
+      fieldLine += ' ';
+    }
+    fieldLine += ' | ';
+    fieldLine += formatDescriptionSummaryForTable(fieldDocContent.description.summary);
+    fieldLine += ' |';
+    mardownDocContent.push(fieldLine);
+  });
+}
+
+function hasFields(fieldsDocContent) {
+  return (!_.isEmpty(fieldsDocContent));
+}
+
+function createFieldsTable(fieldsDocContent, mardownDocContent) {
+  mardownDocContent.push('');
+  mardownDocContent.push('| Property | Description |');
+  mardownDocContent.push('| -------- | ----------- |');
+  fillFieldsTable(fieldsDocContent, mardownDocContent);
+}
+
+function createElementFieldsSummary(mardownDocContent, fieldsDocContent) {
+  if (hasFields(fieldsDocContent)) {
+    mardownDocContent.push('');
+    mardownDocContent.push('__Properties__');
+    createFieldsTable(fieldsDocContent, mardownDocContent);
+  }
+}
+
+function hasTag(docContent, tagValue) {
+  var match = false;
+  _.forEach(docContent.tags, function(tag) {
+    if (tag.type == tagValue) {
+      match = true;
+    }
+  });
+  return match;
+}
+
+function getTag(docContent, tagValue) {
+  return _.find(docContent.tags, { type: tagValue });
+}
+
 function createElementDocMarkdown(mardownDocContent, elementDocs, elementDescription) {
   if (elementDocs == null) {
   	return;
@@ -154,7 +208,7 @@ function createElementDocMarkdown(mardownDocContent, elementDocs, elementDescrip
 
   mardownDocContent.push('');
 
-  mardownDocContent.push('## ' + elementDescription);
+  mardownDocContent.push('### ' + elementDescription);
 
   var constructorDocContent = elementDocs.filter(function(elementDoc) {
     return elementDoc.isConstructor;
@@ -164,8 +218,18 @@ function createElementDocMarkdown(mardownDocContent, elementDocs, elementDescrip
     createElementConstructorDocMarkdown(mardownDocContent, constructorDocContent[0]);
   }
 
+  // Fields
+
+  var fieldsDocContent = elementDocs.filter(function(elementDoc) {
+    return hasTag(elementDoc, 'member');
+  });
+
+  createElementFieldsSummary(mardownDocContent, fieldsDocContent);
+
+  // Methods
+
   var methodsDocContent = elementDocs.filter(function(elementDoc) {
-    return !elementDoc.isConstructor;
+    return hasTag(elementDoc, 'method') && !elementDoc.isConstructor;
   });
 
   createElementMethodsSummary(mardownDocContent, methodsDocContent);
@@ -175,14 +239,14 @@ function createElementDocMarkdown(mardownDocContent, elementDocs, elementDescrip
   })
 }
 
-function writeDocFile(filename, mardownDocContent) {
+docCommon.writeDocFile = function(filename, mardownDocContent) {
   fs.writeFile(filename, mardownDocContent.join('\n'), function (err) {
     if (err) throw err;
     console.log('Doc file ' + filename + ' written');
   });
-}
+};
 
-function generateElementDocMarkdown(mardownDocContent, docContent, elementName, elementDescription) {
+docCommon.generateElementDocMarkdown = function(mardownDocContent, docContent, elementName, elementDescription) {
   var elementDoc = getElementDocs(docContent, elementName);
   console.log('Creating documentation for ' + elementName + '...');
   if (elementDoc != null && !_.isEmpty(elementDoc)) {
@@ -191,40 +255,4 @@ function generateElementDocMarkdown(mardownDocContent, docContent, elementName, 
   } else {
     console.log('  -> no doc elements found');
   }
-}
-
-fs.readFile('docs/doc-server.json', 'utf8', function (err, data) {
-  if (err) throw err;
-  var docContent = JSON.parse(data);
-
-  var mardownDocContent = [];
-
-  mardownDocContent.push('# Server side support - API documentation')
-  mardownDocContent.push('');
-  mardownDocContent.push('__Restlet JS for Node__');
-  mardownDocContent.push('');
-  mardownDocContent.push('__Version ' + packageJson.version + '__');
-  mardownDocContent.push('');
-  mardownDocContent.push('<!-- START doctoc -->');
-  mardownDocContent.push('<!-- END doctoc -->');
-  mardownDocContent.push('');
-
-  // Component
-  generateElementDocMarkdown(mardownDocContent, docContent, 'component', 'Component');
-  // Virtual host
-  generateElementDocMarkdown(mardownDocContent, docContent, 'virtualhost', 'Virtual host');
-  // Application
-  generateElementDocMarkdown(mardownDocContent, docContent, 'application', 'Application');
-  // Router
-  generateElementDocMarkdown(mardownDocContent, docContent, 'router', 'Router');
-  // Restlet
-  generateElementDocMarkdown(mardownDocContent, docContent, 'restlet', 'Restlet');
-  // Filter
-  generateElementDocMarkdown(mardownDocContent, docContent, 'filter', 'Filter');
-  // Server resource
-  generateElementDocMarkdown(mardownDocContent, docContent, 'serverresource', 'Server resource');
-  // Directory
-  generateElementDocMarkdown(mardownDocContent, docContent, 'directory', 'Directory');
-
-  writeDocFile('docs/references/doc-server-' + packageJson.version + '.md', mardownDocContent);
-});
+};
