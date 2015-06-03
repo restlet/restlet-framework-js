@@ -5,6 +5,7 @@
 <table>
   <thead>
     <tr>
+      <th>Version</th>
       <th>Linux</th>
       <th>OS X</th>
       <th>Windows</th>
@@ -14,6 +15,9 @@
   </thead>
   <tbody>
     <tr>
+      <td align="center">
+        <a href="https://www.npmjs.org/package/restlet"><img src="https://img.shields.io/npm/v/restlet.svg"></a>
+      </td>
       <td colspan="2" align="center">
         <a href="https://travis-ci.org/restlet/restlet-framework-js"><img src="https://travis-ci.org/restlet/restlet-framework-js.svg"></a>
       </td>
@@ -105,11 +109,25 @@ and Node:
     // Start the component.
     component.start();
 
+Restlet JS also provides a client support to call REST resources:
+
+    var restlet = require('restlet');
+
+    restlet.createClientResource('http://myurl')
+      .get({
+        accept: 'application/json'
+        parameters: [ 'entity' ],
+        convertOutputEntity: true },
+      function(entity) {
+        (...)
+      });
+
 ## Documentation
 
 | Version | Status | Documentation |
 | ------- | -------| --------------|
 | 0.4.0   | In progress | [Server API Reference](https://github.com/restlet/restlet-framework-js/blob/master/docs/doc-server-0.4.0.md) |
+| 0.4.0   | In progress | [Client API Reference](https://github.com/restlet/restlet-framework-js/blob/master/docs/doc-client-0.4.0.md) |
 
 ## Copyright
 
