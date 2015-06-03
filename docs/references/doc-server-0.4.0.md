@@ -4,11 +4,57 @@ __Restlet JS for Node__
 
 __Version 0.4.0__
 
-<!-- START doctoc -->
-<!-- END doctoc -->
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+
+- [Core elements](#core-elements)
+  - [Component](#component)
+    - [Method addServer(protocol, port|configuration)](#method-addserverprotocol-port%7Cconfiguration)
+    - [Method getDefaultHost()](#method-getdefaulthost)
+    - [Method start()](#method-start)
+    - [Method stop()](#method-stop)
+  - [Virtual host](#virtual-host)
+    - [Method attach(path, handler)](#method-attachpath-handler)
+    - [Method attachDefault(handler)](#method-attachdefaulthandler)
+    - [Method handle(request, response)](#method-handlerequest-response)
+  - [Application](#application)
+    - [Method handle(request, response)](#method-handlerequest-response-1)
+  - [Router](#router)
+    - [Method attach(path, [configuration], handler)](#method-attachpath-configuration-handler)
+  - [Restlet](#restlet)
+    - [Method handle(request, response)](#method-handlerequest-response-2)
+    - [Method next(handler)](#method-nexthandler)
+  - [Filter](#filter)
+    - [Method handle(request, response)](#method-handlerequest-response-3)
+    - [Method next(handler)](#method-nexthandler-1)
+  - [Server resource](#server-resource)
+    - [Method handler(handler)](#method-handlerhandler)
+    - [Method get(handler)](#method-gethandler)
+    - [Method getJson(handler)](#method-getjsonhandler)
+    - [Method getXml(handler)](#method-getxmlhandler)
+    - [Method getYaml(handler)](#method-getyamlhandler)
+    - [Method post(handler)](#method-posthandler)
+    - [Method put(handler)](#method-puthandler)
+    - [Method patch(handler)](#method-patchhandler)
+    - [Method delete(handler)](#method-deletehandler)
+    - [Method head(handler)](#method-headhandler)
+    - [Method options(handler)](#method-optionshandler)
+    - [Method handle(request, response)](#method-handlerequest-response-4)
+  - [Directory](#directory)
+    - [Method handle(request, response)](#method-handlerequest-response-5)
+- [Data objects](#data-objects)
+  - [Request](#request)
+  - [Reference](#reference)
+  - [Response](#response)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 
-## Component
+## Core elements
+
+
+### Component
 
 __`restlet.createComponent`__
 
@@ -53,7 +99,7 @@ __Methods__
 | start | Start the component and all the configured servers. |
 | stop | Stop the component and all the configured servers. |
 
-### Method addServer(protocol, port|configuration)
+#### Method addServer(protocol, port|configuration)
 
 Configure a server for the component to serve requests
 for a particular protocol.
@@ -61,7 +107,7 @@ for a particular protocol.
 | Argument | Type | Description |
 | -------- | ---- | ----------- |
 | protocol | String | the protocol of the server to add |
-| port or configuration | Number or Object | the port or the configuration object of the server to add  |
+| port or configuration | Number or Object | the port or the configuration object of the server to add |
 
 This allows to internally attach a server to the component
 and link it to its lifecycle. When the component is started,
@@ -81,13 +127,13 @@ you can use a configuration object as second parameter:
         certFile: '/path/to/agent2-cert.pem'
     });
 
-### Method getDefaultHost()
+#### Method getDefaultHost()
 
 Get the default host associated with the component. For
 each component, a default host is implicitely created. It's
 called if any other virtual hosts match for the request.
 
-### Method start()
+#### Method start()
 
 Start the component and all the configured servers.
 
@@ -99,7 +145,7 @@ Following snippet provides a sample of use of this method:
     // Start the component.
     component.start();
 
-### Method stop()
+#### Method stop()
 
 Stop the component and all the configured servers.
 
@@ -111,7 +157,7 @@ Following snippet provides a sample of use of this method:
     // Stop the component.
     component.stop();
 
-## Virtual host
+### Virtual host
 
 __`restlet.createVirtualHost`__
 
@@ -125,7 +171,7 @@ __Methods__
 | attachDefault | Attach a default route on a virtual host. |
 | handle | The entry point for virtual host. |
 
-### Method attach(path, handler)
+#### Method attach(path, handler)
 
 Attach a route on a virtual host.
 
@@ -147,7 +193,7 @@ of use:
     var application = (...)
     router.attach('/path', application);
 
-### Method attachDefault(handler)
+#### Method attachDefault(handler)
 
 Attach a default route on a virtual host.
 
@@ -158,7 +204,7 @@ Attach a default route on a virtual host.
 The attached handler will be called only if no route matches for
 the request.
 
-### Method handle(request, response)
+#### Method handle(request, response)
 
 The entry point for virtual host.
 
@@ -170,24 +216,25 @@ The entry point for virtual host.
 Notice that this method shouldn't be called explicitly since it
 involves within the request processing chain.
 
-## Application
+### Application
 
 __`restlet.createApplication`__
 
 Create a new application.
 
+__Properties__
+
+| Property | Description |
+| -------- | ----------- |
+| converters|   | The list of converters associated with the application. |
+
 __Methods__
 
 | Method | Description |
 | ------ | ----------- |
-| converters | The list of converters associated with the application. |
 | handle | The entry point for router. |
 
-### Method converters()
-
-The list of converters associated with the application.
-
-### Method handle(request, response)
+#### Method handle(request, response)
 
 The entry point for router.
 
@@ -196,10 +243,10 @@ The entry point for router.
 | request | Request | the request |
 | response | Response | the response |
 
-Notice that this method shouldn't be called explicitly since it
+Notice that this method shouldnt be called explicitly since it
 involves within the request processing chain.
 
-## Router
+### Router
 
 __`restlet.createRouter`__
 
@@ -224,7 +271,7 @@ __Methods__
 | ------ | ----------- |
 | attach | Attach a route on a router. |
 
-### Method attach(path, [configuration], handler)
+#### Method attach(path, [configuration], handler)
 
 Attach a route on a router.
 
@@ -232,7 +279,7 @@ Attach a route on a router.
 | -------- | ---- | ----------- |
 | path | String | the path of the route |
 | [configuration] | Object | the configuration of the attachment |
-| handler | Function or Object | the processing element when the router matches  |
+| handler | Function or Object | the processing element when the router matches |
 
 This function accepts several parameters. The concise use
 allows to specify two parameters: the path and the handler
@@ -278,7 +325,7 @@ Notice that path variables are evaluated by the router itself.
 For this reason, they are available in the request processing
 chain after the router.
 
-## Restlet
+### Restlet
 
 __`restlet.createRestlet`__
 
@@ -313,7 +360,7 @@ __Methods__
 | handle | The entry point for router. |
 | next | Define the next element of the current restlet. |
 
-### Method handle(request, response)
+#### Method handle(request, response)
 
 The entry point for router.
 
@@ -325,7 +372,7 @@ The entry point for router.
 Notice that this method shouldn't be called explicitly since it
 involves within the request processing chain.
 
-### Method next(handler)
+#### Method next(handler)
 
 Define the next element of the current restlet.
 
@@ -348,7 +395,7 @@ The following snippet describes this mechanism:
 Notice that this method shouldn't be called explicitly since it
 involves within the request processing chain.
 
-## Filter
+### Filter
 
 __`restlet.createFilter`__
 
@@ -361,7 +408,7 @@ __Methods__
 | handle | The entry point for router. |
 | next | Define the next element of the current restlet. |
 
-### Method handle(request, response)
+#### Method handle(request, response)
 
 The entry point for router.
 
@@ -373,7 +420,7 @@ The entry point for router.
 Notice that this method shouldn't be called explicitly since it
 involves within the request processing chain.
 
-### Method next(handler)
+#### Method next(handler)
 
 Define the next element of the current restlet.
 
@@ -384,16 +431,16 @@ Define the next element of the current restlet.
 Notice that this method shouldn't be called explicitly since it
 involves within the request processing chain.
 
-## Server resource
+### Server resource
 
 __`restlet.createServerResource`__
 
-Create a server server resource.
+Create a server resource.
 
 | Argument | Type | Description |
 | -------- | ---- | ----------- |
 | [configuration] | String | a configuration for the defined default handler |
-| [handler] | Function | a default handler for the server resource  |
+| [handler] | Function | a default handler for the server resource |
 
 Restlet provides two ways to create and configure processing of
 server resources:
@@ -457,22 +504,17 @@ __Methods__
 | handler | TODO |
 | get | TODO |
 | getJson | TODO |
+| getXml | TODO |
+| getYaml | TODO |
 | post | TODO |
 | put | TODO |
 | patch | TODO |
 | delete | TODO |
 | head | TODO |
 | options | TODO |
+| handle | The entry point for server resource. |
 
-### Method handler(handler)
-
-TODO
-
-| Argument | Type | Description |
-| -------- | ---- | ----------- |
-| handler | Function or Object | the processing element when the router matches |
-
-### Method get(handler)
+#### Method handler(handler)
 
 TODO
 
@@ -480,7 +522,7 @@ TODO
 | -------- | ---- | ----------- |
 | handler | Function or Object | the processing element when the router matches |
 
-### Method getJson(handler)
+#### Method get(handler)
 
 TODO
 
@@ -488,7 +530,7 @@ TODO
 | -------- | ---- | ----------- |
 | handler | Function or Object | the processing element when the router matches |
 
-### Method post(handler)
+#### Method getJson(handler)
 
 TODO
 
@@ -496,7 +538,7 @@ TODO
 | -------- | ---- | ----------- |
 | handler | Function or Object | the processing element when the router matches |
 
-### Method put(handler)
+#### Method getXml(handler)
 
 TODO
 
@@ -504,7 +546,7 @@ TODO
 | -------- | ---- | ----------- |
 | handler | Function or Object | the processing element when the router matches |
 
-### Method patch(handler)
+#### Method getYaml(handler)
 
 TODO
 
@@ -512,7 +554,7 @@ TODO
 | -------- | ---- | ----------- |
 | handler | Function or Object | the processing element when the router matches |
 
-### Method delete(handler)
+#### Method post(handler)
 
 TODO
 
@@ -520,7 +562,7 @@ TODO
 | -------- | ---- | ----------- |
 | handler | Function or Object | the processing element when the router matches |
 
-### Method head(handler)
+#### Method put(handler)
 
 TODO
 
@@ -528,7 +570,7 @@ TODO
 | -------- | ---- | ----------- |
 | handler | Function or Object | the processing element when the router matches |
 
-### Method options(handler)
+#### Method patch(handler)
 
 TODO
 
@@ -536,7 +578,43 @@ TODO
 | -------- | ---- | ----------- |
 | handler | Function or Object | the processing element when the router matches |
 
-## Directory
+#### Method delete(handler)
+
+TODO
+
+| Argument | Type | Description |
+| -------- | ---- | ----------- |
+| handler | Function or Object | the processing element when the router matches |
+
+#### Method head(handler)
+
+TODO
+
+| Argument | Type | Description |
+| -------- | ---- | ----------- |
+| handler | Function or Object | the processing element when the router matches |
+
+#### Method options(handler)
+
+TODO
+
+| Argument | Type | Description |
+| -------- | ---- | ----------- |
+| handler | Function or Object | the processing element when the router matches |
+
+#### Method handle(request, response)
+
+The entry point for server resource.
+
+| Argument | Type | Description |
+| -------- | ---- | ----------- |
+| request | Request | the request |
+| response | Response | the response |
+
+Notice that this method shouldn't be called explicitly since it
+involves within the request processing chain.
+
+### Directory
 
 __`restlet.createDirectory`__
 
@@ -548,7 +626,7 @@ __Methods__
 | ------ | ----------- |
 | handle | The entry point for directory. |
 
-### Method handle(request, response)
+#### Method handle(request, response)
 
 The entry point for directory.
 
@@ -559,3 +637,32 @@ The entry point for directory.
 
 Notice that this method shouldn't be called explicitly since it
 involves within the request processing chain.
+
+## Data objects
+
+
+### Request
+
+__Properties__
+
+| Property | Description |
+| -------- | ----------- |
+| attributes| Object | The attributes associated with the request |
+| method| String | The HTTP method |
+| entity| Representation | The entity associated with the request |
+| reference| Reference | The request reference. |
+| queryParameters| Object | The query parameters |
+
+### Reference
+
+__Properties__
+
+| Property | Description |
+| -------- | ----------- |
+| hostDomain| String | The host domain |
+| hostPort| String | The host port |
+| path| String | The path |
+| query| String | The query string |
+| scheme| String | The scheme |
+
+### Response
