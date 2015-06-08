@@ -222,6 +222,24 @@ __`restlet.createApplication`__
 
 Create a new application.
 
+An application gather a set of elements like routers, filters 
+and server resources to handle requests for a particular paths.
+In addition, applications provide services to manage media types,
+content negotiation.
+
+The first parameter provided when creating an application allows
+to define routing within the application itself. This function
+must return a restlet element with a method `handle`.
+
+Following snippet describes how to create an application:
+
+    var application = restlet.createApplication(function() {
+        // Create the application router
+        var router = restlet.createRouter();
+        (...)
+        return router;
+    });
+
 __Properties__
 
 | Property | Type | Description |
@@ -480,8 +498,26 @@ server resource:
 
 Notice that configuration chaining is supported at this level.
 
-TODO: parameters
-TODO: content conversion
+Expected parameters can be configured through the configuration object.
+This applies to entity but also hints present within the request. This
+allows not to look for them within the request object. Following values
+can be used at this level:
+
+* `request`: the request object
+* `response`: the response object
+* `entity`: the entity object. The representation itself or a JavaScript
+  object if the conversion if enabled
+* `clientInfo`: the client info
+* `reference`: the reference
+* `pathVariables`: the map containing the path variables  
+* `pathVariables["varName"]`: the path variable with name `varName`  
+* `queryParameters`: the map containing the query parameters  
+* `queryParameters["paramName"]`: the query parameter with name `varName`  
+
+By default, the parameter `entity` provides the representation itself.
+If you expect to have a JavaScript object that maps the received data,
+you need to use the parameter `convertInputEntity`. The latter leverages
+the underlying converter service of Restlet  .
 
 Following snippet summarizes all available configuration parameters:
 
@@ -494,6 +530,13 @@ Following snippet summarizes all available configuration parameters:
                         'queryParameters["paramName"]', 'reference'],
         match: function(req, res) {
             // Check if the handler matches within server resource
+        },
+        validatorType: 'validate.js',
+        validation: {
+            // Validation configuration supported by the validator
+        },
+        validate: function(entity) {
+
         }
     }
 
@@ -501,106 +544,223 @@ __Methods__
 
 | Method | Description |
 | ------ | ----------- |
-| handler | TODO |
-| get | TODO |
-| getJson | TODO |
-| getXml | TODO |
-| getYaml | TODO |
-| post | TODO |
-| put | TODO |
-| patch | TODO |
-| delete | TODO |
-| head | TODO |
-| options | TODO |
+| handler | Register an handler to handle request within the server resource. |
+| get | Register an handler for GET request with the server resource. |
+| getJson | Register an handler for GET requests that should return JSON content with the server resource. |
+| getXml | Register an handler for GET requests that should return XML content with the server resource. |
+| getYaml | Register an handler for GET requests that should return YAML content with the server resource. |
+| post | Register an handler for POST request with the server resource. |
+| put | Register an handler for PUT request with the server resource. |
+| patch | Register an handler for PATCH request with the server resource. |
+| delete | Register an handler for DELETE request with the server resource. |
+| head | Register an handler for HEAD request with the server resource. |
+| options | Register an handler for OPTIONS request with the server resource. |
 | handle | The entry point for server resource. |
 
 #### Method handler(handler)
 
-TODO
+Register an handler to handle request within the server resource.
 
 | Argument | Type | Description |
 | -------- | ---- | ----------- |
 | handler | Function or Object | the processing element when the router matches |
+
+A configuration can be provide to define which requests will be handled,
+the parameters to provide, if entity conversion must apply and configure
+data validation.
 
 #### Method get(handler)
 
-TODO
+Register an handler for GET request with the server resource.
 
 | Argument | Type | Description |
 | -------- | ---- | ----------- |
 | handler | Function or Object | the processing element when the router matches |
+
+This method is a shortcut for the method `handler` with the following
+configuration:
+
+    var serverResource = restlet.createServerResource(
+                                   { method: 'GET' },
+                                   function(request, response) {
+        (...)
+    });
+
+Additional configuration can be also provided as first parameter.
 
 #### Method getJson(handler)
 
-TODO
+Register an handler for GET requests that should return JSON content
+with the server resource.
 
 | Argument | Type | Description |
 | -------- | ---- | ----------- |
 | handler | Function or Object | the processing element when the router matches |
+
+This method is a shortcut for the method `handler` with the following
+configuration:
+
+    var serverResource = restlet.createServerResource(
+                                   { method: 'GET', accept: 'json' },
+                                   function(request, response) {
+        (...)
+    });
+
+Additional configuration can be also provided as first parameter.
 
 #### Method getXml(handler)
 
-TODO
+Register an handler for GET requests that should return XML content
+with the server resource.
 
 | Argument | Type | Description |
 | -------- | ---- | ----------- |
 | handler | Function or Object | the processing element when the router matches |
+
+This method is a shortcut for the method `handler` with the following
+configuration:
+
+    var serverResource = restlet.createServerResource(
+                                   { method: 'GET', accept: 'xml' },
+                                   function(request, response) {
+        (...)
+    });
+
+Additional configuration can be also provided as first parameter.
 
 #### Method getYaml(handler)
 
-TODO
+Register an handler for GET requests that should return YAML content
+with the server resource.
 
 | Argument | Type | Description |
 | -------- | ---- | ----------- |
 | handler | Function or Object | the processing element when the router matches |
+
+This method is a shortcut for the method `handler` with the following
+configuration:
+
+    var serverResource = restlet.createServerResource(
+                                   { method: 'GET', accept: 'yaml' },
+                                   function(request, response) {
+        (...)
+    });
+
+Additional configuration can be also provided as first parameter.
 
 #### Method post(handler)
 
-TODO
+Register an handler for POST request with the server resource.
 
 | Argument | Type | Description |
 | -------- | ---- | ----------- |
 | handler | Function or Object | the processing element when the router matches |
+
+This method is a shortcut for the method `handler` with the following
+configuration:
+
+    var serverResource = restlet.createServerResource(
+                                   { method: 'POST' },
+                                   function(request, response) {
+        (...)
+    });
+
+Additional configuration can be also provided as first parameter.
 
 #### Method put(handler)
 
-TODO
+Register an handler for PUT request with the server resource.
 
 | Argument | Type | Description |
 | -------- | ---- | ----------- |
 | handler | Function or Object | the processing element when the router matches |
+
+This method is a shortcut for the method `handler` with the following
+configuration:
+
+    var serverResource = restlet.createServerResource(
+                                   { method: 'PUT' },
+                                   function(request, response) {
+        (...)
+    });
+
+Additional configuration can be also provided as first parameter.
 
 #### Method patch(handler)
 
-TODO
+Register an handler for PATCH request with the server resource.
 
 | Argument | Type | Description |
 | -------- | ---- | ----------- |
 | handler | Function or Object | the processing element when the router matches |
+
+This method is a shortcut for the method `handler` with the following
+configuration:
+
+    var serverResource = restlet.createServerResource(
+                                   { method: 'PATCH' },
+                                   function(request, response) {
+        (...)
+    });
+
+Additional configuration can be also provided as first parameter.
 
 #### Method delete(handler)
 
-TODO
+Register an handler for DELETE request with the server resource.
 
 | Argument | Type | Description |
 | -------- | ---- | ----------- |
 | handler | Function or Object | the processing element when the router matches |
+
+This method is a shortcut for the method `handler` with the following
+configuration:
+
+    var serverResource = restlet.createServerResource(
+                                   { method: 'DELETE' },
+                                   function(request, response) {
+        (...)
+    });
+
+Additional configuration can be also provided as first parameter.
 
 #### Method head(handler)
 
-TODO
+Register an handler for HEAD request with the server resource.
 
 | Argument | Type | Description |
 | -------- | ---- | ----------- |
 | handler | Function or Object | the processing element when the router matches |
+
+This method is a shortcut for the method `handler` with the following
+configuration:
+
+    var serverResource = restlet.createServerResource(
+                                   { method: 'HEAD' },
+                                   function(request, response) {
+        (...)
+    });
+
+Additional configuration can be also provided as first parameter.
 
 #### Method options(handler)
 
-TODO
+Register an handler for OPTIONS request with the server resource.
 
 | Argument | Type | Description |
 | -------- | ---- | ----------- |
 | handler | Function or Object | the processing element when the router matches |
+
+This method is a shortcut for the method `handler` with the following
+configuration:
+
+    var serverResource = restlet.createServerResource(
+                                   { method: 'OPTIONS' },
+                                   function(request, response) {
+        (...)
+    });
+
+Additional configuration can be also provided as first parameter.
 
 #### Method handle(request, response)
 
@@ -619,6 +779,17 @@ involves within the request processing chain.
 __`restlet.createDirectory`__
 
 Create a directory.
+
+A directory is a particular restlet element that allows to serve
+static content within an application. You simply need to provide
+a root path and this element will automatically translate virtual
+path of requests to path on the filesystem.
+
+A directory can be created as described below:
+
+    var router = (...)
+    var directory = restlet.createDirectory('/path/to/');
+    router.attach('/static', directory);
 
 __Methods__
 
