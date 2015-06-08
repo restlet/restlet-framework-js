@@ -9,14 +9,14 @@ describe('entity headers', function() {
   // Content type
   describe('content type header', function() {
     it('no header', function() {
-      var rawRequest = testUtils.createRawRequest({});
+      var rawRequest = testUtils.createRawRequest('GET', '/path', {});
 
       var request = serverUtils.createRequest(rawRequest, 'http');
       assert.equal(null, request.entity.mediaType);
     });
 
     it('header with correct format', function() {
-      var rawRequest = testUtils.createRawRequest(
+      var rawRequest = testUtils.createRawRequest('GET', '/path',
         { 'content-type': 'application/json' });
 
       var request = serverUtils.createRequest(rawRequest, 'http');
@@ -24,7 +24,7 @@ describe('entity headers', function() {
     });
 
     it('header with wrong format', function() {
-      var rawRequest = testUtils.createRawRequest(
+      var rawRequest = testUtils.createRawRequest('GET', '/path',
         { 'content-type': 'application/json' });
 
       var request = serverUtils.createRequest(rawRequest, 'http');
@@ -35,14 +35,14 @@ describe('entity headers', function() {
   // Content length
   describe('content length header', function() {
     it('no header', function() {
-      var rawRequest = testUtils.createRawRequest({});
+      var rawRequest = testUtils.createRawRequest('GET', '/path', {});
 
       var request = serverUtils.createRequest(rawRequest, 'http');
       assert.equal(-1, request.entity.length);
     });
 
     it('header with correct format', function() {
-      var rawRequest = testUtils.createRawRequest(
+      var rawRequest = testUtils.createRawRequest('GET', '/path',
         { 'content-length': '12345' });
 
       var request = serverUtils.createRequest(rawRequest, 'http');
@@ -50,7 +50,7 @@ describe('entity headers', function() {
     });
 
     it('header with wrong format', function() {
-      var rawRequest = testUtils.createRawRequest(
+      var rawRequest = testUtils.createRawRequest('GET', '/path',
         { 'content-length': 'abcde' });
 
       var request = serverUtils.createRequest(rawRequest, 'http');
@@ -61,14 +61,14 @@ describe('entity headers', function() {
   // Encoding
   describe('content encoding header', function() {
     it('no header', function() {
-      var rawRequest = testUtils.createRawRequest({});
+      var rawRequest = testUtils.createRawRequest('GET', '/path', {});
 
       var request = serverUtils.createRequest(rawRequest, 'http');
       assert.equal(0, request.entity.encodings.length);
     });
 
     it('header with correct format', function() {
-      var rawRequest = testUtils.createRawRequest(
+      var rawRequest = testUtils.createRawRequest('GET', '/path',
         { 'content-encoding': 'compress, deflate' });
 
       var request = serverUtils.createRequest(rawRequest, 'http');
@@ -78,7 +78,7 @@ describe('entity headers', function() {
     });
 
     it('header with wrong format', function() {
-      var rawRequest = testUtils.createRawRequest(
+      var rawRequest = testUtils.createRawRequest('GET', '/path',
         { 'content-encoding': 'abcde' });
 
       var request = serverUtils.createRequest(rawRequest, 'http');
@@ -90,14 +90,14 @@ describe('entity headers', function() {
   // Language
   describe('content language header', function() {
     it('no header', function() {
-      var rawRequest = testUtils.createRawRequest({});
+      var rawRequest = testUtils.createRawRequest('GET', '/path', {});
 
       var request = serverUtils.createRequest(rawRequest, 'http');
       assert.equal(0, request.entity.languages.length);
     });
 
     it('header with correct format', function() {
-      var rawRequest = testUtils.createRawRequest(
+      var rawRequest = testUtils.createRawRequest('GET', '/path',
         { 'content-language': 'fr-fr, en' });
 
       var request = serverUtils.createRequest(rawRequest, 'http');
@@ -107,7 +107,7 @@ describe('entity headers', function() {
     });
 
     it('header with wrong format', function() {
-      var rawRequest = testUtils.createRawRequest(
+      var rawRequest = testUtils.createRawRequest('GET', '/path',
         { 'content-language': 'abcde' });
 
       var request = serverUtils.createRequest(rawRequest, 'http');
@@ -119,14 +119,14 @@ describe('entity headers', function() {
   // Range
   describe('content range header', function() {
     it('no header', function() {
-      var rawRequest = testUtils.createRawRequest({});
+      var rawRequest = testUtils.createRawRequest('GET', '/path', {});
 
       var request = serverUtils.createRequest(rawRequest, 'http');
       assert.equal(null, request.entity.range);
     });
 
     it('header with correct format', function() {
-      var rawRequest = testUtils.createRawRequest(
+      var rawRequest = testUtils.createRawRequest('GET', '/path',
         { 'content-range': 'bytes 500-999/1234' });
 
       var request = serverUtils.createRequest(rawRequest, 'http');
@@ -137,7 +137,7 @@ describe('entity headers', function() {
     });
 
     it('header with wrong format (1)', function() {
-      var rawRequest = testUtils.createRawRequest(
+      var rawRequest = testUtils.createRawRequest('GET', '/path',
         { 'content-language': 'abcde' });
 
       var request = serverUtils.createRequest(rawRequest, 'http');
@@ -145,7 +145,7 @@ describe('entity headers', function() {
     });
 
     it('header with wrong format (2)', function() {
-      var rawRequest = testUtils.createRawRequest(
+      var rawRequest = testUtils.createRawRequest('GET', '/path',
         { 'content-language': 'bytes dd-12/12' });
 
       var request = serverUtils.createRequest(rawRequest, 'http');
@@ -153,7 +153,7 @@ describe('entity headers', function() {
     });
 
     it('header with wrong format (3)', function() {
-      var rawRequest = testUtils.createRawRequest(
+      var rawRequest = testUtils.createRawRequest('GET', '/path',
         { 'content-language': 'bytes 12-dd/12' });
 
       var request = serverUtils.createRequest(rawRequest, 'http');
@@ -161,7 +161,7 @@ describe('entity headers', function() {
     });
 
     it('header with wrong format (4)', function() {
-      var rawRequest = testUtils.createRawRequest(
+      var rawRequest = testUtils.createRawRequest('GET', '/path',
         { 'content-language': 'bytes 12-12/dd' });
 
       var request = serverUtils.createRequest(rawRequest, 'http');

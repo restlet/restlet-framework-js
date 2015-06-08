@@ -8,7 +8,6 @@ describe('server resource parameters', function() {
     it('with function and text payload', function() {
       var handleCalled = false;
       var endCalled = false;
-      var notAllowedCalled = false;
       var textPayload = null;
       var serverResource = restlet.createServerResource()
                                   .post({
@@ -19,24 +18,17 @@ describe('server resource parameters', function() {
         response.end();
       });
 
-      var request = testUtils.createRequest(
+      var request = testUtils.createMockRequest(
         'POST', '/path', 'application/xml');
-      var response = testUtils.createResponse({
-        onSetStatus: function(code) {
-          if (code == 405) {
-            notAllowedCalled = true;
-          }
-        },
-        onEnd: function() {
-          endCalled = true;
-        }
+      var response = testUtils.createMockResponse(request, {
+        end: [ function() { endCalled = true; } ]
       });
       serverResource.handle(request, response);
       request.trigger('data', 'chunk1');
       request.trigger('data', 'chunk2');
       request.trigger('end');
+
       assert.equal(true, handleCalled);
-      assert.equal(false, notAllowedCalled);
       assert.equal('chunk1chunk2', textPayload);
       assert.equal(true, endCalled);
     });
@@ -53,23 +45,18 @@ describe('server resource parameters', function() {
                                   }, function(entity) {
         called = true;
         textPayload = entity.text;
+        response.end();
       });
 
-      var request = testUtils.createRequest('POST',
+      var request = testUtils.createMockRequest('POST',
         '/path', 'application/xml');
-      var response = testUtils.createResponse({
-        onSetStatus: function(code) {
-          if (code == 405) {
-            notAllowedCalled = true;
-          }
-        }
-      });
+      var response = testUtils.createMockResponse(request);
       serverResource.handle(request, response);
       request.trigger('data', 'chunk1');
       request.trigger('data', 'chunk2');
       request.trigger('end');
+
       assert.equal(true, called);
-      assert.equal(false, notAllowedCalled);
       assert.equal('chunk1chunk2', textPayload);
     });
 
@@ -85,12 +72,9 @@ describe('server resource parameters', function() {
         objEntity = entity;
       });
 
-      var request = testUtils.createRequest('POST',
-        '/path', 'application/json');
-      request.clientInfo = {
-        acceptedMediaTypes: [ 'application/json' ]
-      }
-      var response = testUtils.createResponse();
+      var request = testUtils.createMockRequest('POST',
+        '/path', 'application/json', 'application/json');
+      var response = testUtils.createMockResponse(request);
 
       serverResource.handle(request, response);
       request.trigger('data', '{"attr1":');
@@ -114,26 +98,20 @@ describe('server resource parameters', function() {
         objEntity = entity;
       });
 
-      var request = testUtils.createRequest('POST',
-        '/path', 'application/xml');
-      request.clientInfo = {
-        acceptedMediaTypes: [ 'application/json' ]
-      }
-      var response = testUtils.createResponse({
-        onSetStatus: function(code) {
-          if (code == 415) {
-            notSupportedMediaTypeCalled = true;
-          }
-        }
-      });
+      var request = testUtils.createMockRequest('POST',
+        '/path', 'application/xml', 'application/json');
+      var response = testUtils.createMockResponse(request);
 
       serverResource.handle(request, response);
       request.trigger('data', '{"attr1":');
       request.trigger('data', '10,"attr2":"a string"}');
       request.trigger('end');
-      assert.equal(false, called);
-      assert.equal(true, notSupportedMediaTypeCalled);
-      assert.equal(null, objEntity);
+
+      var rawResponse = response.rawResponse;
+      assert.equal(called, false);
+      assert.equal(rawResponse.statusCode, 415);
+      assert.equal(rawResponse.statusMessage, 'Unsupported Media Type');
+      assert.equal(objEntity, null);
     });
   });
 
@@ -149,13 +127,14 @@ describe('server resource parameters', function() {
         savedReference = reference;
       });
 
-      var request = testUtils.createRequest('POST',
+      var request = testUtils.createMockRequest('POST',
         '/path?test=10', 'application/xml');
-      var response = testUtils.createResponse();
+      var response = testUtils.createMockResponse();
       serverResource.handle(request, response);
       request.trigger('end');
-      assert.equal(true, called);
-      assert.equal('/path?test=10', savedReference.path);
+      assert.equal(called, true);
+      assert.equal(savedReference.path, '/path');
+      assert.equal(savedReference.query, 'test=10');
     });
   });
 
@@ -171,9 +150,9 @@ describe('server resource parameters', function() {
         savedQueryParameters = queryParameters;
       });
 
-      var request = testUtils.createRequest('POST',
+      var request = testUtils.createMockRequest('POST',
         '/path?param1=10&param2=un%20test', 'application/xml');
-      var response = testUtils.createResponse();
+      var response = testUtils.createMockResponse();
       serverResource.handle(request, response);
       request.trigger('end');
       assert.equal(true, called);
@@ -196,9 +175,9 @@ describe('server resource parameters', function() {
         savedParam2 = param2;
       });
 
-      var request = testUtils.createRequest('POST',
+      var request = testUtils.createMockRequest('POST',
         '/path?param1=10&param2=un%20test', 'application/xml');
-      var response = testUtils.createResponse();
+      var response = testUtils.createMockResponse();
       serverResource.handle(request, response);
       request.trigger('end');
       assert.equal(true, called);

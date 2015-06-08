@@ -9,7 +9,7 @@ describe('client info creation', function() {
   // Simple creations
   describe('warning header', function() {
     it('no accept header', function() {
-      var rawRequest = testUtils.createRawRequest({ warning: ''});
+      var rawRequest = testUtils.createRawRequest('GET', '/path', { warning: ''});
       var request = serverUtils.createRequest(rawRequest, 'http');
       var clientInfo = request.clientInfo;
 

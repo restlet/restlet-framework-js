@@ -10,12 +10,14 @@ describe('server resource', function() {
       var serverResource = restlet.createServerResource(
                                       function(request, response) {
         called = true;
+        response.end();
       });
 
-      var request = testUtils.createRequest('GET', '/path');
-      var response = testUtils.createResponse();
+      var request = testUtils.createMockRequest('GET', '/path');
+      var response = testUtils.createMockResponse(request);
       serverResource.handle(request, response);
       request.trigger('end');
+
       assert.equal(true, called);
     });
 
@@ -24,41 +26,34 @@ describe('server resource', function() {
       var serverResource = restlet.createServerResource({ method: 'GET' },
                                       function(request, response) {
         called = true;
+        response.end();
       });
 
-      var request = testUtils.createRequest('GET', '/path');
-      var response = testUtils.createResponse();
+      var request = testUtils.createMockRequest('GET', '/path');
+      var response = testUtils.createMockResponse(request);
       serverResource.handle(request, response);
       request.trigger('end');
+
       assert.equal(true, called);
     });
 
     it('with a function and configuration (not called)', function() {
       var called = false;
-      var notAllowedCalled = false;
       var serverResource = restlet.createServerResource({ method: 'POST' },
                                       function(request, response) {
         called = true;
+        response.end();
       });
 
-      var request = testUtils.createRequest('GET', '/path');
-      var response = {
-        setStatus: function(code) {
-          if (code == 405) {
-            notAllowedCalled = true;
-          }
-        },
-        writeRepresentation: function() {
-
-        },
-        end: function() {
-
-        }
-      };
+      var request = testUtils.createMockRequest('GET', '/path');
+      var response = testUtils.createMockResponse(request);
       serverResource.handle(request, response);
       request.trigger('end');
+
+      var rawResponse = response.rawResponse;
       assert.equal(false, called);
-      assert.equal(true, notAllowedCalled);
+      assert.equal(405, rawResponse.statusCode);
+      assert.equal('Method Not Allowed', rawResponse.statusMessage);
     });
   });
 
@@ -69,12 +64,14 @@ describe('server resource', function() {
       var serverResource = restlet.createServerResource().handler(
                                       function(request, response) {
         called = true;
+        response.end();
       });
 
-      var request = testUtils.createRequest('GET', '/path');
-      var response = testUtils.createResponse();
+      var request = testUtils.createMockRequest('GET', '/path');
+      var response = testUtils.createMockResponse(request);
       serverResource.handle(request, response);
       request.trigger('end');
+
       assert.equal(true, called);
     });
 
@@ -83,35 +80,34 @@ describe('server resource', function() {
       var serverResource = restlet.createServerResource().handler(
                    { method: 'GET' }, function(request, response) {
         called = true;
+        response.end();
       });
 
-      var request = testUtils.createRequest('GET', '/path');
-      var response = testUtils.createResponse();
+      var request = testUtils.createMockRequest('GET', '/path');
+      var response = testUtils.createMockResponse(request);
       serverResource.handle(request, response);
       request.trigger('end');
+
       assert.equal(true, called);
     });
 
     it('with a function and configuration (not called)', function() {
       var called = false;
-      var notAllowedCalled = false;
       var serverResource = restlet.createServerResource().handler(
                    { method: 'POST' }, function(request, response) {
         called = true;
+        response.end();
       });
 
-      var request = testUtils.createRequest('GET', '/path');
-      var response = testUtils.createResponse({
-        onSetStatus: function(code) {
-          if (code == 405) {
-            notAllowedCalled = true;
-          }
-        }
-      });
+      var request = testUtils.createMockRequest('GET', '/path');
+      var response = testUtils.createMockResponse(request);
       serverResource.handle(request, response);
       request.trigger('end');
+
+      var rawResponse = response.rawResponse;
       assert.equal(false, called);
-      assert.equal(true, notAllowedCalled);
+      assert.equal(405, rawResponse.statusCode);
+      assert.equal('Method Not Allowed', rawResponse.statusMessage);
     });
   });
 
@@ -122,35 +118,34 @@ describe('server resource', function() {
       var serverResource = restlet.createServerResource()
                                   .get(function(request, response) {
         called = true;
+        response.end();
       });
 
-      var request = testUtils.createRequest('GET', '/path');
-      var response = testUtils.createResponse();
+      var request = testUtils.createMockRequest('GET', '/path');
+      var response = testUtils.createMockResponse(request);
       serverResource.handle(request, response);
       request.trigger('end');
+
       assert.equal(true, called);
     });
 
     it('with function only (not called)', function() {
       var called = false;
-      var notAllowedCalled = false;
       var serverResource = restlet.createServerResource()
                                   .get(function(request, response) {
         called = true;
+        response.end();
       });
 
-      var request = testUtils.createRequest('POST', '/path');
-      var response = testUtils.createResponse({
-        onSetStatus: function(code) {
-          if (code == 405) {
-            notAllowedCalled = true;
-          }
-        }
-      });
+      var request = testUtils.createMockRequest('POST', '/path');
+      var response = testUtils.createMockResponse(request);
       serverResource.handle(request, response);
       request.trigger('end');
+
+      var rawResponse = response.rawResponse;
       assert.equal(false, called);
-      assert.equal(true, notAllowedCalled);
+      assert.equal(405, rawResponse.statusCode);
+      assert.equal('Method Not Allowed', rawResponse.statusMessage);
     });
   });
 
@@ -161,61 +156,57 @@ describe('server resource', function() {
       var serverResource = restlet.createServerResource()
                                   .post(function(request, response) {
         called = true;
+        response.end();
       });
 
-      var request = testUtils.createRequest('POST', '/path');
-      var response = testUtils.createResponse();
+      var request = testUtils.createMockRequest('POST', '/path');
+      var response = testUtils.createMockResponse(request);
       serverResource.handle(request, response);
       request.trigger('end');
+
       assert.equal(true, called);
     });
 
     it('with function only (not called)', function() {
       var called = false;
-      var notAllowedCalled = false;
       var serverResource = restlet.createServerResource()
                                   .post(function(request, response) {
         called = true;
+        response.end();
       });
 
-      var request = testUtils.createRequest('GET', '/path');
-      var response = testUtils.createResponse({
-        onSetStatus: function(code) {
-          if (code == 405) {
-            notAllowedCalled = true;
-          }
-        }
-      });
+      var request = testUtils.createMockRequest('GET', '/path');
+      var response = testUtils.createMockResponse(request);
       serverResource.handle(request, response);
       request.trigger('end');
+
+      var rawResponse = response.rawResponse;
       assert.equal(false, called);
-      assert.equal(true, notAllowedCalled);
+      assert.equal(405, rawResponse.statusCode);
+      assert.equal('Method Not Allowed', rawResponse.statusMessage);
     });
 
     it('with function and text payload', function() {
       var called = false;
-      var notAllowedCalled = false;
       var textPayload = null;
       var serverResource = restlet.createServerResource()
                                   .post(function(request, response) {
         called = true;
         textPayload = request.entity.text;
+        response.end();
       });
 
-      var request = testUtils.createRequest('POST', '/path', 'application/xml');
-      var response = testUtils.createResponse({
-        onSetStatus: function(code) {
-          if (code == 405) {
-            notAllowedCalled = true;
-          }
-        }
-      });
+      var request = testUtils.createMockRequest('POST', '/path', 'application/xml');
+      var response = testUtils.createMockResponse(request);
       serverResource.handle(request, response);
       request.trigger('data', 'chunk1');
       request.trigger('data', 'chunk2');
       request.trigger('end');
+
+      var rawResponse = response.rawResponse;
       assert.equal(true, called);
-      assert.equal(false, notAllowedCalled);
+      assert.equal(200, rawResponse.statusCode);
+      assert.equal('OK', rawResponse.statusMessage);
       assert.equal('chunk1chunk2', textPayload);
     });
 
@@ -229,29 +220,26 @@ describe('server resource', function() {
         called = true;
         textPayload = request.entity.text;
         bytesPayload = request.entity.raw;
+        response.end();
       });
 
-      var request = testUtils.createRequest('POST', '/path');
-      var response = testUtils.createResponse({
-        onSetStatus: function(code) {
-          if (code == 415) {
-            notSupportedMediaTypeCalled = true;
-          }
-        }
-      });
+      var request = testUtils.createMockRequest('POST', '/path');
+      var response = testUtils.createMockResponse(request);
       serverResource.handle(request, response);
       request.trigger('data', 'chunk1');
       request.trigger('data', 'chunk2');
       request.trigger('end');
+
+      var rawResponse = response.rawResponse;
       assert.equal(true, called);
-      assert.equal(false, notSupportedMediaTypeCalled);
+      assert.equal(200, rawResponse.statusCode);
+      assert.equal('OK', rawResponse.statusMessage);
       assert.equal(null, textPayload);
       assert.equal(null, bytesPayload);
     });
 
     it('with function, text payload conversion and no content type', function() {
       var called = false;
-      var notSupportedMediaTypeCalled = false;
       var serverResource = restlet.createServerResource()
                                   .post({
                                     parameters: ['entity', 'response' ],
@@ -259,20 +247,17 @@ describe('server resource', function() {
         called = true;
       });
 
-      var request = testUtils.createRequest('POST', '/path');
-      var response = testUtils.createResponse({
-        onSetStatus: function(code) {
-          if (code == 415) {
-            notSupportedMediaTypeCalled = true;
-          }
-        }
-      });
+      var request = testUtils.createMockRequest('POST', '/path');
+      var response = testUtils.createMockResponse(request);
       serverResource.handle(request, response);
       request.trigger('data', 'chunk1');
       request.trigger('data', 'chunk2');
       request.trigger('end');
+
+      var rawResponse = response.rawResponse;
+      assert.equal(415, rawResponse.statusCode);
+      assert.equal('Unsupported Media Type', rawResponse.statusMessage);
       assert.equal(false, called);
-      assert.equal(true, notSupportedMediaTypeCalled);
     });
 
     it('with function and byte payload', function() {
@@ -283,22 +268,20 @@ describe('server resource', function() {
                                   .post(function(request, response) {
         called = true;
         bytePayload = request.entity.raw;
+        response.end();
       });
 
-      var request = testUtils.createRequest('POST', '/path', 'octet/stream');
-      var response = testUtils.createResponse({
-        onSetStatus: function(code) {
-          if (code == 405) {
-            notAllowedCalled = true;
-          }
-        }
-      });
+      var request = testUtils.createMockRequest('POST', '/path', 'octet/stream');
+      var response = testUtils.createMockResponse(request);
       serverResource.handle(request, response);
       request.trigger('data', new Buffer('chunk1', 'utf-8'));
       request.trigger('data', new Buffer('chunk2', 'utf-8'));
       request.trigger('end');
+
+      var rawResponse = response.rawResponse;
       assert.equal(true, called);
-      assert.equal(false, notAllowedCalled);
+      assert.equal(200, rawResponse.statusCode);
+      assert.equal('OK', rawResponse.statusMessage);
       assert.equal(new Buffer('chunk1chunk2', 'utf-8').toString(),
         bytePayload.toString());
     });
@@ -311,22 +294,20 @@ describe('server resource', function() {
                                   .post(function(request, response) {
         called = true;
         bytePayload = request.entity.raw;
+        response.end();
       });
 
-      var request = testUtils.createRequest('POST', '/path');
-      var response = testUtils.createResponse({
-        onSetStatus: function(code) {
-          if (code == 415) {
-            notSupportedMediaTypeCalled = true;
-          }
-        }
-      });
+      var request = testUtils.createMockRequest('POST', '/path');
+      var response = testUtils.createMockResponse(request);
       serverResource.handle(request, response);
       request.trigger('data', new Buffer('chunk1', 'utf-8'));
       request.trigger('data', new Buffer('chunk2', 'utf-8'));
       request.trigger('end');
-      assert.equal(true, called);
-      assert.equal(false, notSupportedMediaTypeCalled);
+      assert.equal(called, true);
+
+      var rawResponse = response.rawResponse;
+      assert.equal(200, rawResponse.statusCode);
+      assert.equal('OK', rawResponse.statusMessage);
       assert.equal(null, request.entity.raw);
       assert.equal(null, request.entity.text);
     });

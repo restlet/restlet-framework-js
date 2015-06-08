@@ -6,8 +6,8 @@ describe('query parameters', function() {
   // Simple chaining
   describe('extracting query parameters', function() {
     it('simple query parameters', function() {
-      var rawRequest = testUtils.createRawRequest({},
-        '/path?param1=10&param2=un test');
+      var rawRequest = testUtils.createRawRequest('GET',
+        '/path?param1=10&param2=un test', {});
       var request = serverUtils.createRequest(rawRequest, 'http');
 
       var queryParameters = request.queryParameters;
@@ -16,8 +16,8 @@ describe('query parameters', function() {
     });
 
     it('encoded query parameters', function() {
-      var rawRequest = testUtils.createRawRequest({},
-        '/path?param1=10&param2=un%20test');
+      var rawRequest = testUtils.createRawRequest('GET',
+        '/path?param1=10&param2=un%20test', {});
       var request = serverUtils.createRequest(rawRequest, 'http');
 
       var queryParameters = request.queryParameters;

@@ -33,6 +33,20 @@ describe('converters', function() {
       assert.equal('my string', savedObj.attr2[0]);
     });
 
+    it('simple conversion xml to obj with null input', function() {
+      var converter = converters.getBuiltinConverter('xml2js');
+
+      var savedObj = null;
+      var savedErr = null;
+      converter.toObject(null, function(err, obj) {
+          savedObj = obj;
+          savedErr = err;
+        });
+
+      assert.equal(null, savedObj);
+      assert.equal(null, savedErr);
+    });
+
     it('simple conversion xml to obj (error)', function() {
       var converter = converters.getBuiltinConverter('xml2js');
 
@@ -76,6 +90,20 @@ describe('converters', function() {
 
       assert.equal(10, savedObj.attr1);
       assert.equal('my string', savedObj.attr2);
+    });
+
+    it('simple conversion json to obj with null input', function() {
+      var converter = converters.getBuiltinConverter('json');
+
+      var savedObj = null;
+      var savedErr = null;
+      converter.toObject(null, function(err, obj) {
+          savedErr = err;
+          savedObj = obj;
+        });
+
+      assert.equal(null, savedObj);
+      assert.equal(null, savedErr);
     });
 
     it('simple conversion json to obj (error)', function() {
@@ -122,6 +150,20 @@ describe('converters', function() {
 
       assert.equal(10, savedObj.attr1);
       assert.equal('my string', savedObj.attr2);
+    });
+
+    it('simple conversion yaml to obj with null input', function() {
+      var converter = converters.getBuiltinConverter('js-yaml');
+
+      var savedObj = null;
+      var savedErr = null;
+      converter.toObject(null, function(err, obj) {
+          savedObj = obj;
+          savedErr = err;
+        });
+
+      assert.equal(null, savedObj);
+      assert.equal(null, savedErr);
     });
 
     it('simple conversion yaml to obj (error)', function() {

@@ -1,13 +1,14 @@
 var _ = require('lodash');
 var urlApi = require('url');
+var serverUtils = require('../../lib/server-utils');
 
 exports = module.exports;
 
 var testUtils = exports;
 
-testUtils.createRawRequest = function(headers, path) {
-  var handlers = {};
+testUtils.createRawRequest = function(method, path, headers, handlers) {
   return {
+    method: method,
     headers: headers,
     connection: {
       remoteAddress: 'localhost',
@@ -17,94 +18,62 @@ testUtils.createRawRequest = function(headers, path) {
     },
     url: path != null ? path : '/path',
     on: function(event, handler) {
-      if (handlers.event == null) {
-        handlers.event = [];
-      }
-      handlers.event.push(handler);
-    },
-    trigger: function(event, data) {
-      if (handlers.event != null) {
-        var eventHandlers = handlers.event;
-        _.forEach(eventHandlers, function(eventHandler) {
-          eventHandler(data);
-        });
-      }
-    }
-  };
-};
-
-testUtils.createRequest = function(method, path, contentType, acceptType) {
-  var handlers = {};
-  var entity = {
-    on: function(event, handler) {
       if (handlers[event] == null) {
         handlers[event] = [];
       }
       handlers[event].push(handler);
-    },
-    resume: function() {
-
-    }
-  };
-
-  if (contentType != null) {
-    entity.mediaType = { name: contentType };
-  }
-
-  var clientInfo = {};
-  if (acceptType != null) {
-    clientInfo.acceptedMediaTypes = [ acceptType ];
-  }
-
-  var queryParameters = {};
-  if (path != null) {
-    var urlParts = urlApi.parse(path, true);
-    queryParameters = urlParts.query;
-  }
-  return {
-    method: method,
-    reference: {
-      path: path
-    },
-    entity: entity,
-    clientInfo: clientInfo,
-    queryParameters: queryParameters,
-    trigger: function(event, data) {
-      if (handlers[event] != null) {
-        var eventHandlers = handlers[event];
-        _.forEach(eventHandlers, function(eventHandler) {
-          eventHandler(data);
-        });
-      }
     }
   };
 };
 
-testUtils.createResponse = function(listeners) {
-  return {
-    status: {
-      code: 200,
-      isError: function() {
-        return (this.code >= 400 && this.code < 600);
-      }
+testUtils.createMockRequest = function(method, path, contentType, acceptType) {
+  var handlers = {};
+  var rawRequest = testUtils.createRawRequest(method, path, {
+
+  }, handlers);
+
+  if (contentType != null) {
+    rawRequest.headers['content-type'] = contentType;
+  }
+
+  if (acceptType != null) {
+    rawRequest.headers['accept'] = acceptType;
+  }
+
+  var request = serverUtils.createRequest(rawRequest);
+
+  request.trigger = function(event, data) {
+    if (handlers[event] != null) {
+      var eventHandlers = handlers[event];
+      _.forEach(eventHandlers, function(eventHandler) {
+        eventHandler(data);
+      });
+    }
+  };
+
+  return request;
+};
+
+testUtils.createMockResponse = function(request, listeners) {
+  var rawResponse = {
+    statusCode: '',
+    statusMessage: '',
+    setHeader: function(name, value) {
+
     },
-    setStatus: function(code, description) {
-      this.status.code = code;
-      this.status.description = description;
-      if (listeners != null && listeners.onSetStatus != null) {
-        listeners.onSetStatus(code, description);
-      }
-    },
-    writeRepresentation: function(repr) {
-      if (listeners != null && listeners.onWriteRepresentation != null) {
-        listeners.onWriteRepresentation(repr);
-      }
+    write: function() {
+
     },
     end: function() {
-      if (listeners != null && listeners.onEnd != null) {
-        listeners.onEnd();
+      if (listeners!=null && !_.isEmpty(listeners.end)) {
+        _.forEach(listeners.end, function(callback) {
+          callback();
+        });
       }
     }
   };
-}
 
+  var response = serverUtils.createResponse(rawResponse, request);
+  response.rawResponse = rawResponse;
+  return response;
+};

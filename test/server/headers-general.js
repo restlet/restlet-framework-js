@@ -9,14 +9,14 @@ describe('general headers', function() {
   // Simple creations
   describe('date header', function() {
     it('no date header', function() {
-      var rawRequest = testUtils.createRawRequest({});
+      var rawRequest = testUtils.createRawRequest('GET', '/path', {});
 
       var request = serverUtils.createRequest(rawRequest, 'http');
       assert.equal(null, request.date);
     });
 
     it('date header with correct format', function() {
-      var rawRequest = testUtils.createRawRequest(
+      var rawRequest = testUtils.createRawRequest('GET', '/path',
         { date: 'Tue, 11 Jul 2000 18:23:51 GMT' });
 
       var request = serverUtils.createRequest(rawRequest, 'http');
@@ -24,7 +24,7 @@ describe('general headers', function() {
     });
 
     it('date header with wrong format', function() {
-      var rawRequest = testUtils.createRawRequest(
+      var rawRequest = testUtils.createRawRequest('GET', '/path',
         { date: 'Tue, 11 XXXXXXJul 2000 18:23:51 GMT' });
 
       var request = serverUtils.createRequest(rawRequest, 'http');

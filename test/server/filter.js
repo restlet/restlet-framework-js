@@ -12,8 +12,8 @@ describe('filter', function() {
         called = true;
       });
 
-      var request = testUtils.createRequest('GET', '/path');
-      var response = testUtils.createResponse();
+      var request = testUtils.createMockRequest('GET', '/path');
+      var response = testUtils.createMockResponse();
       serverResource.handle(request, response);
       request.trigger('end');
       assert.equal(true, called);

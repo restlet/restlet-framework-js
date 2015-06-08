@@ -9,7 +9,8 @@ describe('client info creation', function() {
   // Simple creations
   describe('accept header', function() {
     it('no accept header', function() {
-      var rawRequest = testUtils.createRawRequest({});
+      var rawRequest = testUtils.createRawRequest('GET', '/path',
+        { });
       var request = serverUtils.createRequest(rawRequest, 'http');
       var clientInfo = request.clientInfo;
 
@@ -18,7 +19,7 @@ describe('client info creation', function() {
     });
 
     it('accept header with single value', function() {
-      var rawRequest = testUtils.createRawRequest(
+      var rawRequest = testUtils.createRawRequest('GET', '/path',
         { accept: 'application/json' });
       var request = serverUtils.createRequest(rawRequest, 'http');
       var clientInfo = request.clientInfo;
@@ -30,7 +31,7 @@ describe('client info creation', function() {
     });
 
     it('accept header with multiple values', function() {
-      var rawRequest = testUtils.createRawRequest(
+      var rawRequest = testUtils.createRawRequest('GET', '/path',
         { accept: 'application/json, application/xml' });
       var request = serverUtils.createRequest(rawRequest, 'http');
       var clientInfo = request.clientInfo;
@@ -45,7 +46,7 @@ describe('client info creation', function() {
     });
 
     it('accept header with multiple values and parameters', function() {
-      var rawRequest = testUtils.createRawRequest(
+      var rawRequest = testUtils.createRawRequest('GET', '/path',
         { accept: 'text/*;q=0.3, text/html;q=0.7, text/html;level=1,'
             + ' text/html;level=2;q=0.4, */*;q=0.5' });
       var request = serverUtils.createRequest(rawRequest, 'http');
@@ -93,7 +94,7 @@ describe('client info creation', function() {
     });
 
     it('accept header with wrong format', function() {
-      var rawRequest = testUtils.createRawRequest(
+      var rawRequest = testUtils.createRawRequest('GET', '/path',
         { accept: 'text/*;q, text/html,level=2;q=0.4, */*;q=0.5' });
 
       var throwError = false;
