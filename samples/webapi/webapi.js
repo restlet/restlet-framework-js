@@ -36,7 +36,7 @@ var application = restlet.createApplication(function() {
     }, function(entity, request, response) {
       contacts.push(entity);
       response.locationRef = request.reference.path + entity.id;
-      response.empty();
+      response.setNoContent();
       response.end();
     })
   );
