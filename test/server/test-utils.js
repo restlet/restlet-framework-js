@@ -56,13 +56,20 @@ testUtils.createMockRequest = function(method, path, contentType, acceptType) {
 
 testUtils.createMockResponse = function(request, listeners) {
   var rawResponse = {
+    headers: {},
+    text: '',
+    raw: [],
     statusCode: '',
     statusMessage: '',
     setHeader: function(name, value) {
-
+      this.headers[name] = value;
     },
-    write: function() {
-
+    write: function(c) {
+      if (_.isString(c)) {
+        this.text += c;
+      } else {
+        this.raw.push(c);
+      }
     },
     end: function() {
       if (listeners!=null && !_.isEmpty(listeners.end)) {

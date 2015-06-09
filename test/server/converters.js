@@ -1,4 +1,5 @@
 var assert = require('assert');
+var _ = require('lodash');
 var converters = require('../../lib/converter');
 var testUtils = require('./test-utils');
 
@@ -12,10 +13,10 @@ describe('converters', function() {
         xmlString = s;
       });
 
-      assert.equal('<root>\n'
+      assert.equal(xmlString, '<root>\n'
         + ' <attr1>10</attr1>\n'
         + ' <attr2>my string</attr2>\n'
-        + '</root>', xmlString);
+        + '</root>');
     });
 
     it('simple conversion xml to obj', function() {
@@ -29,8 +30,8 @@ describe('converters', function() {
           savedObj = obj;
         });
 
-      assert.equal('10', savedObj.attr1[0]);
-      assert.equal('my string', savedObj.attr2[0]);
+      assert.equal(savedObj.attr1[0], '10');
+      assert.equal(savedObj.attr2[0], 'my string');
     });
 
     it('simple conversion xml to obj with null input', function() {
@@ -43,8 +44,8 @@ describe('converters', function() {
           savedErr = err;
         });
 
-      assert.equal(null, savedObj);
-      assert.equal(null, savedErr);
+      assert.equal(savedObj, null);
+      assert.equal(savedErr, null);
     });
 
     it('simple conversion xml to obj (error)', function() {
@@ -60,8 +61,8 @@ describe('converters', function() {
           savedErr = err;
         });
 
-      assert.equal(null, savedObj);
-      assert.notEqual(null, savedErr);
+      assert.equal(savedObj, null);
+      assert.notEqual(savedErr, null);
     });
   });
 
@@ -74,7 +75,7 @@ describe('converters', function() {
         jsonString = s;
       });
 
-      assert.equal('{"attr1":10,"attr2":"my string"}', jsonString);
+      assert.equal(jsonString, '{"attr1":10,"attr2":"my string"}');
     });
 
     it('simple conversion json to obj', function() {
@@ -88,8 +89,8 @@ describe('converters', function() {
           savedObj = obj;
         });
 
-      assert.equal(10, savedObj.attr1);
-      assert.equal('my string', savedObj.attr2);
+      assert.equal(savedObj.attr1, 10);
+      assert.equal(savedObj.attr2, 'my string');
     });
 
     it('simple conversion json to obj with null input', function() {
@@ -102,8 +103,8 @@ describe('converters', function() {
           savedObj = obj;
         });
 
-      assert.equal(null, savedObj);
-      assert.equal(null, savedErr);
+      assert.equal(savedObj, null);
+      assert.equal(savedErr, null);
     });
 
     it('simple conversion json to obj (error)', function() {
@@ -119,8 +120,8 @@ describe('converters', function() {
           savedObj = obj;
         });
 
-      assert.equal(null, savedObj);
-      assert.notEqual(null, savedErr);
+      assert.equal(savedObj, null);
+      assert.notEqual(savedErr, null);
     });
   });
 
@@ -133,7 +134,7 @@ describe('converters', function() {
         yamlString = s;
       });
 
-      assert.equal('attr1: 10\nattr2: my string\n', yamlString);
+      assert.equal(yamlString, 'attr1: 10\nattr2: my string\n');
     });
 
     it('simple conversion yaml to obj', function() {
@@ -148,8 +149,8 @@ describe('converters', function() {
           savedErr = err;
         });
 
-      assert.equal(10, savedObj.attr1);
-      assert.equal('my string', savedObj.attr2);
+      assert.equal(savedObj.attr1, 10);
+      assert.equal(savedObj.attr2, 'my string');
     });
 
     it('simple conversion yaml to obj with null input', function() {
@@ -162,8 +163,8 @@ describe('converters', function() {
           savedErr = err;
         });
 
-      assert.equal(null, savedObj);
-      assert.equal(null, savedErr);
+      assert.equal(savedObj, null);
+      assert.equal(savedErr, null);
     });
 
     it('simple conversion yaml to obj (error)', function() {
@@ -178,8 +179,34 @@ describe('converters', function() {
           savedErr = err;
         });
 
-      assert.equal(null, savedObj);
-      assert.notEqual(null, savedErr);
+      assert.equal(savedObj, null);
+      assert.notEqual(savedErr, null);
+    });
+  });
+  describe('find converter', function() {
+    it('builtinConverters()', function() {
+      var allConverters = converters.builtinConverters();
+      assert.equal(allConverters.length, 3);
+      assert.equal(allConverters[0].name, 'json');
+      assert.equal(allConverters[1].name, 'xml2js');
+      assert.equal(allConverters[2].name, 'js-yaml');
+    });
+
+    it('findConverter(null)', function() {
+      var converter = converters.findConverter(null);
+      assert.notEqual(converter, null);
+      assert.equal(converter.name, 'json');
+    });
+
+    it('findConverter([something])', function() {
+      var converter = converters.findConverter([ 'something' ]);
+      assert.equal(converter, null);
+    });
+
+    it('findConverter(json) and no builtin converters', function() {
+      converters.clearBuiltinConverters();
+      var converter = converters.findConverter('json');
+      assert.equal(converter, null);
     });
   });
 });
