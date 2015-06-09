@@ -47,6 +47,10 @@ __Version 0.4.0__
   - [Request](#request)
   - [Reference](#reference)
   - [Response](#response)
+    - [Method setStatus()](#method-setstatus)
+    - [Method writeRepresentation()](#method-writerepresentation)
+    - [Method writeText()](#method-writetext)
+    - [Method end()](#method-end)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -837,3 +841,44 @@ __Properties__
 | scheme| String | The scheme |
 
 ### Response
+
+__Properties__
+
+| Property | Type | Description |
+| -------- | ---- | ----------- |
+| status| Status | The status of the response |
+| entity| Representation | The entity associated with the request |
+| setNoContent| Representation | Set that the response doesn't contain content. |
+| writeObject| Representation | Write an object within the response. |
+
+__Methods__
+
+| Method | Description |
+| ------ | ----------- |
+| setStatus | Explicitely set the status of the response. |
+| writeRepresentation | Set a representation within the response. |
+| writeText | Write text within the response for a specific media type. |
+| end | End the response. |
+
+#### Method setStatus()
+
+Explicitely set the status of the response.
+
+#### Method writeRepresentation()
+
+Set a representation within the response.
+
+#### Method writeText()
+
+Write text within the response for a specific media type.
+
+This method automatically wraps the provided parameter
+with a representation and set it in the response.
+
+#### Method end()
+
+End the response.
+
+This means that the response will be sent back to the client.
+At this level, the status and the computed headers are written
+into the raw response and response content is flushed.
