@@ -47,9 +47,14 @@ __Version 0.4.0__
   - [Request](#request)
   - [Reference](#reference)
   - [Response](#response)
-    - [Method setStatus()](#method-setstatus)
-    - [Method writeRepresentation()](#method-writerepresentation)
-    - [Method writeText()](#method-writetext)
+    - [Method setStatus(code, message)](#method-setstatuscode-message)
+    - [Method setNoContent()](#method-setnocontent)
+    - [Method sendNotFound()](#method-sendnotfound)
+    - [Method sendNotAllowedMethod()](#method-sendnotallowedmethod)
+    - [Method sendNotSupportedMediaType()](#method-sendnotsupportedmediatype)
+    - [Method writeObject(obj)](#method-writeobjectobj)
+    - [Method writeRepresentation(entity)](#method-writerepresentationentity)
+    - [Method writeText(text, mediaType)](#method-writetexttext-mediatype)
     - [Method end()](#method-end)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -848,29 +853,77 @@ __Properties__
 | -------- | ---- | ----------- |
 | status| Status | The status of the response |
 | entity| Representation | The entity associated with the request |
-| setNoContent| Representation | Set that the response doesn't contain content. |
-| writeObject| Representation | Write an object within the response. |
 
 __Methods__
 
 | Method | Description |
 | ------ | ----------- |
 | setStatus | Explicitely set the status of the response. |
+| setNoContent | Set that the response doesn't contain content. |
+| sendNotFound | Send back a not found response (404). |
+| sendNotAllowedMethod | Send back a not allowed method response (405). |
+| sendNotSupportedMediaType | Send back a not supported media type response (415). |
+| writeObject | Write an object within the response. |
 | writeRepresentation | Set a representation within the response. |
 | writeText | Write text within the response for a specific media type. |
 | end | End the response. |
 
-#### Method setStatus()
+#### Method setStatus(code, message)
 
 Explicitely set the status of the response.
 
-#### Method writeRepresentation()
+| Argument | Type | Description |
+| -------- | ---- | ----------- |
+| code | int | the status code |
+| message | String | the status message |
+
+#### Method setNoContent()
+
+Set that the response doesn't contain content.
+
+#### Method sendNotFound()
+
+Send back a not found response (404).
+
+#### Method sendNotAllowedMethod()
+
+Send back a not allowed method response (405).
+
+#### Method sendNotSupportedMediaType()
+
+Send back a not supported media type response (415).
+
+#### Method writeObject(obj)
+
+Write an object within the response.
+
+| Argument | Type | Description |
+| -------- | ---- | ----------- |
+| obj | Object | the object to use to create the representation |
+
+This method leverages the converter support of Restlet
+and the content negotiation to convert the provided
+object to the right text content.
+
+It then automatically wraps the provided parameter
+with a representation and set it in the response.
+
+#### Method writeRepresentation(entity)
 
 Set a representation within the response.
 
-#### Method writeText()
+| Argument | Type | Description |
+| -------- | ---- | ----------- |
+| entity | Representation | the representation to set within the response |
+
+#### Method writeText(text, mediaType)
 
 Write text within the response for a specific media type.
+
+| Argument | Type | Description |
+| -------- | ---- | ----------- |
+| text | String | the text content of the representation |
+| mediaType | MediaType | the corresponding media type |
 
 This method automatically wraps the provided parameter
 with a representation and set it in the response.
