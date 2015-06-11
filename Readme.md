@@ -132,7 +132,7 @@ Restlet JS also provides a client support to call REST resources:
 ## Support
 
 If you have questions about the framework and the way to use it, you can ask a question
-on the [StackOverflow website](http://stackoverflow.com/) using tags `restlet` and `javascript`
+on the [StackOverflow website](http://stackoverflow.com/questions/tagged/restlet+javascript) using tags `restlet` and `javascript`
 or `restlet.js`.
 
 ## Contribute
