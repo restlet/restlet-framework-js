@@ -129,6 +129,17 @@ Restlet JS also provides a client support to call REST resources:
 | 0.4.0   | In progress | [Server API Reference](https://github.com/restlet/restlet-framework-js/blob/master/docs/references/doc-server-0.4.0.md) |
 | 0.4.0   | In progress | [Client API Reference](https://github.com/restlet/restlet-framework-js/blob/master/docs/references/doc-client-0.4.0.md) |
 
+## Support
+
+If you have questions about the framework and the way to use it, you can ask a question
+on the [StackOverflow website](http://stackoverflow.com/) using tags `restlet` and `javascript`
+or `restlet.js`.
+
+## Contribute
+
+If you want to contribute to the framework, please have a look at this page:
+[Server API Reference](https://github.com/restlet/restlet-framework-js/blob/master/docs/guides/contribute.md)
+
 ## Copyright
 
 Copyright 2015 Restlet, Inc.
