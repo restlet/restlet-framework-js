@@ -32,8 +32,25 @@
     "jscs": "latest",
     "dox": "~0.7",
     "doctoc": "latest",
-    "conventional-changelog": "latest"
+    "conventional-changelog": "latest",
+    "browserify": "10.2.4",
+    "browserify-shim": "3.8.8",
+    "uglifyjs": "2.4.10",
+    "exorcist": "0.4.0"
   },
+  "browser": {
+    "./lib/builtin-converters.js": "./browser/builtin-converters.js"
+  },
+  "browserify-shim": {
+    "lodash": "global:_",
+    "moment": "global:moment"
+  },
+  "browserify": {
+    "transform": [
+      "browserify-shim"
+    ]
+  },
+  "main": "./index.js",
   "files": [
     "LICENSE",
     "History.md",
@@ -44,6 +61,8 @@
   "scripts": {
     "code:jshint": "jshint **/**.js",
     "code:style": "node_modules/jscs/bin/jscs *.js lib/*.js test/server/*.js",
+    "code:browser": "node browser/generate-browser-src.js > dist/restlet.js",
+    "code:browser:minify": "node browser/generate-browser-src.js | uglifyjs > dist/restlet.min.js",
     "doc:generate:server": "cat lib/server.js lib/server-utils.js > docs/code-server.js ; node_modules/dox/bin/dox -r < docs/code-server.js > docs/doc-server.json ; node docs/generate-reference-server-doc.js ; node node_modules/doctoc/doctoc.js docs/references/doc-server-*.md",
     "doc:generate:client": "cat lib/client.js lib/client-utils.js > docs/code-client.js ; node_modules/dox/bin/dox -r < docs/code-client.js > docs/doc-server.json ; node docs/generate-reference-client-doc.js ; node node_modules/doctoc/doctoc.js docs/references/doc-client-*.md",
     "doc:changelog": "node docs/generate-changelog.js",
