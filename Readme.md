@@ -49,6 +49,14 @@ For Node, use NPM with the following command:
 npm install restlet
 ```
 
+For browsers, use Bower with the following command:
+
+```
+bower install restlet
+```
+
+or get the JavaScript files from folder `browser/dist` from Github.
+
 ## Getting started
 
 ### Within Node applications
@@ -168,7 +176,7 @@ or `restlet.js`.
 ## Contribute
 
 If you want to contribute to the framework, please have a look at this page:
-[Server API Reference](https://github.com/restlet/restlet-framework-js/blob/master/docs/guides/contribute.md)
+[Contributing Restlet JS](https://github.com/restlet/restlet-framework-js/blob/master/docs/guides/contribute.md)
 
 ## Copyright
 
