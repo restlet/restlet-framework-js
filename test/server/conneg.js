@@ -22,8 +22,8 @@ describe('content types', function() {
       request.trigger('data', 'chunk2');
       request.trigger('end');
 
-      assert.equal(true, called);
-      assert.equal('chunk1chunk2', textPayload);
+      assert.equal(called, true);
+      assert.equal(textPayload, 'chunk1chunk2');
     });
 
     it('with function, text payload and no content type', function() {
@@ -45,9 +45,9 @@ describe('content types', function() {
       request.trigger('data', 'chunk2');
       request.trigger('end');
 
-      assert.equal(true, called);
-      assert.equal(null, textPayload);
-      assert.equal(null, bytesPayload);
+      assert.equal(called, true );
+      assert.equal(textPayload, null);
+      assert.equal(bytesPayload, null);
     });
 
     it('with function, text payload conversion and no content type', function() {
@@ -68,7 +68,7 @@ describe('content types', function() {
       request.trigger('data', 'chunk2');
       request.trigger('end');
 
-      assert.equal(false, called);
+      assert.equal(called, false);
     });
 
     it('with function and byte payload', function() {
@@ -89,9 +89,9 @@ describe('content types', function() {
       request.trigger('data', new Buffer('chunk2', 'utf-8'));
       request.trigger('end');
 
-      assert.equal(true, called);
-      assert.equal(new Buffer('chunk1chunk2', 'utf-8').toString(),
-        bytePayload.toString());
+      assert.equal(called, true);
+      assert.equal(bytePayload.toString(),
+        new Buffer('chunk1chunk2', 'utf-8').toString());
     });
 
     it('with function, byte payload but no content type', function() {
@@ -111,9 +111,9 @@ describe('content types', function() {
       request.trigger('data', new Buffer('chunk2', 'utf-8'));
       request.trigger('end');
 
-      assert.equal(true, called);
-      assert.equal(null, request.entity.raw);
-      assert.equal(null, request.entity.text);
+      assert.equal(called, true);
+      assert.equal(request.entity.raw, null);
+      assert.equal(request.entity.text, null);
     });
 
     it('with function, text payload but wrong content type', function() {
@@ -133,7 +133,7 @@ describe('content types', function() {
       request.trigger('data', ' test"}');
       request.trigger('end');
 
-      assert.equal(false, called);
+      assert.equal(called, false);
     });
   });
   describe('output content types', function() {
