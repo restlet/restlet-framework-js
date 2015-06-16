@@ -1,6 +1,6 @@
 # Debug mode
 
-Restlet JS leverages the tool (debug)[https://github.com/visionmedia/debug]
+Restlet JS leverages the tool [Debug](https://github.com/visionmedia/debug)
 
 ## Enabling debug mode
 
