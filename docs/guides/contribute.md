@@ -11,15 +11,15 @@ The project is using the Github https://github.com/restlet/restlet-framework-js/
 
 While using the Restlet Framework, you may encounter issues that you want to report to us. Those issues can be of several types including bugs, enhancement or new feature requests.
 
-For general support questions, you might also consider asking your questions under the (https://stackoverflow.com/questions/tagged/restlet.js)['restlet.js' tag] or (https://stackoverflow.com/questions/tagged/restlet+javascript)['restlet' + 'javascript' tags] at StackOverflow].
+For general support questions, you might also consider asking your questions under the ['restlet.js' tag](https://stackoverflow.com/questions/tagged/restlet.js) or ['restlet' + 'javascript' tags](https://stackoverflow.com/questions/tagged/restlet+javascript) at StackOverflow.
 
 ### Check list
 
-Before entering a new report, you should https://github.com/restlet/restlet-framework-js/issues?sort=created&direction=desc&state=open[query] the current issue database for similar open issues. You might also want to talk about your issue by raising a question on Stackoverflow, as mentioned above. Eventually, make sure that you also consult the http://restlet.com/technical-resources/restlet-framework/guide/2.3[documentation section] of the version of the Restlet Framework you are using.
+Before entering a new report, you should [query](https://github.com/restlet/restlet-framework-js/issues?sort=created&direction=desc&state=open) the current issue database for similar open issues. You might also want to talk about your issue by raising a question on Stackoverflow, as mentioned above. Eventually, make sure that you also consult the [documentation section](http://restlet.com/technical-resources/restlet-framework/guide/2.3) of the version of the Restlet Framework you are using.
 
 ### Reporting an issue
 
-The Restlet project relies on an issue tracker hosted at GitHub to manage all those reports. If you want to create a new report, you should first have a GitHub account. If necessary, you can create a new one by going to the https://github.com/signup/free[signup page]. Then you should go to the https://github.com/restlet/restlet-framework-js/issues/new[Issue Tracker page]. If you don't see the page to enter an issue, make sure that you are correctly logged into GitHub.
+The Restlet project relies on an issue tracker hosted at GitHub to manage all those reports. If you want to create a new report, you should first have a GitHub account. If necessary, you can create a new one by going to the [signup page](https://github.com/signup/free). Then you should go to the [Issue Tracker page](https://github.com/restlet/restlet-framework-js/issues/new). If you don't see the page to enter an issue, make sure that you are correctly logged into GitHub.
 
 ## Submit contributions
 	
@@ -30,13 +30,13 @@ If you found a bug and fixed it locally, or if you developed an enhancement that
 * Consider writing additional unit tests covering your contribution
 * Right before creating a pull request, squash all your commits into a single one with the command `git rebase HEAD~number (1) and provide a commit
   message that follows convention from convertional changelog (2)
-* Create a pull request on GitHub based on http://help.github.com/send-pull-requests/[those instructions]
-* Once your patch is accepted, a signed https://github.com/restlet/restlet-sites/blob/master/modules/com.restlet/participate/Joint%20Copyright%20Assignment%20-%20General.pdf?raw=true[Joint Copyright Assignment (JCA)] will be required
+* Create a pull request on GitHub based on [those instructions](http://help.github.com/send-pull-requests/)
+* Once your patch is accepted, a signed [Joint Copyright Assignment (JCA)](https://github.com/restlet/restlet-sites/blob/master/modules/com.restlet/participate/Joint%20Copyright%20Assignment%20-%20General.pdf?raw=true) will be required
 
 These two links can be helpful at this level:
 
-* (1) Contribute open-source projects using Git - https://templth.wordpress.com/2014/10/31/contribute-open-source-projects-using-git/
-* (2) Commit Message Format - https://github.com/ajoslin/conventional-changelog/blob/master/conventions/angular.md
+* (1) [Contribute open-source projects using Git](https://templth.wordpress.com/2014/10/31/contribute-open-source-projects-using-git/)
+* (2) [Commit Message Format](https://github.com/ajoslin/conventional-changelog/blob/master/conventions/angular.md)
 
 [NOTE]
 ----
