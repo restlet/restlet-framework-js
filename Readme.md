@@ -122,6 +122,36 @@ Restlet JS also provides a client support to call REST resources:
         (...)
       });
 
+### Within browsers
+
+Restlet JS also provides a client support to call REST resources with browsers:
+
+    <html>
+      <head>
+        <script type="text/javascript" src="jquery-2.1.4.min.js"></script>
+        <script type="text/javascript" src="lodash.min.js"></script>
+        <script type="text/javascript" src="moment-2.10.3.js"></script>
+        <script type="text/javascript" src="restlet.min.js"></script>
+        <script type="text/javascript">
+          $(document).ready(function() {
+            $('#test').click(function() {
+              restlet.createClientResource('http://localhost:8080/data.json').get({
+                accept: 'application/json',
+                parameters: [ 'entity' ],
+                convertInputEntity: true
+              }, function(entity) {
+                console.log('>> entity = ' + JSON.stringify(entity));
+              });
+            });
+          });
+        </script>
+      </head>
+
+      <body>
+        <span id="test">Run Restlet client</span>
+      </body>
+    </html>
+
 ## Documentation
 
 | Version | Status | Documentation |
