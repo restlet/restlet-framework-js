@@ -1,0 +1,27 @@
+{
+    "name": "restlet",
+    "version": "0.4.0",
+    "main": "dist/restlet-js.js",
+    "ignore": [
+        "lib",
+        "coverage",
+        "docs",
+        "test",
+        ".bowerrc",
+        ".jscsrc",
+        ".gitignore",
+        ".jshintignore",
+        ".jshintrc",
+        "bower.json",
+        "gruntfile.js",
+        "package.json",
+        "Readme.md",
+        "index.js",
+        ".travis.yml",
+        "appveyor.yml"
+        "CHANGELOG.md"
+    ],
+    "dependencies": {
+        "lodash": "~3.8.0"
+    }
+}
