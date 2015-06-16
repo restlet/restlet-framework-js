@@ -3,11 +3,11 @@
 ## Github repository
 
 Restlet Framework is hosted here on Github, and you're currently browsing a page of the Github wiki of the project.
-Here's the repository: https://github.com/restlet/restlet-framework-java[Restlet Framework]
+Here's the repository: [Restlet Framework](https://github.com/restlet/restlet-framework-js)
 
 ## Issue tracker
 
-The project is using the Github https://github.com/restlet/restlet-framework-js/issues[issue tracker].
+The project is using the Github [issue tracker](https://github.com/restlet/restlet-framework-js/issues).
 
 While using the Restlet Framework, you may encounter issues that you want to report to us. Those issues can be of several types including bugs, enhancement or new feature requests.
 
