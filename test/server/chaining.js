@@ -1,3 +1,5 @@
+'use strict';
+
 var assert = require('assert');
 var restlet = require('../..');
 
@@ -23,7 +25,7 @@ describe('request / response chaining', function() {
 
       virtualHost.attachDefault(restlet1);
 
-      var restlet2 = restlet1.next(function(request, response) {
+      restlet1.next(function(request, response) {
         restlet2Called = cpt;
         cpt++;
         response.end();
@@ -39,7 +41,7 @@ describe('request / response chaining', function() {
           endCalled = cpt;
           cpt++;
         }
-      }
+      };
 
       virtualHost.handle(request, response);
 

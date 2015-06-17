@@ -1,5 +1,6 @@
+'use strict';
+
 var _ = require('lodash');
-var urlApi = require('url');
 var serverUtils = require('../../lib/server-utils');
 
 exports = module.exports;
@@ -37,7 +38,7 @@ testUtils.createMockRequest = function(method, path, contentType, acceptType) {
   }
 
   if (acceptType != null) {
-    rawRequest.headers['accept'] = acceptType;
+    rawRequest.headers.accept = acceptType;
   }
 
   var request = serverUtils.createRequest(rawRequest);
@@ -72,7 +73,7 @@ testUtils.createMockResponse = function(request, listeners) {
       }
     },
     end: function() {
-      if (listeners!=null && !_.isEmpty(listeners.end)) {
+      if (listeners != null && !_.isEmpty(listeners.end)) {
         _.forEach(listeners.end, function(callback) {
           callback();
         });

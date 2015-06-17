@@ -1,3 +1,5 @@
+'use strict';
+
 var assert = require('assert');
 var testUtils = require('./test-utils');
 var serverUtils = require('../../lib/server-utils');
@@ -130,7 +132,7 @@ describe('entity headers', function() {
         { 'content-range': 'bytes 500-999/1234' });
 
       var request = serverUtils.createRequest(rawRequest, 'http');
-      assert.equal(1234, request.entity.length)
+      assert.equal(1234, request.entity.length);
       assert.equal(1, request.entity.ranges.length);
       assert.equal(500, request.entity.ranges[0].index);
       assert.equal(500, request.entity.ranges[0].length);

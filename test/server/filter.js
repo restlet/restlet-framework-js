@@ -1,3 +1,5 @@
+'use strict';
+
 var assert = require('assert');
 var restlet = require('../..');
 var testUtils = require('./test-utils');
@@ -8,7 +10,7 @@ describe('filter', function() {
     it('with a function', function() {
       var called = false;
       var serverResource = restlet.createServerResource(
-                             function(request, response) {
+                             function() {
         called = true;
       });
 

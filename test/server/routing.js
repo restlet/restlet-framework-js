@@ -1,3 +1,5 @@
+'use strict';
+
 var assert = require('assert');
 var restlet = require('../..');
 
@@ -8,10 +10,10 @@ describe('router', function() {
       var router = restlet.createRouter();
       var called = false;
       var called1 = false;
-      router.attach('/path1', function(request, response) {
+      router.attach('/path1', function() {
         called1 = true;
       });
-      router.attach('/path', function(request, response) {
+      router.attach('/path', function() {
         called = true;
       });
 
@@ -30,10 +32,11 @@ describe('router', function() {
       var router = restlet.createRouter();
       var called = false;
       var called1 = false;
-      router.attach('/path1', restlet.createRestlet(function(request, response) {
+      router.attach('/path1', restlet.createRestlet(
+                             function() {
         called1 = true;
       }));
-      router.attach('/path', restlet.createRestlet(function(request, response) {
+      router.attach('/path', restlet.createRestlet(function() {
         called = true;
       }));
 
@@ -54,10 +57,10 @@ describe('router', function() {
       var router = restlet.createRouter();
       var called = false;
       var called1 = false;
-      router.attach('/path/{var1}/{var2}', function(request, response) {
+      router.attach('/path/{var1}/{var2}', function() {
         called = true;
       });
-      router.attach('/path', function(request, response) {
+      router.attach('/path', function() {
         called1 = true;
       });
 
@@ -78,10 +81,10 @@ describe('router', function() {
       var router = restlet.createRouter();
       var called = false;
       var called1 = false;
-      router.attach('/path/{var1}/test{var2}', function(request, response) {
+      router.attach('/path/{var1}/test{var2}', function() {
         called = true;
       });
-      router.attach('/path', function(request, response) {
+      router.attach('/path', function() {
         called1 = true;
       });
 
@@ -102,10 +105,10 @@ describe('router', function() {
       var router = restlet.createRouter();
       var called = false;
       var called1 = false;
-      router.attach('/path/{var1}/test({var2})', function(request, response) {
+      router.attach('/path/{var1}/test({var2})', function() {
         called = true;
       });
-      router.attach('/path', function(request, response) {
+      router.attach('/path', function() {
         called1 = true;
       });
 

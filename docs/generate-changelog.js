@@ -1,11 +1,14 @@
+'use strict';
+
 var fs = require('fs');
 var changelog = require('conventional-changelog');
+var currentPackage = require('../package.json');
 
-console.log('version = '+require('../package.json').version);
+console.log('Current version is ' + currentPackage.version);
 
 changelog({
   repository: 'https://github.com/restlet/restlet-framework-js',
-  version: require('../package.json').version
+  version: currentPackage.version
 }, function(err, log) {
   if (err) console.log('err = '+err);
   console.log('Here is your changelog!', log);

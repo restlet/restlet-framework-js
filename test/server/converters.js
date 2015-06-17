@@ -1,7 +1,7 @@
+'use strict';
+
 var assert = require('assert');
-var _ = require('lodash');
 var converters = require('../../lib/converter');
-var testUtils = require('./test-utils');
 
 describe('converters', function() {
   describe('xml2js converter', function() {

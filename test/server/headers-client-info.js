@@ -1,3 +1,5 @@
+'use strict';
+
 var assert = require('assert');
 var testUtils = require('./test-utils');
 var serverUtils = require('../../lib/server-utils');
@@ -99,15 +101,14 @@ describe('client info creation', function() {
 
       var throwError = false;
       try {
-        var request = serverUtils.createRequest(rawRequest, 'http');
-        var clientInfo = request.clientInfo;
+        serverUtils.createRequest(rawRequest, 'http');
       } catch (err) {
         throwError = true;
         console.log(err);
       }
 
       if (!throwError) {
-        //assert.equal(false, true);
+        // TODO: assert.equal(false, true);
       }
     });
   });

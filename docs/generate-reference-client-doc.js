@@ -1,6 +1,5 @@
 'use strict';
 
-var _ = require('lodash');
 var fs = require('fs');
 var packageJson = require('../package.json');
 var docCommon = require('./generate-reference-common-doc');
@@ -11,7 +10,7 @@ fs.readFile('docs/doc-server.json', 'utf8', function (err, data) {
 
   var mardownDocContent = [];
 
-  mardownDocContent.push('# Client side support - API documentation')
+  mardownDocContent.push('# Client side support - API documentation');
   mardownDocContent.push('');
   mardownDocContent.push('__Restlet JS for Node__');
   mardownDocContent.push('');

@@ -1,12 +1,14 @@
+'use strict';
+
 var assert = require('assert');
-var restlet = require('../..');
 var serverUtils = require('../../lib/server-utils');
 var testUtils = require('./test-utils');
 
 describe('error response', function() {
   describe('not found', function() {
     it('function serverUtils.sendNotFound', function() {
-      var request = testUtils.createMockRequest('POST', '/path', 'octet/stream');
+      var request = testUtils.createMockRequest(
+        'POST', '/path', 'octet/stream');
       var response = testUtils.createMockResponse(request);
       serverUtils.sendNotFound(response);
 
@@ -18,7 +20,8 @@ describe('error response', function() {
 
   describe('method not allowed', function() {
     it('function serverUtils.sendNotAllowedMethod', function() {
-      var request = testUtils.createMockRequest('POST', '/path', 'octet/stream');
+      var request = testUtils.createMockRequest(
+        'POST', '/path', 'octet/stream');
       var response = testUtils.createMockResponse(request);
       serverUtils.sendNotAllowedMethod(response);
 
@@ -30,7 +33,8 @@ describe('error response', function() {
 
   describe('not supported media type', function() {
     it('function serverUtils.sendNotSupportedMediaType', function() {
-      var request = testUtils.createMockRequest('POST', '/path', 'octet/stream');
+      var request = testUtils.createMockRequest(
+        'POST', '/path', 'octet/stream');
       var response = testUtils.createMockResponse(request);
       serverUtils.sendNotSupportedMediaType(response);
 

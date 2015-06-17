@@ -1,3 +1,5 @@
+'use strict';
+
 var assert = require('assert');
 var restlet = require('../..');
 var testUtils = require('./test-utils');
@@ -37,7 +39,6 @@ describe('server resource parameters', function() {
   describe('server resource with parameter "entity"', function() {
     it('with entity', function() {
       var called = false;
-      var notAllowedCalled = false;
       var textPayload = null;
       var serverResource = restlet.createServerResource()
                                   .post({
@@ -88,7 +89,6 @@ describe('server resource parameters', function() {
     it('with entity and conversion (error)', function() {
       var called = false;
       var objEntity = null;
-      var notSupportedMediaTypeCalled = false;
       var serverResource = restlet.createServerResource()
                                   .post({
                                     convertInputEntity: true,

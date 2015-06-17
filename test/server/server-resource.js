@@ -1,3 +1,5 @@
+'use strict';
+
 var assert = require('assert');
 var restlet = require('../..');
 var testUtils = require('./test-utils');
@@ -196,7 +198,8 @@ describe('server resource', function() {
         response.end();
       });
 
-      var request = testUtils.createMockRequest('POST', '/path', 'application/xml');
+      var request = testUtils.createMockRequest(
+        'POST', '/path', 'application/xml');
       var response = testUtils.createMockResponse(request);
       serverResource.handle(request, response);
       request.trigger('data', 'chunk1');
@@ -212,7 +215,6 @@ describe('server resource', function() {
 
     it('with function, text payload and no content type', function() {
       var called = false;
-      var notSupportedMediaTypeCalled = false;
       var textPayload = null;
       var bytesPayload = null;
       var serverResource = restlet.createServerResource()
@@ -238,12 +240,13 @@ describe('server resource', function() {
       assert.equal(null, bytesPayload);
     });
 
-    it('with function, text payload conversion and no content type', function() {
+    it('with function, text payload conversion and no content type',
+                                                         function() {
       var called = false;
       var serverResource = restlet.createServerResource()
-                                  .post({
-                                    parameters: ['entity', 'response' ],
-                                    convertInputEntity: true }, function(entity, response) {
+                .post({
+                  parameters: ['entity', 'response' ],
+                  convertInputEntity: true }, function() {
         called = true;
       });
 
@@ -262,7 +265,6 @@ describe('server resource', function() {
 
     it('with function and byte payload', function() {
       var called = false;
-      var notAllowedCalled = false;
       var bytePayload = null;
       var serverResource = restlet.createServerResource()
                                   .post(function(request, response) {
@@ -271,7 +273,8 @@ describe('server resource', function() {
         response.end();
       });
 
-      var request = testUtils.createMockRequest('POST', '/path', 'octet/stream');
+      var request = testUtils.createMockRequest(
+        'POST', '/path', 'octet/stream');
       var response = testUtils.createMockResponse(request);
       serverResource.handle(request, response);
       request.trigger('data', new Buffer('chunk1', 'utf-8'));
@@ -288,7 +291,6 @@ describe('server resource', function() {
 
     it('with function, byte payload but no content type', function() {
       var called = false;
-      var notSupportedMediaTypeCalled = false;
       var bytePayload = null;
       var serverResource = restlet.createServerResource()
                                   .post(function(request, response) {

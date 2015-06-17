@@ -1,3 +1,5 @@
+'use strict';
+
 var assert = require('assert');
 var testUtils = require('./test-utils');
 var serverUtils = require('../../lib/server-utils');
@@ -9,7 +11,8 @@ describe('client info creation', function() {
   // Simple creations
   describe('warning header', function() {
     it('no accept header', function() {
-      var rawRequest = testUtils.createRawRequest('GET', '/path', { warning: ''});
+      var rawRequest = testUtils.createRawRequest(
+        'GET', '/path', { warning: ''});
       var request = serverUtils.createRequest(rawRequest, 'http');
       var clientInfo = request.clientInfo;
 

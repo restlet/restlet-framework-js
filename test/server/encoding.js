@@ -1,5 +1,4 @@
-var assert = require('assert');
-var restlet = require('../..');
+'use strict';
 
 describe('request / response encoding', function() {
 });
