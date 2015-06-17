@@ -112,15 +112,15 @@ the following files:
 
 ## Summary
 
-* [] Check everything is commited
-* [] Check code style
-* [] Check JSHint
-* [] Run tests
-* [] Check continuous integration
-* [] Check code coverage (optional)
-* [] Create tag for version
-* [] Push tag in the remote repository
-* [] Publish in NPM
-* [] Check NPM for published version
-* [] Check Bower for published version
-* [] Increment number version
+* Check everything is commited
+* Check code style
+* Check JSHint
+* Run tests
+* Check continuous integration
+* Check code coverage (optional)
+* Create tag for version
+* Push tag in the remote repository
+* Publish in NPM
+* Check NPM for published version
+* Check Bower for published version
+* Increment number version
