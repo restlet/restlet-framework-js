@@ -2,7 +2,6 @@
 
 var _ = require('lodash');
 var fs = require('fs');
-var packageJson = require('../package.json');
 
 exports = module.exports;
 
@@ -24,7 +23,7 @@ function getElementDocs(docContent, elementName) {
 function createParamList(methodDocContent) {
   var paramList = [];
   _.forEach(methodDocContent.tags, function(tag) {
-  	if (tag.type == 'param') {
+    if (tag.type == 'param') {
       if (!_.isEmpty(paramList)) {
         paramList.push(', ');
       }
@@ -36,7 +35,7 @@ function createParamList(methodDocContent) {
 
 function fillParamTable(methodDocContent, mardownDocContent) {
   _.forEach(methodDocContent.tags, function(tag) {
-  	if (tag.type == 'param') {
+    if (tag.type == 'param') {
       var paramLine = '| ';
       var name = tag.name;
       if (name.indexOf('|') != -1) {
@@ -63,7 +62,7 @@ function fillParamTable(methodDocContent, mardownDocContent) {
 function hasArguments(methodDocContent) {
   var hasArguments = false;
   _.forEach(methodDocContent.tags, function(tag) {
-  	if (tag.type == 'param') {
+    if (tag.type == 'param') {
       hasArguments = true;
     }
   });
@@ -79,9 +78,11 @@ function createArgumentsTable(methodDocContent, mardownDocContent) {
   }
 }
 
-function createElementConstructorDocMarkdown(mardownDocContent, constructorDocContent) {
+function createElementConstructorDocMarkdown(
+       mardownDocContent, constructorDocContent) {
   mardownDocContent.push('');
-  mardownDocContent.push('__`restlet.' + constructorDocContent.ctx.name + '`__');
+  mardownDocContent.push('__`restlet.'
+    + constructorDocContent.ctx.name + '`__');
   mardownDocContent.push('');
   mardownDocContent.push(_.trim(constructorDocContent.description.summary));
 
@@ -95,7 +96,8 @@ function createElementConstructorDocMarkdown(mardownDocContent, constructorDocCo
 
 function createElementMethodDocMarkdown(mardownDocContent, methodDocContent) {
   mardownDocContent.push('');
-  mardownDocContent.push('#### Method ' + methodDocContent.ctx.name + '(' + createParamList(methodDocContent) + ')');
+  mardownDocContent.push('#### Method ' + methodDocContent.ctx.name
+    + '(' + createParamList(methodDocContent) + ')');
   mardownDocContent.push('');
   mardownDocContent.push(_.trim(methodDocContent.description.summary));
 
@@ -114,11 +116,12 @@ function formatDescriptionSummaryForTable(summary) {
 
 function fillMethodsTable(methodsDocContent, mardownDocContent) {
   _.forEach(methodsDocContent, function(methodDocContent) {
-  	if (!methodsDocContent.isConstructor) {
+    if (!methodsDocContent.isConstructor) {
       var methodLine = '| ';
       methodLine += methodDocContent.ctx.name;
       methodLine += ' | ';
-      methodLine += formatDescriptionSummaryForTable(methodDocContent.description.summary);
+      methodLine += formatDescriptionSummaryForTable(
+        methodDocContent.description.summary);
       methodLine += ' |';
       mardownDocContent.push(methodLine);
     }
@@ -128,7 +131,7 @@ function fillMethodsTable(methodsDocContent, mardownDocContent) {
 function hasMethods(methodsDocContent) {
   var hasMethods = false;
   _.forEach(methodsDocContent, function(methodDocContent) {
-  	if (!methodsDocContent.isConstructor) {
+    if (!methodDocContent.isConstructor) {
       hasMethods = true;
     }
   });
@@ -162,7 +165,8 @@ function fillFieldsTable(fieldsDocContent, mardownDocContent) {
       fieldLine += ' ';
     }
     fieldLine += ' | ';
-    fieldLine += formatDescriptionSummaryForTable(fieldDocContent.description.summary);
+    fieldLine += formatDescriptionSummaryForTable(
+      fieldDocContent.description.summary);
     fieldLine += ' |';
     mardownDocContent.push(fieldLine);
   });
@@ -201,9 +205,10 @@ function getTag(docContent, tagValue) {
   return _.find(docContent.tags, { type: tagValue });
 }
 
-function createElementDocMarkdown(mardownDocContent, elementDocs, elementDescription) {
+function createElementDocMarkdown(mardownDocContent,
+                   elementDocs, elementDescription) {
   if (elementDocs == null) {
-  	return;
+    return;
   }
 
   mardownDocContent.push('');
@@ -214,8 +219,9 @@ function createElementDocMarkdown(mardownDocContent, elementDocs, elementDescrip
     return elementDoc.isConstructor;
   });
 
-  if (constructorDocContent !=null && !_.isEmpty(constructorDocContent)) {
-    createElementConstructorDocMarkdown(mardownDocContent, constructorDocContent[0]);
+  if (constructorDocContent != null && !_.isEmpty(constructorDocContent)) {
+    createElementConstructorDocMarkdown(
+      mardownDocContent, constructorDocContent[0]);
   }
 
   // Fields
@@ -235,18 +241,21 @@ function createElementDocMarkdown(mardownDocContent, elementDocs, elementDescrip
   createElementMethodsSummary(mardownDocContent, methodsDocContent);
 
   _.forEach(methodsDocContent, function(methodDocContent) {
-  	createElementMethodDocMarkdown(mardownDocContent, methodDocContent);
-  })
+    createElementMethodDocMarkdown(mardownDocContent, methodDocContent);
+  });
 }
 
 docCommon.writeDocFile = function(filename, mardownDocContent) {
-  fs.writeFile(filename, mardownDocContent.join('\n'), function (err) {
-    if (err) throw err;
+  fs.writeFile(filename, mardownDocContent.join('\n'), function(err) {
+    if (err) {
+      throw err;
+    }
     console.log('Doc file ' + filename + ' written');
   });
 };
 
-docCommon.generateElementDocMarkdown = function(mardownDocContent, docContent, elementName, elementDescription) {
+docCommon.generateElementDocMarkdown = function(mardownDocContent,
+                       docContent, elementName, elementDescription) {
   var elementDoc = getElementDocs(docContent, elementName);
   console.log('Creating documentation for ' + elementName + '...');
   if (elementDoc != null && !_.isEmpty(elementDoc)) {

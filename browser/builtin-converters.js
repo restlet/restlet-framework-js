@@ -26,7 +26,7 @@ converters.push({
     if (!_.isEmpty(string)) {
       try {
         callback(null, JSON.parse(string));
-      } catch(err) {
+      } catch (err) {
         callback(err, null);
       }
     } else {
