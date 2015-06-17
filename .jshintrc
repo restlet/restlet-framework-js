@@ -23,10 +23,12 @@
   //
   "globals": {
     "angular": false,
-    "_": false,
-    "moment": false,
+    "_": true,
+    "moment": true,
     "$": false,
     "Stripe": false,
-    "ngGridFlexibleHeightPlugin": false
+    "ngGridFlexibleHeightPlugin": false,
+    "describe": true,
+    "it": true
   }
 }
