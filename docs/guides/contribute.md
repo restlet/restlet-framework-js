@@ -28,8 +28,8 @@ If you found a bug and fixed it locally, or if you developed an enhancement that
 * Verify that you follow the code style running the command `npm run code:style`
 * Verify that all tests pass running the command `npm run test:default
 * Consider writing additional unit tests covering your contribution
-* Right before creating a pull request, squash all your commits into a single one with the command `git rebase HEAD~number (1) and provide a commit
-  message that follows convention from convertional changelog (2)
+* Right before creating a pull request, squash all your commits into a single one with the command `git rebase HEAD~number` (1) and provide a 
+  commit   message that follows convention from conventional changelog (2)
 * Create a pull request on GitHub based on [those instructions](http://help.github.com/send-pull-requests/)
 * Once your patch is accepted, a signed [Joint Copyright Assignment (JCA)](https://github.com/restlet/restlet-sites/blob/master/modules/com.restlet/participate/Joint%20Copyright%20Assignment%20-%20General.pdf?raw=true) will be required
 
