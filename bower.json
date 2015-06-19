@@ -18,7 +18,7 @@
     "Readme.md",
     "index.js",
     ".travis.yml",
-    "appveyor.yml"
+    "appveyor.yml",
     "CHANGELOG.md"
   ],
   "dependencies": {
