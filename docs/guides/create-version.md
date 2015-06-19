@@ -43,6 +43,25 @@ Check that the coverage of tests is enough for the version:
 
 * [Coveralls](https://coveralls.io/r/restlet/restlet-framework-js)
 
+## Generating reference docs
+
+Check if the reference docs for both server and client sides are 
+generated.
+
+If not, run the two following commands:
+
+    $ npm run doc:generate:server
+    $ npm run doc:generate:client
+
+## Generating client code for browsers
+
+Check if the client code for browsers are generated.
+
+If not, run the two following commands:
+
+    $ npm run code:browser
+    $ npm run code:browser:minify
+
 ## Git
 
 Create a tag within the Git repository for the current version to
