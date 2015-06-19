@@ -36,7 +36,9 @@
     "browserify": "10.2.4",
     "browserify-shim": "3.8.8",
     "uglifyjs": "2.4.10",
-    "exorcist": "0.4.0"
+    "exorcist": "0.4.0",
+    "async": "1.2.1"
+
   },
   "browser": {
     "./lib/builtin-converters.js": "./browser/builtin-converters.js"
@@ -68,6 +70,7 @@
     "doc:changelog": "node docs/generate-changelog.js",
     "test:default": "node_modules/mocha/bin/_mocha --report lcovonly --reporter spec test/server --check-leaks test/server",
     "test:ci": "istanbul cover node_modules/mocha/bin/_mocha -- --report lcovonly --require test/support/env --reporter spec test/server --check-leaks test/ test/server/",
-    "test:cov": "istanbul cover node_modules/mocha/bin/_mocha -- --require test/support/env --reporter dot --check-leaks test/ test/server/"
+    "test:cov": "istanbul cover node_modules/mocha/bin/_mocha -- --require test/support/env --reporter dot --check-leaks test/ test/server/",
+    "version:create": "node tools/version-creator.js"
   }
 }
