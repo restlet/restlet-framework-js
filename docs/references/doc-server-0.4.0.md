@@ -29,17 +29,17 @@ __Version 0.4.0__
     - [Method handle(request, response)](#method-handlerequest-response-3)
     - [Method next(handler)](#method-nexthandler-1)
   - [Server resource](#server-resource)
-    - [Method handler(handler)](#method-handlerhandler)
-    - [Method get(handler)](#method-gethandler)
-    - [Method getJson(handler)](#method-getjsonhandler)
-    - [Method getXml(handler)](#method-getxmlhandler)
-    - [Method getYaml(handler)](#method-getyamlhandler)
-    - [Method post(handler)](#method-posthandler)
-    - [Method put(handler)](#method-puthandler)
-    - [Method patch(handler)](#method-patchhandler)
-    - [Method delete(handler)](#method-deletehandler)
-    - [Method head(handler)](#method-headhandler)
-    - [Method options(handler)](#method-optionshandler)
+    - [Method handler([configuration], handler)](#method-handlerconfiguration-handler)
+    - [Method get([configuration], handler)](#method-getconfiguration-handler)
+    - [Method getJson([configuration], handler)](#method-getjsonconfiguration-handler)
+    - [Method getXml([configuration], handler)](#method-getxmlconfiguration-handler)
+    - [Method getYaml([configuration], handler)](#method-getyamlconfiguration-handler)
+    - [Method post([configuration], handler)](#method-postconfiguration-handler)
+    - [Method put([configuration], handler)](#method-putconfiguration-handler)
+    - [Method patch([configuration], handler)](#method-patchconfiguration-handler)
+    - [Method delete([configuration], handler)](#method-deleteconfiguration-handler)
+    - [Method head([configuration], handler)](#method-headconfiguration-handler)
+    - [Method options([configuration], handler)](#method-optionsconfiguration-handler)
     - [Method handle(request, response)](#method-handlerequest-response-4)
   - [Directory](#directory)
     - [Method handle(request, response)](#method-handlerequest-response-5)
@@ -469,7 +469,7 @@ Create a server resource.
 
 | Argument | Type | Description |
 | -------- | ---- | ----------- |
-| [configuration] | String | a configuration for the defined default handler |
+| [configuration] | Object | a configuration for the defined default handler |
 | [handler] | Function | a default handler for the server resource |
 
 Restlet provides two ways to create and configure processing of
@@ -569,24 +569,26 @@ __Methods__
 | options | Register an handler for OPTIONS request with the server resource. |
 | handle | The entry point for server resource. |
 
-#### Method handler(handler)
+#### Method handler([configuration], handler)
 
 Register an handler to handle request within the server resource.
 
 | Argument | Type | Description |
 | -------- | ---- | ----------- |
+| [configuration] | Object | the configuration object |
 | handler | Function or Object | the processing element when the router matches |
 
 A configuration can be provide to define which requests will be handled,
 the parameters to provide, if entity conversion must apply and configure
 data validation.
 
-#### Method get(handler)
+#### Method get([configuration], handler)
 
 Register an handler for GET request with the server resource.
 
 | Argument | Type | Description |
 | -------- | ---- | ----------- |
+| [configuration] | Object | the configuration object |
 | handler | Function or Object | the processing element when the router matches |
 
 This method is a shortcut for the method `handler` with the following
@@ -600,13 +602,14 @@ configuration:
 
 Additional configuration can be also provided as first parameter.
 
-#### Method getJson(handler)
+#### Method getJson([configuration], handler)
 
 Register an handler for GET requests that should return JSON content
 with the server resource.
 
 | Argument | Type | Description |
 | -------- | ---- | ----------- |
+| [configuration] | Object | the configuration object |
 | handler | Function or Object | the processing element when the router matches |
 
 This method is a shortcut for the method `handler` with the following
@@ -620,13 +623,14 @@ configuration:
 
 Additional configuration can be also provided as first parameter.
 
-#### Method getXml(handler)
+#### Method getXml([configuration], handler)
 
 Register an handler for GET requests that should return XML content
 with the server resource.
 
 | Argument | Type | Description |
 | -------- | ---- | ----------- |
+| [configuration] | Object | the configuration object |
 | handler | Function or Object | the processing element when the router matches |
 
 This method is a shortcut for the method `handler` with the following
@@ -640,13 +644,14 @@ configuration:
 
 Additional configuration can be also provided as first parameter.
 
-#### Method getYaml(handler)
+#### Method getYaml([configuration], handler)
 
 Register an handler for GET requests that should return YAML content
 with the server resource.
 
 | Argument | Type | Description |
 | -------- | ---- | ----------- |
+| [configuration] | Object | the configuration object |
 | handler | Function or Object | the processing element when the router matches |
 
 This method is a shortcut for the method `handler` with the following
@@ -660,12 +665,13 @@ configuration:
 
 Additional configuration can be also provided as first parameter.
 
-#### Method post(handler)
+#### Method post([configuration], handler)
 
 Register an handler for POST request with the server resource.
 
 | Argument | Type | Description |
 | -------- | ---- | ----------- |
+| [configuration] | Object | the configuration object |
 | handler | Function or Object | the processing element when the router matches |
 
 This method is a shortcut for the method `handler` with the following
@@ -679,12 +685,13 @@ configuration:
 
 Additional configuration can be also provided as first parameter.
 
-#### Method put(handler)
+#### Method put([configuration], handler)
 
 Register an handler for PUT request with the server resource.
 
 | Argument | Type | Description |
 | -------- | ---- | ----------- |
+| [configuration] | Object | the configuration object |
 | handler | Function or Object | the processing element when the router matches |
 
 This method is a shortcut for the method `handler` with the following
@@ -698,12 +705,13 @@ configuration:
 
 Additional configuration can be also provided as first parameter.
 
-#### Method patch(handler)
+#### Method patch([configuration], handler)
 
 Register an handler for PATCH request with the server resource.
 
 | Argument | Type | Description |
 | -------- | ---- | ----------- |
+| [configuration] | Object | the configuration object |
 | handler | Function or Object | the processing element when the router matches |
 
 This method is a shortcut for the method `handler` with the following
@@ -717,12 +725,13 @@ configuration:
 
 Additional configuration can be also provided as first parameter.
 
-#### Method delete(handler)
+#### Method delete([configuration], handler)
 
 Register an handler for DELETE request with the server resource.
 
 | Argument | Type | Description |
 | -------- | ---- | ----------- |
+| [configuration] | Object | the configuration object |
 | handler | Function or Object | the processing element when the router matches |
 
 This method is a shortcut for the method `handler` with the following
@@ -736,12 +745,13 @@ configuration:
 
 Additional configuration can be also provided as first parameter.
 
-#### Method head(handler)
+#### Method head([configuration], handler)
 
 Register an handler for HEAD request with the server resource.
 
 | Argument | Type | Description |
 | -------- | ---- | ----------- |
+| [configuration] | Object | the configuration object |
 | handler | Function or Object | the processing element when the router matches |
 
 This method is a shortcut for the method `handler` with the following
@@ -755,12 +765,13 @@ configuration:
 
 Additional configuration can be also provided as first parameter.
 
-#### Method options(handler)
+#### Method options([configuration], handler)
 
 Register an handler for OPTIONS request with the server resource.
 
 | Argument | Type | Description |
 | -------- | ---- | ----------- |
+| [configuration] | Object | the configuration object |
 | handler | Function or Object | the processing element when the router matches |
 
 This method is a shortcut for the method `handler` with the following

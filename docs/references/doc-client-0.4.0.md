@@ -10,14 +10,14 @@ __Version 0.4.0__
 
 - [Core elements](#core-elements)
   - [Client resource](#client-resource)
-    - [Method handle(handler)](#method-handlehandler)
-    - [Method get(handler)](#method-gethandler)
-    - [Method post(handler)](#method-posthandler)
-    - [Method put(handler)](#method-puthandler)
-    - [Method patch(handler)](#method-patchhandler)
-    - [Method delete(handler)](#method-deletehandler)
-    - [Method head(handler)](#method-headhandler)
-    - [Method options(handler)](#method-optionshandler)
+    - [Method handle([configuration], handler)](#method-handleconfiguration-handler)
+    - [Method get([configuration], handler)](#method-getconfiguration-handler)
+    - [Method post([configuration], handler)](#method-postconfiguration-handler)
+    - [Method put([configuration], handler)](#method-putconfiguration-handler)
+    - [Method patch([configuration], handler)](#method-patchconfiguration-handler)
+    - [Method delete([configuration], handler)](#method-deleteconfiguration-handler)
+    - [Method head([configuration], handler)](#method-headconfiguration-handler)
+    - [Method options([configuration], handler)](#method-optionsconfiguration-handler)
 - [Data objects](#data-objects)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -53,79 +53,143 @@ __Methods__
 | Method | Description |
 | ------ | ----------- |
 | handle | The entry point for server resource. |
-| get | TODO |
-| post | TODO |
-| put | TODO |
-| patch | TODO |
-| delete | TODO |
-| head | TODO |
-| options | TODO |
+| get | Execute a GET request. |
+| post | Execute a POST request. |
+| put | Execute a PUT request. |
+| patch | Execute a PATCH request. |
+| delete | Execute a DELETE request. |
+| head | Execute a HEAD request. |
+| options | Execute a OPTIONS request. |
 
-#### Method handle(handler)
+#### Method handle([configuration], handler)
 
 The entry point for server resource.
 
 | Argument | Type | Description |
 | -------- | ---- | ----------- |
-| handler | Function or Object | the processing element when the router matches |
+| [configuration] | Object | the configuration object |
+| handler | Function or Object | the processing element for the response |
 
 Notice that this method shouldn't be called explicitly since it
 involves within the request processing chain.
 
-#### Method get(handler)
+#### Method get([configuration], handler)
 
-TODO
-
-| Argument | Type | Description |
-| -------- | ---- | ----------- |
-| handler | Function or Object | the processing element when the router matches |
-
-#### Method post(handler)
-
-TODO
+Execute a GET request.
 
 | Argument | Type | Description |
 | -------- | ---- | ----------- |
-| handler | Function or Object | the processing element when the router matches |
+| [configuration] | Object | the configuration object |
+| handler | Function or Object | the processing element for the response |
 
-#### Method put(handler)
+This method is a shortcut for the method `handler` with the following
+configuration:
 
-TODO
+    restlet.createClientResource('http://myurl')
+        .handle({ method: 'GET' }, function(request, response) {
+            (...)
+        });
 
-| Argument | Type | Description |
-| -------- | ---- | ----------- |
-| handler | Function or Object | the processing element when the router matches |
+#### Method post([configuration], handler)
 
-#### Method patch(handler)
-
-TODO
-
-| Argument | Type | Description |
-| -------- | ---- | ----------- |
-| handler | Function or Object | the processing element when the router matches |
-
-#### Method delete(handler)
-
-TODO
+Execute a POST request.
 
 | Argument | Type | Description |
 | -------- | ---- | ----------- |
-| handler | Function or Object | the processing element when the router matches |
+| [configuration] | Object | the configuration object |
+| handler | Function or Object | the processing element for the response |
 
-#### Method head(handler)
+This method is a shortcut for the method `handler` with the following
+configuration:
 
-TODO
+    restlet.createClientResource('http://myurl')
+        .handle({ method: 'POST' }, function(request, response) {
+            (...)
+        });
+
+#### Method put([configuration], handler)
+
+Execute a PUT request.
 
 | Argument | Type | Description |
 | -------- | ---- | ----------- |
-| handler | Function or Object | the processing element when the router matches |
+| [configuration] | Object | the configuration object |
+| handler | Function or Object | the processing element for the response |
 
-#### Method options(handler)
+This method is a shortcut for the method `handler` with the following
+configuration:
 
-TODO
+    restlet.createClientResource('http://myurl')
+        .handle({ method: 'PUT' }, function(request, response) {
+            (...)
+        });
+
+#### Method patch([configuration], handler)
+
+Execute a PATCH request.
 
 | Argument | Type | Description |
 | -------- | ---- | ----------- |
-| handler | Function or Object | the processing element when the router matches |
+| [configuration] | Object | the configuration object |
+| handler | Function or Object | the processing element for the response |
+
+This method is a shortcut for the method `handler` with the following
+configuration:
+
+    restlet.createClientResource('http://myurl')
+        .handle({ method: 'PATCH' }, function(request, response) {
+            (...)
+        });
+
+#### Method delete([configuration], handler)
+
+Execute a DELETE request.
+
+| Argument | Type | Description |
+| -------- | ---- | ----------- |
+| [configuration] | Object | the configuration object |
+| handler | Function or Object | the processing element for the response |
+
+This method is a shortcut for the method `handler` with the following
+configuration:
+
+    restlet.createClientResource('http://myurl')
+        .handle({ method: 'DELETE' }, function(request, response) {
+            (...)
+        });
+
+#### Method head([configuration], handler)
+
+Execute a HEAD request.
+
+| Argument | Type | Description |
+| -------- | ---- | ----------- |
+| [configuration] | Object | the configuration object |
+| handler | Function or Object | the processing element for the response |
+
+This method is a shortcut for the method `handler` with the following
+configuration:
+
+    restlet.createClientResource('http://myurl')
+        .handle({ method: 'HEAD' }, function(request, response) {
+            (...)
+        });
+
+#### Method options([configuration], handler)
+
+Execute a OPTIONS request.
+
+| Argument | Type | Description |
+| -------- | ---- | ----------- |
+| [configuration] | Object | the configuration object |
+| handler | Function or Object | the processing element for the response |
+
+This method is a shortcut for the method `handler` with the following
+configuration:
+
+    restlet.createClientResource('http://myurl')
+        .handle({ method: 'OPTIONS' }, function(request, response) {
+            (...)
+        });
 
 ## Data objects
