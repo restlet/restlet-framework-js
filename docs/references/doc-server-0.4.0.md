@@ -6,7 +6,7 @@ __Version 0.4.0__
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+
 
 - [Core elements](#core-elements)
   - [Component](#component)
@@ -231,7 +231,7 @@ __`restlet.createApplication`__
 
 Create a new application.
 
-An application gather a set of elements like routers, filters 
+An application gather a set of elements like routers, filters
 and server resources to handle requests for a particular paths.
 In addition, applications provide services to manage media types,
 content negotiation.
@@ -364,11 +364,13 @@ in the following snippet:
 
     var virtualHost = restlet.createVirtualHost();
 
-    var myRestlet1 = restlet.createRestlet(function(request, response, next) {
+    var myRestlet1 = restlet.createRestlet(function(
+                               request, response, next) {
         (...)
     });
 
-    var myRestlet2 = restlet.createRestlet(function(request, response, next) {
+    var myRestlet2 = restlet.createRestlet(function(
+                               request, response, next) {
         (...)
         // Call the next restlet in the chain
         next();
@@ -413,7 +415,8 @@ set, it's implicitely called.
 
 The following snippet describes this mechanism:
 
-    var myRestlet2 = restlet.createRestlet(function(request, response, next) {
+    var myRestlet2 = restlet.createRestlet(function(
+                                 request, response, next) {
         (...)
         // Call the next restlet in the chain
         next();
@@ -518,10 +521,10 @@ can be used at this level:
   object if the conversion if enabled
 * `clientInfo`: the client info
 * `reference`: the reference
-* `pathVariables`: the map containing the path variables  
-* `pathVariables["varName"]`: the path variable with name `varName`  
-* `queryParameters`: the map containing the query parameters  
-* `queryParameters["paramName"]`: the query parameter with name `varName`  
+* `pathVariables`: the map containing the path variables
+* `pathVariables["varName"]`: the path variable with name `varName`
+* `queryParameters`: the map containing the query parameters
+* `queryParameters["paramName"]`: the query parameter with name `varName`
 
 By default, the parameter `entity` provides the representation itself.
 If you expect to have a JavaScript object that maps the received data,
