@@ -27,7 +27,7 @@ converters.push({
     if (!_.isEmpty(string)) {
       try {
         callback(null, JSON.parse(string));
-      } catch(err) {
+      } catch (err) {
         callback(err, null);
       }
     } else {
@@ -84,14 +84,15 @@ function createRequestOptions(request) {
         + JSON.stringify(request.clientInfo.acceptedMediaTypes));
 
       options.headers.accept = [ ];
-      _.forEach(request.clientInfo.acceptedMediaTypes, function(acceptedMediaType) {
+      _.forEach(request.clientInfo.acceptedMediaTypes,
+                             function(acceptedMediaType) {
         options.headers.accept.push(acceptedMediaType.name);
       });
     }
   }
 
   if (request.entity != null) {
-    if (request.entity.mediaType!=null
+    if (request.entity.mediaType != null
       && !_.isEmpty(request.entity.mediaType.name)) {
       options.headers['content-type'] = request.entity.mediaType.name;
       debugResource('Sent media type: '
@@ -131,10 +132,8 @@ transport.createClient = function(request, handler) {
 },{"./client-utils":3,"debug":41,"http":14,"querystring":24}],3:[function(require,module,exports){
 'use strict';
 
-var http = require('http');
 var urlApi = require('url');
 var _ = (window._);
-var debugResponse = require('debug')('response');
 var debugConneg = require('debug')('conneg');
 var data = require('./data');
 var headers = require('./headers');
@@ -146,12 +145,12 @@ var clientUtils = exports;
 clientUtils.createRequest = function(url, configuration) {
   var urlElements = urlApi.parse(url);
   var request = {
-  	resourceRef: {
+    resourceRef: {
       hostDomain: urlElements.hostname,
       hostPort: urlElements.port,
       path: urlElements.pathname,
       query: urlElements.query,
-      scheme: urlElements.protocol.substr(0, urlElements.protocol.length-1)
+      scheme: urlElements.protocol.substr(0, urlElements.protocol.length - 1)
     },
     method: configuration.method
   };
@@ -159,7 +158,7 @@ clientUtils.createRequest = function(url, configuration) {
   if (configuration.accept != null) {
     request.clientInfo = {
       acceptedMediaTypes: [ new data.MediaType(configuration.accept) ]
-    }
+    };
   }
 
   request.queryParameters = configuration.queryParameters;
@@ -184,10 +183,11 @@ clientUtils.createResponse = function(request, rawResponse) {
   if (contentTypeHeader != null) {
     debugConneg('Received media type '
       + contentTypeHeader);
-  	entity.mediaType = headers.parser.readPreferenceHeaderValue(contentTypeHeader);
+    entity.mediaType = headers.parser.readPreferenceHeaderValue(
+      contentTypeHeader);
   }
   if (contentLengthHeader != null) {
-  	entity.length = contentLengthHeader;
+    entity.length = contentLengthHeader;
   }
 
   return {
@@ -210,7 +210,7 @@ clientUtils.createRepresentation = function(text, mediaType) {
       text: null,
       length: 0,
       mediaType: new data.MediaType(mediaType)
-    }
+    };
   }
 };
 
@@ -220,7 +220,7 @@ clientUtils.setNotSupportedMediaTypeInResponse = function(response) {
     clientUtils.createRepresentation(response.status.description, 'text/plan');
 };
 
-},{"./data":6,"./headers":7,"debug":41,"http":14,"url":38}],4:[function(require,module,exports){
+},{"./data":6,"./headers":7,"debug":41,"url":38}],4:[function(require,module,exports){
 (function (process,global,Buffer){
 'use strict';
 
@@ -230,8 +230,9 @@ clientUtils.setNotSupportedMediaTypeInResponse = function(response) {
  */
 
 var _ = (window._);
-var transport = require('./client-transport')
-var clientUtils = require('./client-utils')
+var data = require('./data');
+var transport = require('./client-transport');
+var clientUtils = require('./client-utils');
 var converterApi = require('./converter');
 var debugClientResource = require('debug')('resource');
 var debugHttp = require('debug')('http');
@@ -253,10 +254,10 @@ function extractArgumentsForClientResourceReadHandle() {
     configuration = {};
     handle = arguments[0];
   } else if (arguments.length == 2) {
-      configuration = arguments[0];
-      handle = arguments[1];
+    configuration = arguments[0];
+    handle = arguments[1];
   } else if (arguments.length == 3) {
-    entity = arguments[0]
+    entity = arguments[0];
     configuration = arguments[1];
     handle = arguments[2];
   }
@@ -276,11 +277,11 @@ function extractArgumentsForClientResourceReadWriteHandle() {
     configuration = {};
     handle = arguments[0];
   } else if (arguments.length == 2) {
-      entity = arguments[0]
-      configuration = {};
-      handle = arguments[1];
+    entity = arguments[0];
+    configuration = {};
+    handle = arguments[1];
   } else if (arguments.length == 3) {
-    entity = arguments[0]
+    entity = arguments[0];
     configuration = arguments[1];
     handle = arguments[2];
   }
@@ -317,7 +318,9 @@ function isBinaryContent(res) {
 }
 
 function hasContent(res) {
-  return (res.status.code!=204 && res.entity != null && res.entity.mediaType);
+  return (res.status.code != 204
+      && res.entity != null
+      && res.entity.mediaType);
 }
 
 function handleResponse(req, res, configuration, handler) {
@@ -343,8 +346,8 @@ function handleResponse(req, res, configuration, handler) {
     });
 
     res.entity.on('error', function(err) {
-      console.log('>> err = '+err);
-    })
+      console.log('>> err = ' + err);
+    });
 
     // Register listener to detect when all allData are received
     res.entity.on('end', function() {
@@ -491,7 +494,7 @@ function createParameters(configuration, request, response) {
  * Create a client resource.
  *
  * Restlet allows to create a client resource for a specific URL:
- * 
+ *
  *     var clientResource = restlet.createClientResource(
  *                                    'http://myurl');
  *
@@ -515,7 +518,8 @@ client.createClientResource = function(url) {
      * Notice that this method shouldn't be called explicitly since it
      * involves within the request processing chain.
      *
-     * @param {(Function|Object)} handler the processing element when the router matches
+     * @param {(Function|Object)} handler the processing element when the
+     * router matches
      * @clientresource
      * @method
      * @api private
@@ -526,7 +530,8 @@ client.createClientResource = function(url) {
         null, arguments);
 
       // Create request from configuration
-      var request = clientUtils.createRequest(url, parameters.configuration, parameters.entity);
+      var request = clientUtils.createRequest(
+        url, parameters.configuration, parameters.entity);
 
       // Send data if necessary
       if (parameters.entity != null) {
@@ -540,15 +545,16 @@ client.createClientResource = function(url) {
       }
 
       // Check if there is an error
-      //if (response)
+      // if (response)
 
       // Execute the request
       var client = transport.createClient(request, function(response) {
-      	handleResponse(request, response, parameters.configuration, parameters.handle);
+        handleResponse(request, response,
+          parameters.configuration, parameters.handle);
       });
 
       client.on('error', function(err) {
-        console.log('>> err = '+err);
+        console.log('>> err = ' + err);
       });
 
       // Actually send the entity
@@ -568,7 +574,8 @@ client.createClientResource = function(url) {
     /**
      * TODO
      *
-     * @param {(Function|Object)} handler the processing element when the router matches
+     * @param {(Function|Object)} handler the processing element when the
+     * router matches
      * @clientresource
      * @method
      * @api public
@@ -580,7 +587,8 @@ client.createClientResource = function(url) {
       parameters.configuration.method = 'GET';
 
       // Handle the request
-      this.handle(parameters.entity, parameters.configuration, parameters.handle);
+      this.handle(parameters.entity,
+        parameters.configuration, parameters.handle);
 
       // Allow chaining
       return this;
@@ -589,7 +597,8 @@ client.createClientResource = function(url) {
     /**
      * TODO
      *
-     * @param {(Function|Object)} handler the processing element when the router matches
+     * @param {(Function|Object)} handler the processing element when the
+     * router matches
      * @clientresource
      * @method
      * @api public
@@ -601,7 +610,8 @@ client.createClientResource = function(url) {
       parameters.configuration.method = 'POST';
 
       // Handle the request
-      this.handle(parameters.entity, parameters.configuration, parameters.handle);
+      this.handle(parameters.entity,
+        parameters.configuration, parameters.handle);
 
       // Allow chaining
       return this;
@@ -610,7 +620,8 @@ client.createClientResource = function(url) {
     /**
      * TODO
      *
-     * @param {(Function|Object)} handler the processing element when the router matches
+     * @param {(Function|Object)} handler the processing element when the
+     * router matches
      * @clientresource
      * @method
      * @api public
@@ -622,7 +633,8 @@ client.createClientResource = function(url) {
       parameters.configuration.method = 'PUT';
 
       // Handle the request
-      this.handle(parameters.entity, parameters.configuration, parameters.handle);
+      this.handle(parameters.entity,
+        parameters.configuration, parameters.handle);
 
       // Allow chaining
       return this;
@@ -631,7 +643,8 @@ client.createClientResource = function(url) {
     /**
      * TODO
      *
-     * @param {(Function|Object)} handler the processing element when the router matches
+     * @param {(Function|Object)} handler the processing element when the
+     * router matches
      * @clientresource
      * @method
      * @api public
@@ -643,7 +656,8 @@ client.createClientResource = function(url) {
       parameters.configuration.method = 'PATCH';
 
       // Handle the request
-      this.handle(parameters.entity, parameters.configuration, parameters.handle);
+      this.handle(parameters.entity,
+        parameters.configuration, parameters.handle);
 
       // Allow chaining
       return this;
@@ -652,7 +666,8 @@ client.createClientResource = function(url) {
     /**
      * TODO
      *
-     * @param {(Function|Object)} handler the processing element when the router matches
+     * @param {(Function|Object)} handler the processing element when the
+     * router matches
      * @clientresource
      * @method
      * @api public
@@ -664,7 +679,8 @@ client.createClientResource = function(url) {
       parameters.configuration.method = 'DELETE';
 
       // Handle the request
-      this.handle(parameters.entity, parameters.configuration, parameters.handle);
+      this.handle(parameters.entity,
+        parameters.configuration, parameters.handle);
 
       // Allow chaining
       return this;
@@ -673,7 +689,8 @@ client.createClientResource = function(url) {
     /**
      * TODO
      *
-     * @param {(Function|Object)} handler the processing element when the router matches
+     * @param {(Function|Object)} handler the processing element when the
+     * router matches
      * @clientresource
      * @method
      * @api public
@@ -685,7 +702,8 @@ client.createClientResource = function(url) {
       parameters.configuration.method = 'HEAD';
 
       // Handle the request
-      this.handle(parameters.entity, parameters.configuration, parameters.handle);
+      this.handle(parameters.entity,
+        parameters.configuration, parameters.handle);
 
       // Allow chaining
       return this;
@@ -694,7 +712,8 @@ client.createClientResource = function(url) {
     /**
      * TODO
      *
-     * @param {(Function|Object)} handler the processing element when the router matches
+     * @param {(Function|Object)} handler the processing element when the
+     * router matches
      * @clientresource
      * @method
      * @api public
@@ -706,7 +725,8 @@ client.createClientResource = function(url) {
       parameters.configuration.method = 'OPTIONS';
 
       // Handle the request
-      this.handle(parameters.entity, parameters.configuration, parameters.handle);
+      this.handle(parameters.entity,
+        parameters.configuration, parameters.handle);
 
       // Allow chaining
       return this;
@@ -721,7 +741,7 @@ if (process.browser) {
 }
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer)
 
-},{"./client-transport":2,"./client-utils":3,"./converter":5,"_process":20,"buffer":9,"debug":41}],5:[function(require,module,exports){
+},{"./client-transport":2,"./client-utils":3,"./converter":5,"./data":6,"_process":20,"buffer":9,"debug":41}],5:[function(require,module,exports){
 'use strict';
 
 var _ = (window._);
@@ -736,7 +756,7 @@ var converters = [];
 // Register builtin converters
 
 var builtinConverters = require('./builtin-converters');
-_.forEach(builtinConverters, function (builtinConverter) {
+_.forEach(builtinConverters, function(builtinConverter) {
   converters.push(builtinConverter);
 });
 
@@ -767,7 +787,7 @@ converter.getBuiltinConverter = function(name) {
 converter.findConverter = function(mediaTypes) {
   // Check if the parameter is an array. If not wrap
   // the parameter into an array
-  if (mediaTypes !=null && !_.isArray(mediaTypes)) {
+  if (mediaTypes != null && !_.isArray(mediaTypes)) {
     mediaTypes = [ mediaTypes ];
   }
 
@@ -791,21 +811,21 @@ converter.findConverter = function(mediaTypes) {
 
   // If no converter can be found
   if (_.isEmpty(filteredConverters)) {
-    debugConverter('No converter can be found for media types ' + JSON.stringify(mediaTypes));
+    debugConverter('No converter can be found for media types '
+      + JSON.stringify(mediaTypes));
     return;
   }
 
   // Return the first matching converter
-    var converter = filteredConverters[0];
-    debugConverter('Converter ' + converter.name + ' found');
-    return converter;
-}
+  var firstConverter = filteredConverters[0];
+  debugConverter('Converter ' + firstConverter.name + ' found');
+  return firstConverter;
+};
 },{"./builtin-converters":1,"debug":41}],6:[function(require,module,exports){
 'use strict';
 
 var http = require('http');
 var _ = (window._);
-var moment = (window.moment);
 var debugMediaType = require('debug')('mediatype');
 
 exports = module.exports;
@@ -824,9 +844,9 @@ data.ENCODINGS = {
 };
 
 data.EXTENSIONS = {
-  'json': [ 'application/json' ],
-  'xml': [ 'text/xml', 'application/xml' ],
-  'yaml': [ 'text/yaml', 'application/yaml' ],
+  json: [ 'application/json' ],
+  xml: [ 'text/xml', 'application/xml' ],
+  yaml: [ 'text/yaml', 'application/yaml' ],
   checkExtension: function(extension, mediaTypes) {
     var configuredMediaTypes = data.EXTENSIONS[extension];
     if (configuredMediaTypes == null) {
@@ -834,18 +854,19 @@ data.EXTENSIONS = {
       return false;
     } else {
       var configuredMediaType = _.find(configuredMediaTypes,
-      	            function(configuredMediaType) {
-      	var mediaType = _.find(mediaTypes, function(mediaType) {
-      	  return (configuredMediaType === mediaType.name);
-      	});
+                         function(configuredMediaType) {
+        var mediaType = _.find(mediaTypes, function(mediaType) {
+          return (configuredMediaType === mediaType.name);
+        });
+        return (mediaType != null);
       });
       var match = (configuredMediaType != null);
       if (match) {
-      	debugMediaType('Media type ' + configuredMediaType
-      		+ ' match for extension ' + extension);
+        debugMediaType('Media type ' + configuredMediaType
+          + ' match for extension ' + extension);
       } else {
-      	debugMediaType('No media type match for extension '
-      		+ extension);
+        debugMediaType('No media type match for extension '
+          + extension);
       }
       return match;
     }
@@ -872,13 +893,13 @@ data.MediaType = function(name, parameters, quality, level) {
 };
 
 data.MediaType.getMostSpecific = function(mediaTypes) {
-  if ((mediaTypes == null) || (mediaTypes.length == 0)) {
+  if ((mediaTypes == null) || (mediaTypes.length === 0)) {
     throw new Error(
-            "You must give at least one MediaType");
+            'You must give at least one MediaType');
   }
 
   if (mediaTypes.length == 1) {
-      return mediaTypes[0];
+    return mediaTypes[0];
   }
 
   var mostSpecific = mediaTypes[0];
@@ -887,16 +908,16 @@ data.MediaType.getMostSpecific = function(mediaTypes) {
     var mediaType = mediaTypes[i];
 
     if (mediaType != null) {
-      if (mediaType.getMainType().equals("*")) {
+      if (mediaType.getMainType().equals('*')) {
         continue;
       }
 
-      if (mostSpecific.getMainType().equals("*")) {
+      if (mostSpecific.getMainType().equals('*')) {
         mostSpecific = mediaType;
         continue;
       }
 
-      if (mostSpecific.getSubType().contains("*")) {
+      if (mostSpecific.getSubType().contains('*')) {
         mostSpecific = mediaType;
         continue;
       }
@@ -911,16 +932,18 @@ var _TSPECIALS = '()<>@,;:/[]?=\\\"';
 data.MediaType.normalizeToken = function(token) {
   // Makes sure we're not dealing with a "*" token.
   token = token.trim();
-  if ("".equals(token) || "*".equals(token))
-      return "*";
+  if (_.isEmpty(token) || '*'.equals(token)) {
+    return '*';
+  }
 
   // Makes sure the token is RFC compliant.
   var length = token.length();
   var c;
   for (var i = 0; i < length; i++) {
-      c = token[i];
-      if (c <= 32 || c >= 127 || _TSPECIALS.indexOf(c) != -1)
-          throw new Error("Illegal token: " + token);
+    c = token[i];
+    if (c <= 32 || c >= 127 || _TSPECIALS.indexOf(c) != -1) {
+      throw new Error('Illegal token: ' + token);
+    }
   }
 
   return token;
@@ -955,13 +978,14 @@ data.MediaType.prototype = {
   getParent: function() {
     var result = null;
 
-    if (getParameters().size() > 0) {
-      result = MediaType.valueOf(getMainType() + "/" + getSubType());
+    if (this.getParameters().size() > 0) {
+      result = data.MediaType.valueOf(this.getMainType()
+        + '/' + this.getSubType());
     } else {
-      if (getSubType().equals("*")) {
-        result = equals(ALL) ? null : ALL;
+      if (this.getSubType().equals('*')) {
+        result = this.equals(ALL) ? null : ALL;
       } else {
-        result = MediaType.valueOf(getMainType() + "/*");
+        result = data.MediaType.valueOf(this.getMainType() + '/*');
       }
     }
 
@@ -976,7 +1000,7 @@ data.MediaType.prototype = {
 
       if (slash == -1) {
         // No subtype found, assume that all subtypes are accepted
-        result = "*";
+        result = '*';
       } else {
         var separator = this.name.indexOf(';');
         if (separator == -1) {
@@ -991,7 +1015,7 @@ data.MediaType.prototype = {
   },
 
   includes: function(includedMediaType, ignoreParameters) {
-    var result = equals(ALL) || equals(included);
+    var result = this.equals(ALL) || this.equals(included);
 
     if (!result) {
       if (this.getMainType().equals(includedMediaType.getMainType())) {
@@ -1004,8 +1028,8 @@ data.MediaType.prototype = {
             // Media type A includes media type B if for each param
             // name/value pair in A, B contains the same name/value.
             result = true;
-            for (var i = 0; result && i < this.parameters().size(); i++) {
-              var param = parameters[i];
+            for (var i = 0; result && i < this.parameters.size(); i++) {
+              var param = this.parameters[i];
               var includedParam = _.find(includedMediaType.parameters,
                                          { name: param.name });
 
@@ -1016,11 +1040,11 @@ data.MediaType.prototype = {
                 && param.value === includedParam.value);
             }
           }
-        } else if (this.getSubType().equals("*")) {
+        } else if (this.getSubType().equals('*')) {
           result = true;
-        } else if (this.getSubType().startsWith("*+")
+        } else if (this.getSubType().startsWith('*+')
                 && _.endsWith(includedMediaType.getSubType(),
-                        getSubType().substring(2))) {
+                        this.getSubType().substring(2))) {
           result = true;
         }
       }
@@ -1030,7 +1054,7 @@ data.MediaType.prototype = {
   },
 
   isConcrete: function() {
-    return !this.name().contains("*");
+    return !this.name().contains('*');
   }
 };
 
@@ -1048,7 +1072,7 @@ data.Status.prototype = {
   /**
    * Indicates if the status is a client error status, meaning "The request
    * contains bad syntax or cannot be fulfilled".
-   * 
+   *
    * @param code the code of the status.
    * @return True if the status is a client error status.
    */
@@ -1059,7 +1083,7 @@ data.Status.prototype = {
   /**
    * Indicates if the status is a connector error status, meaning "The
    * connector failed to send or receive an apparently valid message".
-   * 
+   *
    * @return True if the status is a connector error status.
    */
   isConnectorError: function() {
@@ -1068,7 +1092,7 @@ data.Status.prototype = {
 
   /**
    * Indicates if the status is an error (client or server) status.
-   * 
+   *
    * @return True if the status is an error (client or server) status.
    */
   isError: function() {
@@ -1079,7 +1103,7 @@ data.Status.prototype = {
   /**
    * Indicates if the status is a global error status, meaning "The server has
    * definitive information about a particular user".
-   * 
+   *
    * @return True if the status is a global error status.
    */
   isGlobalError: function() {
@@ -1089,7 +1113,7 @@ data.Status.prototype = {
   /**
    * Indicates if the status is an information status, meaning "request
    * received, continuing process".
-   * 
+   *
    * @return True if the status is an information status.
    */
   isInformational: function() {
@@ -1099,7 +1123,7 @@ data.Status.prototype = {
   /**
    * Indicates if the status is a redirection status, meaning "Further action
    * must be taken in order to complete the request".
-   * 
+   *
    * @return True if the status is a redirection status.
    */
   isRedirection: function() {
@@ -1109,7 +1133,7 @@ data.Status.prototype = {
   /**
    * Indicates if the status is a server error status, meaning "The server
    * failed to fulfill an apparently valid request".
-   * 
+   *
    * @return True if the status is a server error status.
    */
   isServerError: function() {
@@ -1119,7 +1143,7 @@ data.Status.prototype = {
   /**
    * Indicates if the status is a success status, meaning "The action was
    * successfully received, understood, and accepted".
-   * 
+   *
    * @return True if the status is a success status.
    */
   isSuccess: function() {
@@ -1139,9 +1163,9 @@ exports = module.exports;
 
 var headers = exports;
 
-function isValidDateFormat(dateHeader) {
+/* TODO: function isValidDateFormat(dateHeader) {
   return true;
-}
+}*/
 
 headers.parser = {
   readPreferenceHeaderValue: function(metadataHeader) {
@@ -1283,7 +1307,8 @@ function readClientInfo(rawRequest) {
   // Header accept
   var acceptHeader = rawRequest.headers.accept;
   if (acceptHeader != null) {
-    clientInfo.acceptedMediaTypes = headers.parser.readPreferenceHeaderValues(acceptHeader);
+    clientInfo.acceptedMediaTypes = headers.parser.readPreferenceHeaderValues(
+      acceptHeader);
   }
 
   if (_.isEmpty(clientInfo.acceptedMediaTypes)) {
@@ -1331,7 +1356,7 @@ function readClientInfo(rawRequest) {
   }
 
   // Header Expect
-  var expectHeader = rawRequest.headers['expect'];
+  var expectHeader = rawRequest.headers.expect;
   if (expectHeader != null) {
     clientInfo.expectations
       = headers.parser.readPreferenceHeaderValues(expectHeader);
@@ -1356,7 +1381,7 @@ function readWarningHeaderValues(warningHeader) {
 function readWarnings(rawRequest) {
   var warnings = [];
 
-  var warningHeader = rawRequest.headers['warning'];
+  var warningHeader = rawRequest.headers.warning;
   if (warningHeader != null) {
     warnings = readWarningHeaderValues(warningHeader);
   }
@@ -1365,7 +1390,7 @@ function readWarnings(rawRequest) {
 }
 
 function readDate(rawRequest) {
-  var dateHeader = rawRequest.headers['date'];
+  var dateHeader = rawRequest.headers.date;
   return headers.parser.readDateValue(dateHeader);
 }
 
@@ -1380,7 +1405,7 @@ function readAuthorizationHeader(authorizationHeader) {
 }
 
 function readAuthentication(rawRequest) {
-  var authorizationHeader = rawRequest.headers['authorization'];
+  var authorizationHeader = rawRequest.headers.authorization;
   if (authorizationHeader != null) {
     return readAuthorizationHeader(authorizationHeader);
   }
@@ -1423,7 +1448,7 @@ function readConditions(rawRequest) {
   }
 
   if (_.isEmpty(ifRangeHeader)) {
-    var tag = readTag(ifRangeHeader);
+    var tag = headers.parser.readTag(ifRangeHeader);
     if (tag != null) {
       conditions.rangeTag = tag;
     } else {
@@ -1448,7 +1473,8 @@ function readEntity(rawRequest, request) {
 
   // Read content type and character set
   var contentTypeHeader = rawRequest.headers['content-type'];
-  entity.mediaType = headers.parser.readPreferenceHeaderValue(contentTypeHeader);
+  entity.mediaType = headers.parser.readPreferenceHeaderValue(
+    contentTypeHeader);
 
   // Read content encoding
   var contentEncodingHeader = rawRequest.headers['content-encoding'];
@@ -1489,7 +1515,7 @@ headers.extractHeadersFromRequest = function(rawRequest, request) {
 };
 
 headers.getHost = function(rawRequest, protocol) {
-  var hostHeader = rawRequest.headers['host'];
+  var hostHeader = rawRequest.headers.host;
   var host = 'localhost';
   var port = protocol == 'http' ? 80 : 443;
   if (hostHeader != null) {
@@ -1515,7 +1541,9 @@ headers.fillHeadersAndContentInResponse = function(rawResponse, response) {
   rawResponse.setHeader('Connection', 'close');
 
   // Entity
-  if (response.entity != null && response.entity.mediaType != null && response.status.code != 204) {
+  if (response.entity != null
+        && response.entity.mediaType != null
+        && response.status.code != 204) {
     debugHeader('Filling entity content');
     rawResponse.setHeader('Content-Type', response.entity.mediaType.name);
     rawResponse.setHeader('Content-Length', response.entity.length);
