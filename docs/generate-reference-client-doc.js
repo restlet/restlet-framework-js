@@ -4,8 +4,10 @@ var fs = require('fs');
 var packageJson = require('../package.json');
 var docCommon = require('./generate-reference-common-doc');
 
-fs.readFile('docs/doc-server.json', 'utf8', function (err, data) {
-  if (err) throw err;
+fs.readFile('docs/doc-server.json', 'utf8', function(err, data) {
+  if (err) {
+    throw err;
+  }
   var docContent = JSON.parse(data);
 
   var mardownDocContent = [];
@@ -27,7 +29,8 @@ fs.readFile('docs/doc-server.json', 'utf8', function (err, data) {
   mardownDocContent.push('');
 
   // Client resource
-  docCommon.generateElementDocMarkdown(mardownDocContent, docContent, 'clientresource', 'Client resource');
+  docCommon.generateElementDocMarkdown(mardownDocContent,
+    docContent, 'clientresource', 'Client resource');
 
   // Data objects
 
@@ -36,12 +39,16 @@ fs.readFile('docs/doc-server.json', 'utf8', function (err, data) {
   mardownDocContent.push('');
 
   // Request
-  docCommon.generateElementDocMarkdown(mardownDocContent, docContent, 'request', 'Request');
+  docCommon.generateElementDocMarkdown(mardownDocContent,
+    docContent, 'request', 'Request');
   // Reference
-  docCommon.generateElementDocMarkdown(mardownDocContent, docContent, 'reference', 'Reference');
+  docCommon.generateElementDocMarkdown(mardownDocContent,
+    docContent, 'reference', 'Reference');
   // Response
-  docCommon.generateElementDocMarkdown(mardownDocContent, docContent, 'response', 'Response');
+  docCommon.generateElementDocMarkdown(mardownDocContent,
+    docContent, 'response', 'Response');
 
 
-  docCommon.writeDocFile('docs/references/doc-client-' + packageJson.version + '.md', mardownDocContent);
+  docCommon.writeDocFile('docs/references/doc-client-'
+    + packageJson.version + '.md', mardownDocContent);
 });
