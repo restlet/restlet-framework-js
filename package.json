@@ -1,7 +1,7 @@
 {
   "name": "restlet",
   "description": "RESTful web API framework for JavaScript",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "author": "Thierry Templier <templth@yahoo.fr>",
   "contributors": [
   ],
