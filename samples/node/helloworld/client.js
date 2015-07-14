@@ -1,4 +1,4 @@
-var restlet = require('../../index');
+var restlet = require('../../../index');
 
 restlet.createClientResource('http://localhost:3000/contacts/')
 .get({
@@ -6,11 +6,10 @@ restlet.createClientResource('http://localhost:3000/contacts/')
   parameters: [ 'entity' ],
   convertInputEntity: true,
   queryParameters: {
-  	test1: 'test value1',
-  	test2: 'test value2'
+    test1: 'test value1',
+    test2: 'test value2'
   }
-},
-	function(entity) {
+}, function(entity) {
   console.log('>> entity = ' + JSON.stringify(entity));
 })
 .post({
@@ -24,10 +23,9 @@ restlet.createClientResource('http://localhost:3000/contacts/')
   parameters: [ 'response' ],
   convertOutputEntity: true,
   queryParameters: {
-  	test1: 'test value1',
-  	test2: 'test value2'
+    test1: 'test value1',
+    test2: 'test value2'
   }
-},
-	function(response) {
+}, function(response) {
   console.log('>> received response');
 });

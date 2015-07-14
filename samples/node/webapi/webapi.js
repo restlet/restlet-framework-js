@@ -1,4 +1,6 @@
-var restlet = require('../../index');
+'use strict';
+
+var restlet = require('../../../index');
 var _ = require('lodash');
 
 var component = restlet.createComponent();
@@ -9,10 +11,10 @@ component.addServer('http', 3000);
 // In-memory contact list
 var contacts = [
   {
-    'id': '1',
-    'lastName': 'test',
-    'firstName': 'test',
-    'age': 20
+    id: '1',
+    lastName: 'test',
+    firstName: 'test',
+    age: 20
   }
 ];
 
@@ -54,7 +56,8 @@ var application = restlet.createApplication(function() {
     })
     // Update contact
     .put({
-      parameters: ['entity', 'pathVariables["id"]', 'response'], convertInputEntity: true
+      parameters: ['entity', 'pathVariables["id"]', 'response'],
+      convertInputEntity: true
     }, function(entity, id, response) {
       var contact = _.find(contacts, { id: id});
       contact.firstName = entity.firstName;
@@ -63,7 +66,8 @@ var application = restlet.createApplication(function() {
       response.end();
     })
     // Delete contact
-    .delete({ parameters: ['pathVariables["id"]', 'response'] }, function(id, response) {
+    .delete({ parameters: ['pathVariables["id"]', 'response'] },
+        function(id, response) {
       _.remove(contacts, {
         id: id
       });

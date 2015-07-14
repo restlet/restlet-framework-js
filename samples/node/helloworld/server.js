@@ -1,5 +1,6 @@
-var restlet = require('../../index');
-var _ = require('lodash');
+'use strict';
+
+var restlet = require('../../../index');
 
 var component = restlet.createComponent();
 
@@ -13,7 +14,7 @@ var application = restlet.createApplication(function() {
 
   // Attach a server resource
   router.attach('/helloworld',
-    restlet.createServerResource().getJson(function() {
+    restlet.createServerResource().getJson(function(request, response) {
       response.writeObject({message: 'hello world'});
       response.end();
     })
