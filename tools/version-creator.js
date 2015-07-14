@@ -46,7 +46,7 @@ var cmds = [];
 cmds.push({ msg: 'Check code style', task: 'code:style'});
 cmds.push({ msg: 'Check JS Hint', task: 'code:jshint'});
 // Tests
-cmds.push({ msg: 'Tests', task: 'test:default$'});
+cmds.push({ msg: 'Tests', task: 'test:default'});
 // Browser
 cmds.push({ msg: 'Create browser content', task: 'code:browser'});
 cmds.push({ msg: 'Create browser content (minified)',
