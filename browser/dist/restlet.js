@@ -518,8 +518,9 @@ client.createClientResource = function(url) {
      * Notice that this method shouldn't be called explicitly since it
      * involves within the request processing chain.
      *
-     * @param {(Function|Object)} handler the processing element when the
-     * router matches
+     * @param {Object} [configuration] the configuration object
+     * @param {(Function|Object)} handler the processing element for
+     * the response
      * @clientresource
      * @method
      * @api private
@@ -572,10 +573,19 @@ client.createClientResource = function(url) {
     },
 
     /**
-     * TODO
+     * Execute a GET request.
      *
-     * @param {(Function|Object)} handler the processing element when the
-     * router matches
+     * This method is a shortcut for the method `handler` with the following
+     * configuration:
+     *
+     *     restlet.createClientResource('http://myurl')
+     *         .handle({ method: 'GET' }, function(request, response) {
+     *             (...)
+     *         });
+     *
+     * @param {Object} [configuration] the configuration object
+     * @param {(Function|Object)} handler the processing element for
+     * the response
      * @clientresource
      * @method
      * @api public
@@ -595,10 +605,19 @@ client.createClientResource = function(url) {
     },
 
     /**
-     * TODO
+     * Execute a POST request.
      *
-     * @param {(Function|Object)} handler the processing element when the
-     * router matches
+     * This method is a shortcut for the method `handler` with the following
+     * configuration:
+     *
+     *     restlet.createClientResource('http://myurl')
+     *         .handle({ method: 'POST' }, function(request, response) {
+     *             (...)
+     *         });
+     *
+     * @param {Object} [configuration] the configuration object
+     * @param {(Function|Object)} handler the processing element for
+     * the response
      * @clientresource
      * @method
      * @api public
@@ -618,10 +637,19 @@ client.createClientResource = function(url) {
     },
 
     /**
-     * TODO
+     * Execute a PUT request.
      *
-     * @param {(Function|Object)} handler the processing element when the
-     * router matches
+     * This method is a shortcut for the method `handler` with the following
+     * configuration:
+     *
+     *     restlet.createClientResource('http://myurl')
+     *         .handle({ method: 'PUT' }, function(request, response) {
+     *             (...)
+     *         });
+     *
+     * @param {Object} [configuration] the configuration object
+     * @param {(Function|Object)} handler the processing element for
+     * the response
      * @clientresource
      * @method
      * @api public
@@ -641,10 +669,19 @@ client.createClientResource = function(url) {
     },
 
     /**
-     * TODO
+     * Execute a PATCH request.
      *
-     * @param {(Function|Object)} handler the processing element when the
-     * router matches
+     * This method is a shortcut for the method `handler` with the following
+     * configuration:
+     *
+     *     restlet.createClientResource('http://myurl')
+     *         .handle({ method: 'PATCH' }, function(request, response) {
+     *             (...)
+     *         });
+     *
+     * @param {Object} [configuration] the configuration object
+     * @param {(Function|Object)} handler the processing element for
+     * the response
      * @clientresource
      * @method
      * @api public
@@ -664,10 +701,19 @@ client.createClientResource = function(url) {
     },
 
     /**
-     * TODO
+     * Execute a DELETE request.
      *
-     * @param {(Function|Object)} handler the processing element when the
-     * router matches
+     * This method is a shortcut for the method `handler` with the following
+     * configuration:
+     *
+     *     restlet.createClientResource('http://myurl')
+     *         .handle({ method: 'DELETE' }, function(request, response) {
+     *             (...)
+     *         });
+     *
+     * @param {Object} [configuration] the configuration object
+     * @param {(Function|Object)} handler the processing element for
+     * the response
      * @clientresource
      * @method
      * @api public
@@ -687,10 +733,19 @@ client.createClientResource = function(url) {
     },
 
     /**
-     * TODO
+     * Execute a HEAD request.
      *
-     * @param {(Function|Object)} handler the processing element when the
-     * router matches
+     * This method is a shortcut for the method `handler` with the following
+     * configuration:
+     *
+     *     restlet.createClientResource('http://myurl')
+     *         .handle({ method: 'HEAD' }, function(request, response) {
+     *             (...)
+     *         });
+     *
+     * @param {Object} [configuration] the configuration object
+     * @param {(Function|Object)} handler the processing element for
+     * the response
      * @clientresource
      * @method
      * @api public
@@ -710,10 +765,19 @@ client.createClientResource = function(url) {
     },
 
     /**
-     * TODO
+     * Execute a OPTIONS request.
      *
-     * @param {(Function|Object)} handler the processing element when the
-     * router matches
+     * This method is a shortcut for the method `handler` with the following
+     * configuration:
+     *
+     *     restlet.createClientResource('http://myurl')
+     *         .handle({ method: 'OPTIONS' }, function(request, response) {
+     *             (...)
+     *         });
+     *
+     * @param {Object} [configuration] the configuration object
+     * @param {(Function|Object)} handler the processing element for
+     * the response
      * @clientresource
      * @method
      * @api public
@@ -1063,8 +1127,10 @@ data.Status = function(code, message) {
   this.reasonPhrase = http.STATUS_CODES[code];
   if (message != null) {
     this.message = message;
+    this.description = message;
   } else {
     this.message = this.reasonPhrase;
+    this.description = this.reasonPhrase;
   }
 };
 
