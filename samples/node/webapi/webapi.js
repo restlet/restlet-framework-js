@@ -71,7 +71,7 @@ var application = restlet.createApplication(function() {
       _.remove(contacts, {
         id: id
       });
-      response.empty();
+      response.setNoContent();
       response.end();
     })
   );
