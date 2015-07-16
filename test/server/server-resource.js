@@ -56,6 +56,7 @@ describe('server resource', function() {
       assert.equal(false, called);
       assert.equal(405, rawResponse.statusCode);
       assert.equal('Method Not Allowed', rawResponse.statusMessage);
+      assert.equal('Method Not Allowed', rawResponse.text);
     });
   });
 
@@ -110,6 +111,7 @@ describe('server resource', function() {
       assert.equal(false, called);
       assert.equal(405, rawResponse.statusCode);
       assert.equal('Method Not Allowed', rawResponse.statusMessage);
+      assert.equal('Method Not Allowed', rawResponse.text);
     });
   });
 
@@ -148,6 +150,7 @@ describe('server resource', function() {
       assert.equal(false, called);
       assert.equal(405, rawResponse.statusCode);
       assert.equal('Method Not Allowed', rawResponse.statusMessage);
+      assert.equal('Method Not Allowed', rawResponse.text);
     });
   });
 
@@ -186,6 +189,7 @@ describe('server resource', function() {
       assert.equal(false, called);
       assert.equal(405, rawResponse.statusCode);
       assert.equal('Method Not Allowed', rawResponse.statusMessage);
+      assert.equal('Method Not Allowed', rawResponse.text);
     });
 
     it('with function and text payload', function() {
