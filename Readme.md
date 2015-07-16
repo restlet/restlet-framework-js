@@ -37,7 +37,7 @@
 Do you want to blend your web services, web sites and web clients into unified web applications exposing and consuming RESTful web APIs?
 Leverage the open source Restlet Framework and its unique JavaScript API available in two consistent editions: Node.js and Browser/AJAX! 
 
-NOTE: this is a port in progress of the Restlet Framework for Java. See wiki pages for usage instructions.
+NOTE: this is a port in progress of the Restlet Framework for Java.
 
 http://restlet.org
 
@@ -164,8 +164,8 @@ Restlet JS also provides a client support to call REST resources with browsers:
 
 | Version | Status | Documentation |
 | ------- | -------| --------------|
-| 0.4.0   | In progress | [Server API Reference](https://github.com/restlet/restlet-framework-js/blob/master/docs/references/doc-server-0.4.0.md) |
-| 0.4.0   | In progress | [Client API Reference](https://github.com/restlet/restlet-framework-js/blob/master/docs/references/doc-client-0.4.0.md) |
+| 0.4.1   | In progress | [Server API Reference](https://github.com/restlet/restlet-framework-js/blob/master/docs/references/doc-server-0.4.1.md) |
+| 0.4.1   | In progress | [Client API Reference](https://github.com/restlet/restlet-framework-js/blob/master/docs/references/doc-client-0.4.1.md) |
 
 ## Support
 

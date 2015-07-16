@@ -40,7 +40,5 @@ These two links can be helpful at this level:
 
 [NOTE]
 ----
-Note that the JCA is necessary in order to maintain a principal copyright holder for the whole code base and allow us to propose several open source licenses in parallel, to upgrade to future versions of those licenses or to choose new ones.
-
-It also allows Restlet to offer restricted commercial licenses to other vendors or organizations wishing to incorporate and redistribute Restlet in their proprietary product without the constraints of our open source licenses or to develop custom versions without wanting to redistribute their changes publicly. In these case, it helps us to fund the ongoing development of our open source project.
+Note that the JCA is necessary in order to maintain a principal copyright holder for the whole code base and allow us to propose several open source licenses in parallel, to upgrade to future versions of those licenses or to choose new ones. It also allows Restlet to offer restricted commercial licenses to other vendors or organizations wishing to incorporate and redistribute Restlet in their proprietary product without the constraints of our open source licenses or to develop custom versions without wanting to redistribute their changes publicly. In these case, it helps us to fund the ongoing development of our open source project.
 ----
