@@ -13,10 +13,10 @@ var application = restlet.createApplication(function() {
   var router = restlet.createRouter();
 
   // Attach a server resource
-  router.attach('/helloworld',
-    restlet.createServerResource().getJson(function(request, response) {
-      response.writeObject({message: 'hello world'});
-      response.end();
+  router.attach('/helloworld', restlet.createServerResource()
+      .getJson(function(request, response) {
+        response.writeObject({message: 'hello world'});
+        response.end();
     })
   );
 
