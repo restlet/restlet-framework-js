@@ -7,3 +7,4 @@ CHANGELOG.md.tmp
 samples/browser/restlet.js
 samples/browser/restlet.min.js
 browser/bundle.js.map
+.idea/
