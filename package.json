@@ -4,6 +4,10 @@
   "version": "0.4.1",
   "author": "Thierry Templier <templth@yahoo.fr>",
   "contributors": [
+    {
+      "name": "Nicolas Baptiste",
+      "email": "nicolas.baptiste@gmail.com"
+    }
   ],
   "license": "Apache",
   "repository": "restlet/restlet-framework-js",
