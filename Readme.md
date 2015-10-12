@@ -72,6 +72,7 @@ processing elements for requests
 
 Following code describes how to implement a simple Restlet application using JavaScript
 and Node:
+```javascript
 
     var restlet = require('restlet');
 
@@ -116,9 +117,11 @@ and Node:
 
     // Start the component.
     component.start();
+```
 
 Restlet JS also provides a client support to call REST resources:
 
+```javascript
     var restlet = require('restlet');
 
     restlet.createClientResource('http://myurl')
@@ -129,11 +132,11 @@ Restlet JS also provides a client support to call REST resources:
       function(entity) {
         (...)
       });
-
+```
 ### Within browsers
 
 Restlet JS also provides a client support to call REST resources with browsers:
-
+```html
     <html>
       <head>
         <script type="text/javascript" src="jquery-2.1.4.min.js"></script>
@@ -159,7 +162,7 @@ Restlet JS also provides a client support to call REST resources with browsers:
         <span id="test">Run Restlet client</span>
       </body>
     </html>
-
+```
 ## Documentation
 
 | Version | Status | Documentation |
