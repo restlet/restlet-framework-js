@@ -6,10 +6,10 @@ var restlet = require('../..');
 // See the following RFC for more details:
 // http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html
 
-describe('request / response chaining', function() {
+describe('request / response chaining', function () {
   // Simple chaining
-  describe('simple chaining', function() {
-    it('restlet chaining', function() {
+  describe('simple chaining', function () {
+    it('restlet chaining', function () {
       var cpt = 0;
       var restlet1Called = 0;
       var restlet2Called = 0;
@@ -17,7 +17,7 @@ describe('request / response chaining', function() {
 
       var virtualHost = restlet.createVirtualHost();
 
-      var restlet1 = restlet.createRestlet(function(request, response, next) {
+      var restlet1 = restlet.createRestlet(function (request, response, next) {
         restlet1Called = cpt;
         cpt++;
         next();
@@ -25,7 +25,7 @@ describe('request / response chaining', function() {
 
       virtualHost.attachDefault(restlet1);
 
-      restlet1.next(function(request, response) {
+      restlet1.next(function (request, response) {
         restlet2Called = cpt;
         cpt++;
         response.end();
@@ -37,7 +37,7 @@ describe('request / response chaining', function() {
         }
       };
       var response = {
-        end: function() {
+        end: function () {
           endCalled = cpt;
           cpt++;
         }
