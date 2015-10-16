@@ -1,4 +1,4 @@
-# Contributing Restlet JS
+# Contributing to Restlet JS
 
 ## Github repository
 
