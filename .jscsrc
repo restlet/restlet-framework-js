@@ -10,6 +10,10 @@
     "disallowSpacesInFunction": {
         "beforeOpeningRoundBrace": true
     },
+    "disallowSpacesInAnonymousFunctionExpression": {
+        "beforeOpeningRoundBrace": true,
+        "beforeOpeningCurlyBrace": true
+    },
     "disallowSpacesInsideParentheses": true,
     "disallowTrailingWhitespace": true,
     "maximumLineLength": 80,
