@@ -179,7 +179,7 @@ or `restlet.js`.
 ## Contribute
 
 If you want to contribute to the framework, please have a look at this page:
-[Contributing Restlet JS](https://github.com/restlet/restlet-framework-js/blob/master/docs/guides/contribute.md)
+[Contributing to Restlet JS](https://github.com/restlet/restlet-framework-js/blob/master/docs/guides/contribute.md)
 
 ## Copyright
 
