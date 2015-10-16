@@ -7,7 +7,7 @@ exports = module.exports;
 
 var testUtils = exports;
 
-testUtils.createRawRequest = function(method, path, headers, handlers) {
+testUtils.createRawRequest = function (method, path, headers, handlers) {
   return {
     method: method,
     headers: headers,
@@ -15,26 +15,24 @@ testUtils.createRawRequest = function(method, path, headers, handlers) {
       remoteAddress: 'localhost',
       remotePort: '35034'
     },
-    resume: function() {
+    resume: function () {
     },
     url: path != null ? path : '/path',
-    on: function(event, handler) {
-      if (handlers[event] == null) {
-        handlers[event] = [];
+    on: function (event, handler) {
+      if (handlers[ event ] == null) {
+        handlers[ event ] = [];
       }
-      handlers[event].push(handler);
+      handlers[ event ].push(handler);
     }
   };
 };
 
-testUtils.createMockRequest = function(method, path, contentType, acceptType) {
+testUtils.createMockRequest = function (method, path, contentType, acceptType) {
   var handlers = {};
-  var rawRequest = testUtils.createRawRequest(method, path, {
-
-  }, handlers);
+  var rawRequest = testUtils.createRawRequest(method, path, {}, handlers);
 
   if (contentType != null) {
-    rawRequest.headers['content-type'] = contentType;
+    rawRequest.headers[ 'content-type' ] = contentType;
   }
 
   if (acceptType != null) {
@@ -43,10 +41,10 @@ testUtils.createMockRequest = function(method, path, contentType, acceptType) {
 
   var request = serverUtils.createRequest(rawRequest);
 
-  request.trigger = function(event, data) {
-    if (handlers[event] != null) {
-      var eventHandlers = handlers[event];
-      _.forEach(eventHandlers, function(eventHandler) {
+  request.trigger = function (event, data) {
+    if (handlers[ event ] != null) {
+      var eventHandlers = handlers[ event ];
+      _.forEach(eventHandlers, function (eventHandler) {
         eventHandler(data);
       });
     }
@@ -55,26 +53,26 @@ testUtils.createMockRequest = function(method, path, contentType, acceptType) {
   return request;
 };
 
-testUtils.createMockResponse = function(request, listeners) {
+testUtils.createMockResponse = function (request, listeners) {
   var rawResponse = {
     headers: {},
     text: '',
     raw: [],
     statusCode: '',
     statusMessage: '',
-    setHeader: function(name, value) {
-      this.headers[name] = value;
+    setHeader: function (name, value) {
+      this.headers[ name ] = value;
     },
-    write: function(c) {
+    write: function (c) {
       if (_.isString(c)) {
         this.text += c;
       } else {
         this.raw.push(c);
       }
     },
-    end: function() {
+    end: function () {
       if (listeners != null && !_.isEmpty(listeners.end)) {
-        _.forEach(listeners.end, function(callback) {
+        _.forEach(listeners.end, function (callback) {
           callback();
         });
       }

@@ -7,16 +7,9 @@
     "disallowQuotedKeysInObjects": true,
     "disallowSpaceAfterObjectKeys": true,
     "disallowSpaceAfterPrefixUnaryOperators": true,
-    "disallowSpacesInFunction": {
-        "beforeOpeningRoundBrace": true
-    },
-    "disallowSpacesInAnonymousFunctionExpression": {
-        "beforeOpeningRoundBrace": true,
-        "beforeOpeningCurlyBrace": true
-    },
     "disallowSpacesInsideParentheses": true,
     "disallowTrailingWhitespace": true,
-    "maximumLineLength": 80,
+    "maximumLineLength": 150,
     "requireCamelCaseOrUpperCaseIdentifiers": true,
     "requireCapitalizedComments": true,
     "requireCapitalizedConstructors": true,
@@ -40,6 +33,7 @@
     "requireSpaceBeforeBlockStatements": true,
     "requireSpaceBeforeObjectValues": true,
     "requireSpacesInFunction": {
+        "beforeOpeningRoundBrace": true,
         "beforeOpeningCurlyBrace": true
     },
     "validateIndentation": 2,

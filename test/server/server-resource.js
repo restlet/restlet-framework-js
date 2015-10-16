@@ -4,16 +4,16 @@ var assert = require('assert');
 var restlet = require('../..');
 var testUtils = require('./test-utils');
 
-describe('server resource', function() {
+describe('server resource', function () {
   // Simple creations
-  describe('simple creation', function() {
-    it('with a function', function() {
+  describe('simple creation', function () {
+    it('with a function', function () {
       var called = false;
       var serverResource = restlet.createServerResource(
-                                      function(request, response) {
-        called = true;
-        response.end();
-      });
+        function (request, response) {
+          called = true;
+          response.end();
+        });
 
       var request = testUtils.createMockRequest('GET', '/path');
       var response = testUtils.createMockResponse(request);
@@ -23,13 +23,13 @@ describe('server resource', function() {
       assert.equal(true, called);
     });
 
-    it('with a function and configuration (called)', function() {
+    it('with a function and configuration (called)', function () {
       var called = false;
       var serverResource = restlet.createServerResource({ method: 'GET' },
-                                      function(request, response) {
-        called = true;
-        response.end();
-      });
+        function (request, response) {
+          called = true;
+          response.end();
+        });
 
       var request = testUtils.createMockRequest('GET', '/path');
       var response = testUtils.createMockResponse(request);
@@ -39,13 +39,13 @@ describe('server resource', function() {
       assert.equal(true, called);
     });
 
-    it('with a function and configuration (not called)', function() {
+    it('with a function and configuration (not called)', function () {
       var called = false;
       var serverResource = restlet.createServerResource({ method: 'POST' },
-                                      function(request, response) {
-        called = true;
-        response.end();
-      });
+        function (request, response) {
+          called = true;
+          response.end();
+        });
 
       var request = testUtils.createMockRequest('GET', '/path');
       var response = testUtils.createMockResponse(request);
@@ -61,14 +61,14 @@ describe('server resource', function() {
   });
 
   // Explicit handler creations
-  describe('handler creation', function() {
-    it('with function only', function() {
+  describe('handler creation', function () {
+    it('with function only', function () {
       var called = false;
       var serverResource = restlet.createServerResource().handler(
-                                      function(request, response) {
-        called = true;
-        response.end();
-      });
+        function (request, response) {
+          called = true;
+          response.end();
+        });
 
       var request = testUtils.createMockRequest('GET', '/path');
       var response = testUtils.createMockResponse(request);
@@ -78,13 +78,13 @@ describe('server resource', function() {
       assert.equal(true, called);
     });
 
-    it('with function and configuration (called)', function() {
+    it('with function and configuration (called)', function () {
       var called = false;
       var serverResource = restlet.createServerResource().handler(
-                   { method: 'GET' }, function(request, response) {
-        called = true;
-        response.end();
-      });
+        { method: 'GET' }, function (request, response) {
+          called = true;
+          response.end();
+        });
 
       var request = testUtils.createMockRequest('GET', '/path');
       var response = testUtils.createMockResponse(request);
@@ -94,13 +94,13 @@ describe('server resource', function() {
       assert.equal(true, called);
     });
 
-    it('with a function and configuration (not called)', function() {
+    it('with a function and configuration (not called)', function () {
       var called = false;
       var serverResource = restlet.createServerResource().handler(
-                   { method: 'POST' }, function(request, response) {
-        called = true;
-        response.end();
-      });
+        { method: 'POST' }, function (request, response) {
+          called = true;
+          response.end();
+        });
 
       var request = testUtils.createMockRequest('GET', '/path');
       var response = testUtils.createMockResponse(request);
@@ -116,14 +116,14 @@ describe('server resource', function() {
   });
 
   // Shortcut handler creations for get method
-  describe('get shortcut handler creation', function() {
-    it('with function only (called)', function() {
+  describe('get shortcut handler creation', function () {
+    it('with function only (called)', function () {
       var called = false;
       var serverResource = restlet.createServerResource()
-                                  .get(function(request, response) {
-        called = true;
-        response.end();
-      });
+        .get(function (request, response) {
+          called = true;
+          response.end();
+        });
 
       var request = testUtils.createMockRequest('GET', '/path');
       var response = testUtils.createMockResponse(request);
@@ -133,13 +133,13 @@ describe('server resource', function() {
       assert.equal(true, called);
     });
 
-    it('with function only (not called)', function() {
+    it('with function only (not called)', function () {
       var called = false;
       var serverResource = restlet.createServerResource()
-                                  .get(function(request, response) {
-        called = true;
-        response.end();
-      });
+        .get(function (request, response) {
+          called = true;
+          response.end();
+        });
 
       var request = testUtils.createMockRequest('POST', '/path');
       var response = testUtils.createMockResponse(request);
@@ -155,14 +155,14 @@ describe('server resource', function() {
   });
 
   // Shortcut handler creations for post method
-  describe('post shortcut handler creation', function() {
-    it('with function only (called)', function() {
+  describe('post shortcut handler creation', function () {
+    it('with function only (called)', function () {
       var called = false;
       var serverResource = restlet.createServerResource()
-                                  .post(function(request, response) {
-        called = true;
-        response.end();
-      });
+        .post(function (request, response) {
+          called = true;
+          response.end();
+        });
 
       var request = testUtils.createMockRequest('POST', '/path');
       var response = testUtils.createMockResponse(request);
@@ -172,13 +172,13 @@ describe('server resource', function() {
       assert.equal(true, called);
     });
 
-    it('with function only (not called)', function() {
+    it('with function only (not called)', function () {
       var called = false;
       var serverResource = restlet.createServerResource()
-                                  .post(function(request, response) {
-        called = true;
-        response.end();
-      });
+        .post(function (request, response) {
+          called = true;
+          response.end();
+        });
 
       var request = testUtils.createMockRequest('GET', '/path');
       var response = testUtils.createMockResponse(request);
@@ -192,15 +192,15 @@ describe('server resource', function() {
       assert.equal('Method Not Allowed', rawResponse.text);
     });
 
-    it('with function and text payload', function() {
+    it('with function and text payload', function () {
       var called = false;
       var textPayload = null;
       var serverResource = restlet.createServerResource()
-                                  .post(function(request, response) {
-        called = true;
-        textPayload = request.entity.text;
-        response.end();
-      });
+        .post(function (request, response) {
+          called = true;
+          textPayload = request.entity.text;
+          response.end();
+        });
 
       var request = testUtils.createMockRequest(
         'POST', '/path', 'application/xml');
@@ -217,17 +217,17 @@ describe('server resource', function() {
       assert.equal('chunk1chunk2', textPayload);
     });
 
-    it('with function, text payload and no content type', function() {
+    it('with function, text payload and no content type', function () {
       var called = false;
       var textPayload = null;
       var bytesPayload = null;
       var serverResource = restlet.createServerResource()
-                                  .post(function(request, response) {
-        called = true;
-        textPayload = request.entity.text;
-        bytesPayload = request.entity.raw;
-        response.end();
-      });
+        .post(function (request, response) {
+          called = true;
+          textPayload = request.entity.text;
+          bytesPayload = request.entity.raw;
+          response.end();
+        });
 
       var request = testUtils.createMockRequest('POST', '/path');
       var response = testUtils.createMockResponse(request);
@@ -245,37 +245,38 @@ describe('server resource', function() {
     });
 
     it('with function, text payload conversion and no content type',
-                                                         function() {
-      var called = false;
-      var serverResource = restlet.createServerResource()
-                .post({
-                  parameters: ['entity', 'response' ],
-                  convertInputEntity: true }, function() {
-        called = true;
+      function () {
+        var called = false;
+        var serverResource = restlet.createServerResource()
+          .post({
+            parameters: [ 'entity', 'response' ],
+            convertInputEntity: true
+          }, function () {
+            called = true;
+          });
+
+        var request = testUtils.createMockRequest('POST', '/path');
+        var response = testUtils.createMockResponse(request);
+        serverResource.handle(request, response);
+        request.trigger('data', 'chunk1');
+        request.trigger('data', 'chunk2');
+        request.trigger('end');
+
+        var rawResponse = response.rawResponse;
+        assert.equal(415, rawResponse.statusCode);
+        assert.equal('Unsupported Media Type', rawResponse.statusMessage);
+        assert.equal(false, called);
       });
 
-      var request = testUtils.createMockRequest('POST', '/path');
-      var response = testUtils.createMockResponse(request);
-      serverResource.handle(request, response);
-      request.trigger('data', 'chunk1');
-      request.trigger('data', 'chunk2');
-      request.trigger('end');
-
-      var rawResponse = response.rawResponse;
-      assert.equal(415, rawResponse.statusCode);
-      assert.equal('Unsupported Media Type', rawResponse.statusMessage);
-      assert.equal(false, called);
-    });
-
-    it('with function and byte payload', function() {
+    it('with function and byte payload', function () {
       var called = false;
       var bytePayload = null;
       var serverResource = restlet.createServerResource()
-                                  .post(function(request, response) {
-        called = true;
-        bytePayload = request.entity.raw;
-        response.end();
-      });
+        .post(function (request, response) {
+          called = true;
+          bytePayload = request.entity.raw;
+          response.end();
+        });
 
       var request = testUtils.createMockRequest(
         'POST', '/path', 'octet/stream');
@@ -293,15 +294,15 @@ describe('server resource', function() {
         bytePayload.toString());
     });
 
-    it('with function, byte payload but no content type', function() {
+    it('with function, byte payload but no content type', function () {
       var called = false;
       var bytePayload = null;
       var serverResource = restlet.createServerResource()
-                                  .post(function(request, response) {
-        called = true;
-        bytePayload = request.entity.raw;
-        response.end();
-      });
+        .post(function (request, response) {
+          called = true;
+          bytePayload = request.entity.raw;
+          response.end();
+        });
 
       var request = testUtils.createMockRequest('POST', '/path');
       var response = testUtils.createMockResponse(request);

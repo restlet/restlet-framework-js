@@ -4,15 +4,15 @@ var assert = require('assert');
 var restlet = require('../..');
 var testUtils = require('./test-utils');
 
-describe('filter', function() {
+describe('filter', function () {
   // Simple creations
-  describe('simple creation', function() {
-    it('with a function', function() {
+  describe('simple creation', function () {
+    it('with a function', function () {
       var called = false;
       var serverResource = restlet.createServerResource(
-                             function() {
-        called = true;
-      });
+        function () {
+          called = true;
+        });
 
       var request = testUtils.createMockRequest('GET', '/path');
       var response = testUtils.createMockResponse();

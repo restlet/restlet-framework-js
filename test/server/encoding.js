@@ -1,4 +1,4 @@
 'use strict';
 
-describe('request / response encoding', function() {
+describe('request / response encoding', function () {
 });

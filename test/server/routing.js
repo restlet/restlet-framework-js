@@ -3,17 +3,17 @@
 var assert = require('assert');
 var restlet = require('../..');
 
-describe('router', function() {
+describe('router', function () {
   // Simple attachments
-  describe('simple attach', function() {
-    it('attach a function', function() {
+  describe('simple attach', function () {
+    it('attach a function', function () {
       var router = restlet.createRouter();
       var called = false;
       var called1 = false;
-      router.attach('/path1', function() {
+      router.attach('/path1', function () {
         called1 = true;
       });
-      router.attach('/path', function() {
+      router.attach('/path', function () {
         called = true;
       });
 
@@ -28,15 +28,15 @@ describe('router', function() {
       assert.equal(false, called1);
     });
 
-    it('attach a restlet', function() {
+    it('attach a restlet', function () {
       var router = restlet.createRouter();
       var called = false;
       var called1 = false;
       router.attach('/path1', restlet.createRestlet(
-                             function() {
-        called1 = true;
-      }));
-      router.attach('/path', restlet.createRestlet(function() {
+        function () {
+          called1 = true;
+        }));
+      router.attach('/path', restlet.createRestlet(function () {
         called = true;
       }));
 
@@ -52,15 +52,15 @@ describe('router', function() {
     });
   });
   // Attach with path variables
-  describe('attach with path variables', function() {
-    it('path variables #1', function() {
+  describe('attach with path variables', function () {
+    it('path variables #1', function () {
       var router = restlet.createRouter();
       var called = false;
       var called1 = false;
-      router.attach('/path/{var1}/{var2}', function() {
+      router.attach('/path/{var1}/{var2}', function () {
         called = true;
       });
-      router.attach('/path', function() {
+      router.attach('/path', function () {
         called1 = true;
       });
 
@@ -77,14 +77,14 @@ describe('router', function() {
       assert.equal('val2', request.pathVariables.var2);
     });
 
-    it('path variables #2', function() {
+    it('path variables #2', function () {
       var router = restlet.createRouter();
       var called = false;
       var called1 = false;
-      router.attach('/path/{var1}/test{var2}', function() {
+      router.attach('/path/{var1}/test{var2}', function () {
         called = true;
       });
-      router.attach('/path', function() {
+      router.attach('/path', function () {
         called1 = true;
       });
 
@@ -101,14 +101,14 @@ describe('router', function() {
       assert.equal('val2', request.pathVariables.var2);
     });
 
-    it('path variables #3', function() {
+    it('path variables #3', function () {
       var router = restlet.createRouter();
       var called = false;
       var called1 = false;
-      router.attach('/path/{var1}/test({var2})', function() {
+      router.attach('/path/{var1}/test({var2})', function () {
         called = true;
       });
-      router.attach('/path', function() {
+      router.attach('/path', function () {
         called1 = true;
       });
 
