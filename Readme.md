@@ -163,6 +163,15 @@ Restlet JS also provides a client support to call REST resources with browsers:
       </body>
     </html>
 ```
+
+## Samples applications
+
+Discover simple sample applications in our repository:
+
+* [Browser sample](https://github.com/restlet/restlet-framework-js/tree/master/samples/browser)
+* [Node Hello World](https://github.com/restlet/restlet-framework-js/tree/master/samples/node/helloworld)
+* [Node Web API](https://github.com/restlet/restlet-framework-js/tree/master/samples/node/webapi)
+
 ## Documentation
 
 | Version | Status | Documentation |
