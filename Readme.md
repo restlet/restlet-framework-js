@@ -1,6 +1,10 @@
 # Restlet Framework
 
-## RESTful web API framework for JavaScript ![project status](http://dl.dropbox.com/u/2208502/maintained.png)
+## :warning: Restlet Framework JS is not maintained :warning:
+
+You can use the [Java version](https://github.com/restlet/restlet-framework-java) which is maintained instead.
+
+## RESTful web API framework for JavaScript
 
 <table>
   <thead>
