@@ -1,3 +1,27 @@
+/*
+ * Copyright 2005-2017 Restlet
+ *
+ * The contents of this file are subject to the terms of one of the following
+ * open source licenses: Apache 2.0 or or EPL 1.0 (the "Licenses"). You can
+ * select the license that you prefer but you may not use this file except in
+ * compliance with one of these Licenses.
+ *
+ * You can obtain a copy of the Apache 2.0 license at
+ * http://www.opensource.org/licenses/apache-2.0
+ *
+ * You can obtain a copy of the EPL 1.0 license at
+ * http://www.opensource.org/licenses/eclipse-1.0
+ *
+ * See the Licenses for the specific language governing permissions and
+ * limitations under the Licenses.
+ *
+ * Alternatively, you can obtain a royalty free commercial license with less
+ * limitations, transferable or non-transferable, directly at
+ * http://restlet.com/products/restlet-framework
+ *
+ * Restlet is a registered trademark of Restlet S.A.S.
+ */
+
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 'use strict';
 
